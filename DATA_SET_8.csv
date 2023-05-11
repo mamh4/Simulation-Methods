@@ -1,0 +1,1003 @@
+﻿id;CLM_FREQ; CLM_AMT_1 ; CLM_AMT_2 ; CLM_AMT_3 ; CLM_AMT_4 ; CLM_AMT_5 ; CLM_AMT_6 ; CLM_AMT_7 ;CAR_USE;CAR_TYPE;AGE;GENDER;AREA;PREMIUM
+1;2; 372 ; 660 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;60;M;Urban;961
+2;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;43;M;Urban;775
+3;1; 425 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Van;48;M;Urban;866
+4;1; 576 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;35;F;Urban;999
+5;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;51;M;Urban;992
+6;1; 423 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;50;F;Urban;517
+7;1; 277 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sports Car;34;F;Urban;585
+8;1; 447 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;54;F;Urban;535
+9;2; 255 ; 379 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;40;M;Urban;926
+10;3; 231 ; 343 ; 707 ; -   ; -   ; -   ; -   ;Commercial;SUV;44;F;Rural;788
+11;3; 426 ; 553 ; 251 ; -   ; -   ; -   ; -   ;Commercial;Van;37;M;Urban;544
+12;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;34;F;Urban;810
+13;2; 382 ; 284 ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;50;M;Rural;814
+14;5; 293 ; 877 ; 773 ; 355 ; 342 ; -   ; -   ;Private;Sports Car;53;F;Urban;783
+15;2; 609 ; 413 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;43;F;Rural;624
+16;1; 321 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;55;M;Urban;988
+17;2; 640 ; 612 ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;53;M;Urban;848
+18;2; 1 008 ; 535 ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;35;M;Rural;955
+19;4; 556 ; 396 ; 403 ; 475 ; -   ; -   ; -   ;Private;SUV;45;F;Urban;706
+20;2; 472 ; 343 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;39;F;Rural;800
+21;2; 516 ; 562 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;59;M;Urban;702
+22;3; 656 ; 401 ; 290 ; -   ; -   ; -   ; -   ;Private;Sedan;42;M;Urban;938
+23;2; 407 ; 371 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;34;F;Urban;548
+24;1; 522 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;31;F;Urban;866
+25;1; 276 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;28;F;Urban;713
+26;4; 736 ; 267 ; 505 ; 418 ; -   ; -   ; -   ;Commercial;Panel Truck;43;M;Urban;758
+27;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;48;F;Urban;975
+28;5; 469 ; 697 ; 190 ; 434 ; 350 ; -   ; -   ;Private;Sedan;47;F;Urban;541
+29;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;44;F;Urban;834
+30;3; 351 ; 313 ; 739 ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;46;M;Urban;868
+31;1; 703 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sports Car;60;F;Urban;955
+32;4; 318 ; 671 ; 664 ; 670 ; -   ; -   ; -   ;Private;SUV;33;F;Rural;621
+33;2; 549 ; 660 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;32;F;Urban;938
+34;1; 353 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;44;M;Urban;927
+35;3; 286 ; 156 ; 310 ; -   ; -   ; -   ; -   ;Private;SUV;35;F;Urban;713
+36;1; 357 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;40;F;Rural;593
+37;3; 484 ; 217 ; 794 ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;54;M;Urban;623
+38;2; 865 ; 408 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;49;M;Urban;990
+39;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;36;F;Rural;750
+40;1; 264 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;52;F;Urban;993
+41;2; 319 ; 641 ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;41;M;Urban;546
+42;4; 180 ; 208 ; 670 ; 637 ; -   ; -   ; -   ;Commercial;Van;39;M;Urban;671
+43;2; 425 ; 399 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;56;F;Rural;720
+44;1; 556 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;49;F;Urban;788
+45;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;38;F;Rural;728
+46;3; 302 ; 452 ; 752 ; -   ; -   ; -   ; -   ;Commercial;Van;43;F;Urban;975
+47;3; 346 ; 421 ; 357 ; -   ; -   ; -   ; -   ;Private;Sports Car;50;F;Urban;944
+48;1; 482 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;63;F;Urban;821
+49;3; 397 ; 605 ; 715 ; -   ; -   ; -   ; -   ;Commercial;SUV;52;F;Rural;790
+50;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;35;M;Urban;693
+51;4; 340 ; 371 ; 307 ; 349 ; -   ; -   ; -   ;Private;Sports Car;43;F;Urban;973
+52;2; 320 ; 701 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;41;F;Rural;725
+53;1; 280 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;40;M;Urban;563
+54;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;31;M;Urban;835
+55;2; 338 ; 255 ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;47;F;Urban;807
+56;1; 307 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;53;M;Urban;874
+57;1; 692 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;39;F;Rural;508
+58;1; 164 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;33;M;Urban;800
+59;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;59;M;Urban;982
+60;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;42;M;Rural;577
+61;3; 252 ; 404 ; 517 ; -   ; -   ; -   ; -   ;Commercial;Pickup;40;M;Urban;892
+62;1; 337 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;41;F;Urban;834
+63;2; 406 ; 282 ; -   ; -   ; -   ; -   ; -   ;Commercial;Sports Car;37;F;Urban;606
+64;1; 474 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;36;M;Urban;926
+65;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;44;F;Urban;567
+66;1; 759 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;56;M;Urban;734
+67;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Van;45;F;Urban;959
+68;1; 539 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;34;M;Rural;792
+69;1; 354 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;48;M;Urban;985
+70;4; 497 ; 366 ; 175 ; 243 ; -   ; -   ; -   ;Private;Sedan;44;M;Urban;855
+71;1; 464 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;33;F;Urban;713
+72;2; 140 ; 516 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;32;F;Urban;951
+73;2; 253 ; 299 ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;34;F;Urban;783
+74;2; 507 ; 932 ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;38;F;Urban;867
+75;4; 307 ; 846 ; 905 ; 439 ; -   ; -   ; -   ;Private;SUV;35;F;Urban;579
+76;1; 308 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;44;F;Urban;921
+77;2; 659 ; 830 ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;43;F;Urban;973
+78;3; 1 043 ; 1 246 ; 367 ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;49;M;Urban;571
+79;2; 322 ; 111 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;46;F;Urban;951
+80;3; 525 ; 381 ; 421 ; -   ; -   ; -   ; -   ;Private;SUV;45;F;Urban;688
+81;1; 275 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;46;M;Urban;547
+82;4; 254 ; 360 ; 596 ; 537 ; -   ; -   ; -   ;Commercial;Pickup;45;M;Urban;766
+83;2; 430 ; 570 ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;48;M;Urban;880
+84;1; 833 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;63;F;Urban;720
+85;3; 318 ; 380 ; 193 ; -   ; -   ; -   ; -   ;Private;Sedan;44;F;Urban;888
+86;3; 254 ; 763 ; 199 ; -   ; -   ; -   ; -   ;Private;Sedan;45;M;Urban;773
+87;4; 418 ; 553 ; 591 ; 348 ; -   ; -   ; -   ;Private;Sports Car;62;F;Urban;883
+88;3; 287 ; 666 ; 595 ; -   ; -   ; -   ; -   ;Private;Sports Car;48;F;Urban;897
+89;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;37;F;Urban;746
+90;6; 257 ; 255 ; 562 ; 201 ; 572 ; 492 ; -   ;Private;Sports Car;35;F;Urban;523
+91;3; 411 ; 662 ; 393 ; -   ; -   ; -   ; -   ;Commercial;Pickup;48;M;Urban;903
+92;1; 224 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;39;F;Urban;502
+93;4; 280 ; 500 ; 245 ; 413 ; -   ; -   ; -   ;Private;SUV;49;F;Urban;629
+94;1; 520 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sports Car;44;F;Rural;542
+95;3; 256 ; 827 ; 156 ; -   ; -   ; -   ; -   ;Private;Sedan;50;F;Rural;854
+96;2; 469 ; 312 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;30;F;Rural;678
+97;2; 240 ; 336 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;54;M;Urban;876
+98;1; 317 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;38;M;Rural;822
+99;4; 755 ; 199 ; 488 ; 549 ; -   ; -   ; -   ;Commercial;SUV;53;F;Urban;875
+100;1;-250 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Van; 60 ;M;Urban; 750 
+101;1; 385 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;29;M;Urban;952
+102;1; 365 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;58;M;Urban;999
+103;3; 456 ; 471 ; 295 ; -   ; -   ; -   ; -   ;Private;Sedan;55;F;Urban;912
+104;2; 558 ; 557 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;55;M;Urban;678
+105;1; 354 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;56;F;Rural;600
+106;4; 407 ; 549 ; 370 ; 1 000 ; -   ; -   ; -   ;Private;Sports Car;39;F;Urban;949
+107;1; 364 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;44;M;Urban;565
+108;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Van;34;M;Urban;589
+109;1; 400 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;34;F;Urban;747
+110;2; 477 ; 228 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;36;M;Urban;939
+111;3; 389 ; 470 ; 401 ; -   ; -   ; -   ; -   ;Private;Sedan;41;M;Urban;729
+112;2; 340 ; 500 ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;46;M;Urban;633
+113;3; 252 ; 415 ; 212 ; -   ; -   ; -   ; -   ;Private;SUV;45;F;Urban;644
+114;1; 314 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;42;M;Urban;819
+115;4; 143 ; 716 ; 333 ; 583 ; -   ; -   ; -   ;Private;Pickup;38;M;Rural;839
+116;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;33;M;Urban;558
+117;2; 502 ; 580 ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;37;F;Urban;543
+118;3; 339 ; 495 ; 546 ; -   ; -   ; -   ; -   ;Private;Sedan;42;F;Urban;778
+119;2; 365 ; 256 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;47;F;Urban;689
+120;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;43;F;Urban;781
+121;3; 630 ; 316 ; 379 ; -   ; -   ; -   ; -   ;Commercial;Sedan;52;F;Rural;767
+122;3; 261 ; 421 ; 281 ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;43;M;Urban;826
+123;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;64;M;Urban;770
+124;1; 521 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;66;M;Urban;942
+125;4; 763 ; 150 ; 501 ; 497 ; -   ; -   ; -   ;Commercial;Pickup;60;M;Urban;547
+126;2; 396 ; 350 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;35;F;Urban;832
+127;1; 592 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;52;M;Urban;666
+128;3; 256 ; 319 ; 398 ; -   ; -   ; -   ; -   ;Private;SUV;52;F;Urban;855
+129;1; 426 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;56;M;Urban;798
+130;3; 430 ; 373 ; 383 ; -   ; -   ; -   ; -   ;Private;Sports Car;38;F;Rural;579
+131;4; 269 ; 346 ; 531 ; 938 ; -   ; -   ; -   ;Private;SUV;55;F;Urban;857
+132;1; 214 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Van;47;M;Urban;992
+133;2; 345 ; 314 ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;37;M;Urban;540
+134;1; 374 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;47;M;Urban;981
+135;2; 293 ; 324 ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;26;M;Urban;854
+136;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;61;F;Urban;727
+137;2; 452 ; 598 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;41;F;Urban;542
+138;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sports Car;40;F;Rural;854
+139;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;52;M;Urban;670
+140;5; 126 ; 309 ; 367 ; 311 ; 449 ; -   ; -   ;Private;Pickup;58;F;Urban;594
+141;3; 267 ; 343 ; 358 ; -   ; -   ; -   ; -   ;Private;Sedan;52;M;Urban;770
+142;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;38;F;Urban;938
+143;1; 610 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;41;M;Urban;817
+144;1; 297 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;37;F;Urban;573
+145;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;48;M;Urban;623
+146;1; 595 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;47;M;Urban;532
+147;1; 320 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;41;M;Urban;865
+148;1; 543 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;49;F;Urban;899
+149;3; 347 ; 362 ; 218 ; -   ; -   ; -   ; -   ;Private;Sedan;41;M;Rural;781
+150;3; 377 ; 156 ; 330 ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;47;M;Urban;903
+151;1; 310 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;30;F;Rural;687
+152;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;44;F;Rural;985
+153;1; 447 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;46;F;Urban;842
+154;1; 539 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;49;F;Urban;578
+155;1; 225 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;33;F;Urban;732
+156;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;34;F;Urban;583
+157;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;44;F;Urban;703
+158;3; 315 ; 315 ; 645 ; -   ; -   ; -   ; -   ;Private;SUV;43;F;Urban;924
+159;4; 241 ; 391 ; 358 ; 820 ; -   ; -   ; -   ;Private;SUV;62;F;Urban;755
+160;2; 377 ; 357 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;42;M;Urban;779
+161;1; 559 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;36;F;Rural;863
+162;1; 276 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;47;M;Urban;565
+163;2; 533 ; 619 ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;50;M;Urban;935
+164;2; 416 ; 364 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;51;M;Urban;510
+165;3; 166 ; 456 ; 340 ; -   ; -   ; -   ; -   ;Private;Sports Car;46;F;Rural;652
+166;1; 250 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;50;F;Urban;885
+167;2; 344 ; 208 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;43;F;Urban;558
+168;1; 188 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;39;F;Urban;549
+169;1; 386 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sports Car;43;F;Urban;794
+170;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;60;F;Urban;768
+171;2; 736 ; 507 ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;55;M;Rural;884
+172;2; 744 ; 290 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;40;F;Urban;552
+173;1; 1 118 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;39;F;Urban;826
+174;1; 229 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;49;M;Urban;668
+175;1; 431 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;38;M;Urban;989
+176;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;42;M;Urban;636
+177;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;42;F;Urban;863
+178;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;49;F;Urban;842
+179;4; 238 ; 577 ; 336 ; 390 ; -   ; -   ; -   ;Private;SUV;36;F;Urban;947
+180;2; 242 ; 209 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;34;M;Urban;779
+181;2; 213 ; 340 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;49;F;Urban;557
+182;2; 315 ; 248 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;52;M;Urban;924
+183;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Van;50;M;Urban;622
+184;2; 728 ; 484 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;53;F;Urban;723
+185;2; 493 ; 336 ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;55;M;Rural;609
+186;2; 338 ; 272 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;40;F;Urban;643
+187;3; 479 ; 643 ; 482 ; -   ; -   ; -   ; -   ;Private;Sedan;40;F;Urban;808
+188;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;45;F;Urban;874
+189;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;80;M;Urban;802
+190;3; 477 ; 712 ; 228 ; -   ; -   ; -   ; -   ;Commercial;Pickup;48;M;Urban;953
+191;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;37;M;Rural;546
+192;2; 174 ; 442 ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;40;F;Rural;696
+193;1; 295 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;26;M;Urban;913
+194;1; 379 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;45;F;Urban;795
+195;4; 733 ; 398 ; 482 ; 324 ; -   ; -   ; -   ;Private;SUV;46;F;Urban;747
+196;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;42;F;Urban;508
+197;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;36;F;Urban;897
+198;4; 426 ; 365 ; 244 ; 350 ; -   ; -   ; -   ;Commercial;Van;45;F;Rural;891
+199;1; 350 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;52;F;Rural;533
+200;1; 313 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;41;M;Rural;676
+201;3; 321 ; 378 ; 213 ; -   ; -   ; -   ; -   ;Private;Sports Car;36;F;Urban;886
+202;2; 223 ; 449 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;56;F;Urban;730
+203;1; 202 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;53;F;Rural;800
+204;1; 805 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;39;F;Urban;714
+205;1; 279 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;38;F;Rural;592
+206;2; 203 ; 368 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;45;M;Urban;781
+207;2; 201 ; 328 ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;46;F;Rural;994
+208;4; 552 ; 251 ; 320 ; 738 ; -   ; -   ; -   ;Private;Sedan;43;M;Urban;553
+209;5; 462 ; 300 ; 590 ; 417 ; 784 ; -   ; -   ;Private;SUV;54;F;Urban;688
+210;1; 257 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;55;M;Urban;824
+211;2; 747 ; 233 ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;61;F;Rural;591
+212;1; 377 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Van;50;M;Rural;830
+213;4; 438 ; 466 ; 235 ; 536 ; -   ; -   ; -   ;Private;Sports Car;62;F;Urban;854
+214;1; 294 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;53;F;Urban;576
+215;1; 202 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;52;M;Urban;881
+216;1; 431 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;54;F;Urban;771
+217;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;53;F;Rural;563
+218;1; 481 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;51;F;Urban;518
+219;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;39;M;Rural;945
+220;3; 601 ; 420 ; 397 ; -   ; -   ; -   ; -   ;Private;Sedan;38;F;Rural;696
+221;2; 310 ; 539 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;42;M;Urban;972
+222;1; 368 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;31;F;Urban;858
+223;2; 348 ; 180 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;44;M;Urban;805
+224;2; 568 ; 551 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;41;F;Rural;683
+225;2; 340 ; 503 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;36;F;Urban;824
+226;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;48;F;Urban;966
+227;2; 375 ; 445 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;49;F;Urban;647
+228;1; 537 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Van;45;F;Urban;654
+229;3; 368 ; 859 ; 471 ; -   ; -   ; -   ; -   ;Private;Sedan;47;M;Urban;982
+230;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;41;F;Rural;661
+231;4; 412 ; 262 ; 258 ; 866 ; -   ; -   ; -   ;Commercial;SUV;45;F;Rural;829
+232;2; 423 ; 388 ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;53;F;Urban;641
+233;1; 232 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Van;51;F;Urban;653
+234;2; 247 ; 372 ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;51;F;Urban;600
+235;2; 247 ; 417 ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;36;M;Urban;642
+236;5; 511 ; 325 ; 433 ; 773 ; 390 ; -   ; -   ;Private;SUV;43;F;Urban;917
+237;2; 624 ; 1 019 ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;43;F;Urban;772
+238;1; 430 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;53;F;Urban;547
+239;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;40;M;Urban;652
+240;7; 682 ; 175 ; 385 ; 358 ; 305 ; 308 ; 468 ;Private;SUV;31;F;Rural;652
+241;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;32;F;Urban;535
+242;4; 228 ; 267 ; 841 ; 340 ; -   ; -   ; -   ;Private;SUV;58;F;Urban;872
+243;3; 350 ; 429 ; 465 ; -   ; -   ; -   ; -   ;Commercial;Pickup;49;M;Urban;959
+244;3; 465 ; 385 ; 457 ; -   ; -   ; -   ; -   ;Private;Van;50;F;Urban;540
+245;2; 181 ; 210 ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;45;M;Urban;840
+246;1; 262 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;46;F;Urban;680
+247;2; 193 ; 401 ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;47;M;Urban;951
+248;5; 217 ; 369 ; 698 ; 323 ; 502 ; -   ; -   ;Commercial;Sedan;43;M;Urban;607
+249;3; 335 ; 285 ; 335 ; -   ; -   ; -   ; -   ;Private;Sports Car;41;F;Urban;740
+250;1; 343 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;48;F;Urban;996
+251;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;39;M;Rural;592
+252;1; 320 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;49;F;Rural;893
+253;1; 375 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;45;F;Urban;870
+254;4; 366 ; 325 ; 513 ; 410 ; -   ; -   ; -   ;Private;SUV;36;F;Urban;930
+255;1; 320 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;59;F;Urban;859
+256;2; 464 ; 486 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;60;M;Urban;948
+257;3; 265 ; 608 ; 615 ; -   ; -   ; -   ; -   ;Private;SUV;49;F;Urban;695
+258;1; 299 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;45;F;Urban;930
+259;3; 738 ; 178 ; 388 ; -   ; -   ; -   ; -   ;Commercial;Sedan;34;M;Rural;540
+260;1; 480 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;57;M;Urban;780
+261;3; 352 ; 593 ; 196 ; -   ; -   ; -   ; -   ;Private;Sedan;33;M;Rural;910
+262;4; 396 ; 271 ; 502 ; 328 ; -   ; -   ; -   ;Commercial;Sedan;52;M;Urban;530
+263;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;53;F;Urban;852
+264;1; 355 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;57;F;Urban;871
+265;2; 552 ; 332 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;37;F;Urban;861
+266;1; 419 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;45;M;Urban;507
+267;1; 930 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;38;M;Rural;863
+268;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;36;F;Urban;780
+269;2; 513 ; 516 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;51;M;Rural;706
+270;2; 302 ; 375 ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;39;M;Urban;546
+271;5; 415 ; 646 ; 459 ; 217 ; 303 ; -   ; -   ;Private;SUV;51;F;Rural;740
+272;3; 474 ; 164 ; 1 137 ; -   ; -   ; -   ; -   ;Private;SUV;40;F;Urban;960
+273;3; 892 ; 393 ; 327 ; -   ; -   ; -   ; -   ;Private;SUV;54;F;Urban;633
+274;4; 1 222 ; 307 ; 274 ; 579 ; -   ; -   ; -   ;Commercial;SUV;34;F;Urban;523
+275;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;41;F;Urban;770
+276;3; 529 ; 382 ; 367 ; -   ; -   ; -   ; -   ;Commercial;Sedan;36;M;Urban;654
+277;1; 470 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;55;M;Urban;917
+278;1; 402 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;45;F;Urban;601
+279;3; 551 ; 605 ; 533 ; -   ; -   ; -   ; -   ;Commercial;Pickup;45;M;Urban;530
+280;1; 408 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;50;F;Urban;831
+281;1; 339 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;44;M;Urban;640
+282;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;55;F;Urban;956
+283;2; 294 ; 346 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;44;M;Urban;635
+284;1; 486 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;50;M;Urban;605
+285;4; 323 ; 431 ; 397 ; 648 ; -   ; -   ; -   ;Private;Sports Car;60;M;Urban;547
+286;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;40;M;Rural;906
+287;5; 612 ; 529 ; 233 ; 297 ; 189 ; -   ; -   ;Commercial;Sports Car;57;F;Urban;665
+288;3; 246 ; 281 ; 410 ; -   ; -   ; -   ; -   ;Private;Sedan;47;M;Urban;876
+289;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;47;M;Urban;718
+290;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;64;F;Urban;726
+291;1; 344 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;34;M;Urban;704
+292;2; 381 ; 445 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;52;F;Rural;718
+293;2; 659 ; 635 ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;42;M;Urban;520
+294;1; 1 236 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;41;M;Rural;544
+295;2; 141 ; 318 ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;41;M;Urban;862
+296;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;54;M;Urban;936
+297;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;42;F;Urban;910
+298;3; 658 ; 264 ; 534 ; -   ; -   ; -   ; -   ;Private;SUV;56;F;Urban;700
+299;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;50;M;Urban;772
+300;3; 681 ; 276 ; 371 ; -   ; -   ; -   ; -   ;Private;SUV;59;F;Urban;745
+301;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;51;F;Urban;984
+302;2; 381 ; 575 ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;53;M;Urban;956
+303;3; 286 ; 251 ; 280 ; -   ; -   ; -   ; -   ;Commercial;SUV;35;F;Urban;796
+304;1; 291 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;54;F;Urban;748
+305;2; 296 ; 306 ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;50;F;Urban;657
+306;2; 860 ; 599 ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;29;F;Urban;977
+307;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;32;F;Urban;767
+308;1; 383 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;57;F;Urban;959
+309;1; 328 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;43;M;Urban;903
+310;2; 264 ; 507 ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;44;F;Urban;504
+311;2; 840 ; 598 ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;38;F;Urban;641
+312;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;37;F;Urban;718
+313;1; 803 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;55;F;Rural;910
+314;4; 462 ; 277 ; 248 ; 435 ; -   ; -   ; -   ;Private;Sports Car;51;F;Rural;837
+315;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;42;F;Urban;545
+316;1; 330 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;45;F;Rural;675
+317;2; 328 ; 482 ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;54;M;Urban;784
+318;4; 688 ; 286 ; 470 ; 371 ; -   ; -   ; -   ;Private;SUV;48;F;Rural;925
+319;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;54;F;Urban;928
+320;3; 279 ; 250 ; 545 ; -   ; -   ; -   ; -   ;Private;SUV;48;F;Urban;504
+321;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;50;M;Rural;948
+322;1; 284 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;25;F;Urban;932
+323;2; 540 ; 243 ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;55;M;Urban;814
+324;2; 305 ; 796 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;35;F;Urban;792
+325;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sports Car;29;F;Urban;515
+326;2; 507 ; 301 ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;45;M;Urban;661
+327;2; 564 ; 801 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;37;F;Urban;843
+328;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;56;M;Urban;625
+329;1; 624 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;45;F;Urban;728
+330;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;51;F;Urban;528
+331;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;48;F;Rural;804
+332;3; 669 ; 271 ; 549 ; -   ; -   ; -   ; -   ;Commercial;Pickup;52;M;Rural;767
+333;2; 512 ; 418 ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;40;M;Urban;850
+334;1; 331 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;41;F;Urban;811
+335;1; 456 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;44;M;Urban;640
+336;2; 504 ; 855 ; -   ; -   ; -   ; -   ; -   ;Private;Van;54;M;Urban;550
+337;2; 309 ; 439 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;42;M;Urban;901
+338;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;50;M;Rural;599
+339;2; 249 ; 408 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;38;M;Urban;718
+340;2; 462 ; 426 ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;36;F;Urban;964
+341;4; 190 ; 462 ; 327 ; 263 ; -   ; -   ; -   ;Commercial;Sports Car;62;F;Urban;719
+342;5; 529 ; 405 ; 284 ; 1 026 ; 587 ; -   ; -   ;Private;Sedan;47;M;Urban;504
+343;1; 398 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;47;F;Urban;941
+344;4; 732 ; 1 034 ; 412 ; 403 ; -   ; -   ; -   ;Private;Pickup;46;M;Urban;735
+345;3; 1 442 ; 265 ; 392 ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;42;M;Urban;675
+346;2; 1 031 ; 170 ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;44;F;Urban;669
+347;2; 466 ; 98 ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;36;F;Urban;964
+348;2; 360 ; 673 ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;33;M;Urban;606
+349;2; 430 ; 403 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;35;F;Urban;773
+350;3; 567 ; 610 ; 333 ; -   ; -   ; -   ; -   ;Private;Sedan;43;F;Urban;671
+351;3; 609 ; 418 ; 312 ; -   ; -   ; -   ; -   ;Private;SUV;45;M;Urban;853
+352;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;55;M;Urban;555
+353;4; 304 ; 284 ; 205 ; 499 ; -   ; -   ; -   ;Private;Sedan;27;M;Urban;672
+354;3; 572 ; 263 ; 382 ; -   ; -   ; -   ; -   ;Private;Sedan;41;F;Urban;754
+355;2; 603 ; 505 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;40;F;Urban;551
+356;3; 202 ; 307 ; 507 ; -   ; -   ; -   ; -   ;Private;SUV;43;F;Urban;636
+357;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;42;F;Rural;637
+358;5; 333 ; 493 ; 397 ; 358 ; 646 ; -   ; -   ;Private;SUV;57;F;Rural;701
+359;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;56;F;Urban;736
+360;1; 453 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;64;M;Urban;872
+361;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;32;F;Urban;928
+362;4; 718 ; 408 ; 519 ; 861 ; -   ; -   ; -   ;Private;Sports Car;39;F;Urban;524
+363;2; 541 ; 815 ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;37;F;Urban;816
+364;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;45;F;Urban;986
+365;2; 330 ; 452 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;39;M;Urban;939
+366;2; 742 ; 513 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;32;F;Urban;552
+367;1; 189 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;44;M;Urban;585
+368;4; 361 ; 574 ; 364 ; 428 ; -   ; -   ; -   ;Commercial;Sports Car;39;F;Urban;997
+369;1; 200 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;41;F;Rural;762
+370;1; 478 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;35;M;Urban;977
+371;1; 163 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sports Car;64;F;Urban;785
+372;1; 896 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;46;M;Urban;591
+373;1; 541 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;59;F;Urban;692
+374;5; 740 ; 131 ; 269 ; 394 ; 405 ; -   ; -   ;Private;Pickup;39;M;Urban;812
+375;1; 474 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;44;M;Urban;645
+376;2; 183 ; 226 ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;40;F;Urban;780
+377;2; 319 ; 367 ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;43;F;Urban;551
+378;5; 584 ; 497 ; 748 ; 324 ; 451 ; -   ; -   ;Private;Sedan;48;F;Urban;865
+379;2; 462 ; 451 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;38;F;Urban;631
+380;2; 741 ; 555 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;48;M;Rural;677
+381;3; 186 ; 685 ; 206 ; -   ; -   ; -   ; -   ;Private;Sports Car;60;F;Urban;784
+382;1; 354 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Van;59;M;Urban;892
+383;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;43;F;Urban;727
+384;1; 197 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;43;F;Urban;795
+385;1; 389 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;64;F;Urban;617
+386;1; 497 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;55;F;Urban;638
+387;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;35;F;Urban;975
+388;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;54;M;Urban;619
+389;5; 181 ; 299 ; 684 ; 324 ; 188 ; -   ; -   ;Private;SUV;35;F;Urban;688
+390;4; 383 ; 213 ; 468 ; 399 ; -   ; -   ; -   ;Commercial;Panel Truck;46;M;Urban;768
+391;2; 269 ; 214 ; -   ; -   ; -   ; -   ; -   ;Commercial;Sports Car;26;F;Urban;743
+392;1; 170 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;43;M;Urban;789
+393;3; 584 ; 444 ; 759 ; -   ; -   ; -   ; -   ;Private;Sports Car;43;F;Urban;944
+394;2; 383 ; 237 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;54;F;Urban;772
+395;1; 443 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;55;M;Urban;688
+396;2; 652 ; 160 ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;45;M;Rural;916
+397;1; 468 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;42;M;Urban;712
+398;1; 335 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;46;M;Urban;882
+399;4; 320 ; 619 ; 339 ; 253 ; -   ; -   ; -   ;Commercial;Pickup;47;M;Rural;520
+400;3; 551 ; 285 ; 197 ; -   ; -   ; -   ; -   ;Private;SUV;45;F;Urban;761
+401;1; 546 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;55;F;Urban;868
+402;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;43;F;Rural;806
+403;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;53;M;Urban;841
+404;2; 350 ; 581 ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;49;F;Urban;725
+405;1; 275 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;30;F;Rural;803
+406;3; 460 ; 599 ; 462 ; -   ; -   ; -   ; -   ;Private;Sports Car;47;F;Urban;934
+407;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;41;F;Urban;894
+408;2; 491 ; 246 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;49;M;Urban;663
+409;1; 362 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;44;F;Urban;541
+410;2; 377 ; 171 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;31;F;Rural;942
+411;2; 370 ; 501 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;51;F;Urban;630
+412;1; 225 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;50;M;Urban;1000
+413;2; 484 ; 327 ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;58;M;Urban;964
+414;3; 264 ; 418 ; 535 ; -   ; -   ; -   ; -   ;Private;Sedan;56;M;Urban;733
+415;5; 638 ; 679 ; 368 ; 638 ; 423 ; -   ; -   ;Private;Sedan;41;F;Urban;652
+416;3; 573 ; 768 ; 336 ; -   ; -   ; -   ; -   ;Commercial;Sedan;37;M;Urban;587
+417;4; 296 ; 475 ; 439 ; 397 ; -   ; -   ; -   ;Commercial;Pickup;57;F;Rural;928
+418;1; 479 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;37;F;Urban;899
+419;2; 442 ; 234 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;34;F;Urban;899
+420;2; 327 ; 476 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;49;M;Urban;605
+421;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;42;F;Urban;985
+422;2; 268 ; 418 ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;38;M;Rural;630
+423;1; 784 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;55;M;Urban;964
+424;2; 319 ; 284 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;37;F;Urban;671
+425;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;25;M;Urban;932
+426;1; 198 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;44;M;Urban;534
+427;1; 515 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;20;F;Urban;783
+428;3; 301 ; 265 ; 824 ; -   ; -   ; -   ; -   ;Private;Sports Car;40;F;Urban;709
+429;2; 681 ; 420 ; -   ; -   ; -   ; -   ; -   ;Private;Van;32;M;Urban;607
+430;1; 580 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;35;F;Urban;602
+431;4; 392 ; 948 ; 537 ; 277 ; -   ; -   ; -   ;Commercial;Van;37;M;Urban;534
+432;3; 668 ; 243 ; 712 ; -   ; -   ; -   ; -   ;Commercial;Pickup;58;M;Urban;921
+433;1; 422 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Van;40;M;Rural;748
+434;2; 845 ; 598 ; -   ; -   ; -   ; -   ; -   ;Commercial;Sports Car;54;F;Urban;607
+435;3; 595 ; 422 ; 280 ; -   ; -   ; -   ; -   ;Commercial;Sedan;39;M;Urban;779
+436;4; 518 ; 491 ; 208 ; 478 ; -   ; -   ; -   ;Commercial;Pickup;49;M;Urban;558
+437;3; 485 ; 350 ; 333 ; -   ; -   ; -   ; -   ;Commercial;SUV;48;F;Rural;665
+438;4; 251 ; 307 ; 492 ; 343 ; -   ; -   ; -   ;Commercial;Pickup;42;M;Urban;560
+439;1; 529 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;37;F;Urban;960
+440;3; 840 ; 285 ; 402 ; -   ; -   ; -   ; -   ;Private;SUV;56;F;Rural;874
+441;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;48;M;Urban;790
+442;1; 465 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;21;F;Urban;998
+443;3; 577 ; 357 ; 535 ; -   ; -   ; -   ; -   ;Private;Sedan;33;M;Urban;659
+444;1; 273 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;38;F;Urban;745
+445;6; 409 ; 666 ; 348 ; 350 ; 281 ; 204 ; -   ;Private;Pickup;33;M;Rural;781
+446;1; 165 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;51;M;Urban;802
+447;1; 264 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;45;M;Urban;848
+448;2; 472 ; 281 ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;40;F;Urban;820
+449;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;58;M;Urban;686
+450;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;50;M;Urban;688
+451;2; 545 ; 1 112 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;39;M;Urban;793
+452;3; 257 ; 215 ; 273 ; -   ; -   ; -   ; -   ;Private;Van;50;M;Urban;526
+453;3; 607 ; 738 ; 517 ; -   ; -   ; -   ; -   ;Private;SUV;39;F;Urban;813
+454;4; 442 ; 244 ; 337 ; 402 ; -   ; -   ; -   ;Private;SUV;19;F;Rural;670
+455;3; 380 ; 295 ; 1 085 ; -   ; -   ; -   ; -   ;Commercial;Sedan;49;M;Rural;838
+456;1; 839 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;33;F;Rural;777
+457;5; 818 ; 568 ; 211 ; 245 ; 1 073 ; -   ; -   ;Commercial;Panel Truck;43;M;Urban;540
+458;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;48;M;Urban;504
+459;1; 398 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;45;M;Urban;625
+460;1; 545 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;39;M;Rural;635
+461;4; 339 ; 492 ; 285 ; 351 ; -   ; -   ; -   ;Commercial;Pickup;32;M;Rural;917
+462;1; 273 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;45;M;Urban;782
+463;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;46;F;Urban;876
+464;3; 307 ; 810 ; 360 ; -   ; -   ; -   ; -   ;Private;Sedan;53;F;Urban;809
+465;2; 363 ; 317 ; -   ; -   ; -   ; -   ; -   ;Commercial;Sports Car;63;F;Urban;835
+466;1; 231 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;51;F;Urban;745
+467;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;36;F;Rural;553
+468;3; 594 ; 538 ; 541 ; -   ; -   ; -   ; -   ;Private;Sports Car;72;F;Urban;667
+469;1; 605 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Van;51;M;Urban;574
+470;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;39;F;Urban;809
+471;5; 260 ; 403 ; 391 ; 559 ; 615 ; -   ; -   ;Private;SUV;34;F;Rural;914
+472;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Van;53;M;Urban;821
+473;1; 422 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;45;M;Urban;924
+474;3; 365 ; 396 ; 433 ; -   ; -   ; -   ; -   ;Commercial;Pickup;36;F;Urban;699
+475;5; 314 ; 529 ; 341 ; 330 ; 383 ; -   ; -   ;Private;Sports Car;36;F;Rural;880
+476;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;32;M;Urban;844
+477;4; 430 ; 413 ; 305 ; 443 ; -   ; -   ; -   ;Commercial;Panel Truck;43;M;Urban;621
+478;1; 279 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;54;F;Urban;585
+479;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;57;M;Urban;611
+480;1; 747 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;47;F;Urban;953
+481;3; 403 ; 597 ; 661 ; -   ; -   ; -   ; -   ;Commercial;Pickup;36;F;Urban;650
+482;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;43;F;Urban;658
+483;3; 425 ; 461 ; 420 ; -   ; -   ; -   ; -   ;Private;Sports Car;46;F;Urban;595
+484;3; 206 ; 424 ; 288 ; -   ; -   ; -   ; -   ;Private;SUV;41;F;Rural;745
+485;1; 316 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;55;M;Rural;565
+486;2; 438 ; 439 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;63;F;Urban;733
+487;1; 875 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;45;F;Urban;923
+488;6; 671 ; 348 ; 460 ; 330 ; 328 ; 736 ; -   ;Commercial;Van;35;M;Urban;755
+489;2; 299 ; 199 ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;60;F;Urban;903
+490;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;51;F;Urban;554
+491;2; 531 ; 411 ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;43;F;Urban;595
+492;1; 361 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;39;M;Rural;545
+493;2; 608 ; 472 ; -   ; -   ; -   ; -   ; -   ;Commercial;Sports Car;33;F;Urban;764
+494;1; 486 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;37;F;Rural;606
+495;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sports Car;39;F;Urban;969
+496;4; 610 ; 254 ; 386 ; 270 ; -   ; -   ; -   ;Commercial;Panel Truck;43;M;Urban;907
+497;2; 481 ; 829 ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;48;M;Urban;802
+498;3; 194 ; 578 ; 394 ; -   ; -   ; -   ; -   ;Private;SUV;45;M;Rural;986
+499;5; 689 ; 654 ; 602 ; 425 ; 133 ; -   ; -   ;Private;SUV;56;F;Urban;763
+500;1; 250 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;37;M;Urban;689
+501;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;40;F;Urban;854
+502;2; 473 ; 453 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;51;M;Rural;620
+503;1; 371 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;42;F;Urban;970
+504;2; 347 ; 238 ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;41;M;Urban;693
+505;1; 282 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;46;M;Rural;841
+506;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;35;M;Urban;881
+507;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;43;F;Rural;647
+508;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;64;F;Urban;632
+509;4; 504 ; 453 ; 688 ; 189 ; -   ; -   ; -   ;Private;Sedan;46;M;Urban;531
+510;3; 459 ; 334 ; 529 ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;39;M;Urban;527
+511;2; 432 ; 584 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;69;M;Urban;790
+512;1; 344 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;35;F;Urban;722
+513;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;44;M;Rural;730
+514;3; 422 ; 462 ; 340 ; -   ; -   ; -   ; -   ;Commercial;Sedan;44;M;Urban;556
+515;1; 354 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;39;F;Rural;671
+516;1; 323 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;56;F;Urban;613
+517;3; 856 ; 449 ; 413 ; -   ; -   ; -   ; -   ;Commercial;Van;59;M;Urban;576
+518;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Van;41;M;Urban;531
+519;3; 522 ; 387 ; 437 ; -   ; -   ; -   ; -   ;Private;Sports Car;57;F;Urban;726
+520;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;43;M;Urban;563
+521;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;42;M;Urban;562
+522;2; 166 ; 514 ; -   ; -   ; -   ; -   ; -   ;Private;Van;52;M;Urban;881
+523;3; 397 ; 294 ; 248 ; -   ; -   ; -   ; -   ;Commercial;Pickup;46;M;Urban;616
+524;1; 710 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;51;M;Rural;784
+525;1; 392 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;43;F;Urban;646
+526;1; 524 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;52;F;Urban;627
+527;2; 125 ; 563 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;43;F;Urban;537
+528;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;47;F;Urban;565
+529;2; 314 ; 238 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;44;F;Urban;804
+530;2; 394 ; 653 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;48;M;Urban;841
+531;3; 308 ; 410 ; 364 ; -   ; -   ; -   ; -   ;Private;SUV;33;F;Urban;965
+532;1; 432 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;41;F;Rural;624
+533;2; 193 ; 441 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;49;F;Urban;694
+534;2; 451 ; 635 ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;50;F;Urban;737
+535;1; 336 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;42;M;Urban;674
+536;1; 489 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;33;F;Urban;726
+537;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;42;F;Rural;785
+538;1; 237 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;41;F;Urban;548
+539;2; 213 ; 182 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;40;F;Urban;612
+540;4; 465 ; 222 ; 573 ; 627 ; -   ; -   ; -   ;Commercial;Sedan;51;F;Urban;758
+541;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;57;M;Urban;781
+542;1; 669 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;42;M;Urban;604
+543;1; 261 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;46;F;Urban;852
+544;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;56;F;Urban;926
+545;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;52;F;Urban;988
+546;1; 281 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;38;F;Urban;573
+547;5; 293 ; 413 ; 1 047 ; 523 ; 237 ; -   ; -   ;Private;Pickup;43;M;Urban;945
+548;2; 318 ; 426 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;40;F;Urban;999
+549;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;54;F;Rural;749
+550;2; 299 ; 382 ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;51;M;Urban;560
+551;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;27;M;Urban;950
+552;2; 309 ; 445 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;56;F;Urban;766
+553;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;48;M;Urban;691
+554;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;47;M;Rural;892
+555;2; 290 ; 627 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;38;M;Rural;646
+556;1; 452 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;27;F;Urban;724
+557;3; 546 ; 476 ; 492 ; -   ; -   ; -   ; -   ;Private;Sports Car;33;F;Urban;529
+558;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;42;F;Urban;634
+559;2; 416 ; 387 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;55;F;Urban;913
+560;2; 353 ; 368 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;50;M;Urban;887
+561;1; 483 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;48;M;Urban;858
+562;2; 388 ; 587 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;33;F;Rural;716
+563;1; 291 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;53;F;Urban;695
+564;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;58;F;Urban;899
+565;1; 213 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;43;M;Rural;993
+566;5; 176 ; 326 ; 263 ; 317 ; 386 ; -   ; -   ;Private;Sedan;49;M;Urban;744
+567;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;40;F;Urban;841
+568;2; 314 ; 384 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;54;F;Urban;759
+569;1; 443 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;38;M;Rural;501
+570;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;49;M;Urban;858
+571;4; 254 ; 456 ; 301 ; 356 ; -   ; -   ; -   ;Private;Sedan;39;F;Rural;583
+572;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;37;F;Urban;720
+573;3; 306 ; 281 ; 390 ; -   ; -   ; -   ; -   ;Private;SUV;27;F;Urban;893
+574;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;48;M;Rural;711
+575;6; 367 ; 516 ; 231 ; 444 ; 535 ; 330 ; -   ;Commercial;Panel Truck;47;M;Urban;806
+576;1; 379 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;38;F;Rural;748
+577;3; 494 ; 497 ; 365 ; -   ; -   ; -   ; -   ;Commercial;SUV;44;F;Urban;890
+578;3; 403 ; 634 ; 680 ; -   ; -   ; -   ; -   ;Private;Sports Car;44;F;Rural;702
+579;1; 611 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;46;M;Rural;840
+580;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;50;F;Urban;810
+581;1; 434 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;37;M;Rural;911
+582;1; 621 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;24;F;Urban;954
+583;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;37;M;Urban;898
+584;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;38;F;Urban;580
+585;1; 616 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sports Car;43;F;Urban;978
+586;3; 625 ; 418 ; 638 ; -   ; -   ; -   ; -   ;Commercial;SUV;46;F;Urban;775
+587;1; 641 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;36;F;Urban;789
+588;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;50;M;Urban;963
+589;1; 517 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;31;M;Urban;742
+590;4; 455 ; 201 ; 252 ; 370 ; -   ; -   ; -   ;Commercial;Pickup;47;M;Rural;789
+591;4; 342 ; 535 ; 791 ; 393 ; -   ; -   ; -   ;Private;Sedan;42;F;Urban;623
+592;3; 370 ; 242 ; 543 ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;44;M;Urban;502
+593;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;59;F;Rural;896
+594;1; 205 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;40;M;Urban;924
+595;1; 391 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;31;F;Urban;724
+596;2; 351 ; 452 ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;40;M;Urban;956
+597;3; 290 ; 686 ; 195 ; -   ; -   ; -   ; -   ;Private;Sedan;36;F;Urban;936
+598;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;54;F;Urban;803
+599;2; 184 ; 724 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;45;M;Urban;742
+600;2; 606 ; 812 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;58;M;Rural;667
+601;2; 471 ; 814 ; -   ; -   ; -   ; -   ; -   ;Commercial;Sports Car;39;F;Rural;559
+602;1; 361 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;46;F;Rural;805
+603;3; 300 ; 387 ; 341 ; -   ; -   ; -   ; -   ;Private;Sedan;32;M;Urban;907
+604;3; 308 ; 323 ; 314 ; -   ; -   ; -   ; -   ;Private;Pickup;57;M;Urban;788
+605;1; 420 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sports Car;47;F;Urban;915
+606;2; 512 ; 504 ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;44;M;Urban;621
+607;3; 435 ; 751 ; 313 ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;44;M;Urban;735
+608;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;46;M;Urban;620
+609;2; 364 ; 688 ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;55;M;Urban;580
+610;2; 214 ; 819 ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;52;F;Urban;893
+611;2; 327 ; 392 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;43;F;Urban;975
+612;3; 548 ; 417 ; 678 ; -   ; -   ; -   ; -   ;Private;Sedan;52;M;Urban;538
+613;1; 778 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;51;F;Rural;509
+614;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;47;M;Urban;817
+615;1; 345 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;52;F;Rural;578
+616;2; 232 ; 308 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;34;F;Urban;585
+617;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;41;F;Urban;876
+618;2; 608 ; 393 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;48;F;Urban;928
+619;1; 319 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;67;M;Urban;802
+620;1; 368 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;43;M;Urban;862
+621;1; 559 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;36;F;Urban;833
+622;3; 342 ; 578 ; 356 ; -   ; -   ; -   ; -   ;Private;Sports Car;58;F;Urban;655
+623;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;37;F;Urban;518
+624;3; 464 ; 369 ; 387 ; -   ; -   ; -   ; -   ;Private;Sedan;44;M;Urban;674
+625;3; 418 ; 339 ; 373 ; -   ; -   ; -   ; -   ;Private;Sedan;51;M;Urban;950
+626;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sports Car;28;F;Rural;861
+627;2; 259 ; 411 ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;50;M;Urban;573
+628;2; 384 ; 550 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;44;M;Urban;671
+629;1; 391 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Van;52;M;Urban;904
+630;4; 236 ; 241 ; 487 ; 459 ; -   ; -   ; -   ;Commercial;Panel Truck;41;M;Urban;615
+631;3; 703 ; 339 ; 496 ; -   ; -   ; -   ; -   ;Commercial;SUV;42;F;Rural;707
+632;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;37;F;Urban;607
+633;3; 481 ; 397 ; 299 ; -   ; -   ; -   ; -   ;Private;Sedan;58;M;Urban;733
+634;4; 221 ; 828 ; 252 ; 353 ; -   ; -   ; -   ;Private;Sedan;32;M;Rural;892
+635;2; 364 ; 273 ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;38;M;Urban;653
+636;4; 208 ; 702 ; 324 ; 334 ; -   ; -   ; -   ;Commercial;Van;42;M;Urban;945
+637;1; 390 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;42;F;Urban;847
+638;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;44;F;Rural;506
+639;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;46;M;Rural;518
+640;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sports Car;44;F;Rural;819
+641;4; 547 ; 244 ; 246 ; 195 ; -   ; -   ; -   ;Private;Sports Car;37;F;Urban;891
+642;1; 333 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;45;M;Urban;888
+643;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;48;F;Urban;569
+644;1; 520 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;72;F;Urban;868
+645;1; 471 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;52;M;Urban;548
+646;2; 331 ; 517 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;48;F;Urban;622
+647;1; 525 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;40;F;Urban;713
+648;2; 619 ; 279 ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;49;F;Urban;750
+649;3; 259 ; 330 ; 432 ; -   ; -   ; -   ; -   ;Private;Sports Car;62;F;Urban;892
+650;2; 232 ; 155 ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;45;F;Urban;979
+651;1; 416 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;32;F;Urban;673
+652;2; 144 ; 160 ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;42;F;Rural;780
+653;3; 386 ; 240 ; 985 ; -   ; -   ; -   ; -   ;Private;Sports Car;33;F;Urban;906
+654;1; 468 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;43;F;Urban;527
+655;1; 257 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;57;F;Urban;985
+656;1; 471 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;22;F;Urban;950
+657;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;53;M;Urban;584
+658;1; 287 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;43;M;Urban;559
+659;6; 344 ; 277 ; 470 ; 939 ; 747 ; 459 ; -   ;Private;SUV;47;F;Urban;877
+660;3; 371 ; 503 ; 401 ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;44;M;Urban;882
+661;2; 353 ; 496 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;50;M;Urban;777
+662;2; 494 ; 316 ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;48;F;Urban;915
+663;1; 383 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;42;F;Urban;935
+664;3; 655 ; 506 ; 605 ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;51;M;Urban;843
+665;1; 205 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;32;M;Urban;840
+666;3; 301 ; 293 ; 361 ; -   ; -   ; -   ; -   ;Commercial;Pickup;50;M;Rural;875
+667;1; 320 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;52;F;Urban;853
+668;2; 204 ; 662 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;41;M;Rural;991
+669;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;39;F;Rural;654
+670;3; 528 ; 426 ; 426 ; -   ; -   ; -   ; -   ;Commercial;Pickup;27;F;Urban;965
+671;5; 453 ; 1 197 ; 595 ; 359 ; 458 ; -   ; -   ;Commercial;Van;53;M;Urban;783
+672;4; 249 ; 244 ; 434 ; 347 ; -   ; -   ; -   ;Private;SUV;48;F;Urban;928
+673;2; 315 ; 468 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;52;F;Rural;565
+674;1; 620 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;38;M;Urban;877
+675;2; 362 ; 418 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;53;M;Urban;588
+676;1; 195 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sports Car;40;F;Urban;676
+677;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;49;F;Urban;948
+678;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;59;M;Urban;567
+679;1; 304 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;34;F;Rural;542
+680;1; 533 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Van;52;M;Rural;769
+681;2; 325 ; 332 ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;35;F;Urban;660
+682;1; 707 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;46;F;Urban;583
+683;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;56;F;Urban;579
+684;1; 399 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;48;F;Urban;715
+685;2; 348 ; 212 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;36;M;Urban;822
+686;1; 235 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;30;F;Rural;752
+687;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;62;M;Urban;504
+688;1; 433 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;50;M;Urban;534
+689;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;55;M;Urban;667
+690;1; 486 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;52;F;Rural;842
+691;3; 490 ; 568 ; 344 ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;59;M;Urban;842
+692;1; 554 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;33;F;Urban;550
+693;6; 252 ; 705 ; 382 ; 849 ; 227 ; 689 ; -   ;Private;SUV;46;F;Urban;931
+694;2; 309 ; 351 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;46;F;Urban;557
+695;2; 680 ; 402 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;24;F;Urban;860
+696;2; 373 ; 470 ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;55;F;Urban;723
+697;2; 367 ; 392 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;48;M;Urban;620
+698;2; 356 ; 884 ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;42;M;Urban;980
+699;3; 780 ; 589 ; 271 ; -   ; -   ; -   ; -   ;Commercial;Van;50;M;Rural;908
+700;1; 585 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;33;F;Urban;650
+701;3; 363 ; 673 ; 309 ; -   ; -   ; -   ; -   ;Commercial;Sedan;56;F;Urban;522
+702;2; 755 ; 414 ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;49;M;Urban;955
+703;3; 255 ; 604 ; 448 ; -   ; -   ; -   ; -   ;Private;Sports Car;53;F;Rural;653
+704;4; 264 ; 788 ; 305 ; 645 ; -   ; -   ; -   ;Commercial;Pickup;52;M;Urban;576
+705;3; 264 ; 750 ; 438 ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;60;M;Urban;702
+706;1; 644 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;49;M;Urban;743
+707;2; 479 ; 360 ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;21;F;Urban;837
+708;4; 170 ; 304 ; 591 ; 319 ; -   ; -   ; -   ;Private;Sedan;50;M;Urban;523
+709;1; 380 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;30;F;Urban;693
+710;1; 362 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;36;M;Urban;622
+711;1; 634 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;30;M;Rural;981
+712;6; 353 ; 395 ; 723 ; 725 ; 532 ; 232 ; -   ;Private;Pickup;53;M;Urban;634
+713;3; 275 ; 277 ; 259 ; -   ; -   ; -   ; -   ;Private;Sedan;49;M;Urban;865
+714;2; 398 ; 246 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;62;M;Urban;717
+715;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;38;F;Urban;998
+716;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;59;F;Urban;578
+717;4; 202 ; 271 ; 451 ; 384 ; -   ; -   ; -   ;Private;Pickup;53;F;Urban;848
+718;2; 381 ; 241 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;46;M;Urban;566
+719;3; 505 ; 675 ; 232 ; -   ; -   ; -   ; -   ;Commercial;Pickup;30;M;Urban;610
+720;3; 391 ; 372 ; 302 ; -   ; -   ; -   ; -   ;Commercial;Sedan;42;M;Rural;927
+721;1; 372 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;49;M;Urban;851
+722;3; 706 ; 289 ; 199 ; -   ; -   ; -   ; -   ;Private;SUV;57;F;Urban;847
+723;4; 510 ; 466 ; 502 ; 552 ; -   ; -   ; -   ;Commercial;SUV;46;F;Rural;817
+724;1; 366 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;43;M;Urban;640
+725;1; 660 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;50;M;Rural;915
+726;1; 350 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;42;F;Urban;516
+727;1; 372 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;42;F;Urban;786
+728;1; 562 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;48;M;Urban;561
+729;3; 450 ; 594 ; 539 ; -   ; -   ; -   ; -   ;Private;SUV;38;F;Rural;503
+730;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;53;M;Urban;712
+731;4; 194 ; 357 ; 348 ; 312 ; -   ; -   ; -   ;Private;SUV;56;F;Rural;586
+732;1; 466 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;51;F;Urban;833
+733;2; 577 ; 333 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;43;F;Rural;690
+734;1; 341 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;52;M;Urban;907
+735;2; 356 ; 709 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;42;F;Urban;874
+736;1; 411 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;32;F;Urban;920
+737;4; 677 ; 359 ; 441 ; 475 ; -   ; -   ; -   ;Commercial;Pickup;42;M;Urban;820
+738;2; 438 ; 365 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;27;M;Urban;985
+739;2; 323 ; 423 ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;38;F;Rural;843
+740;1; 478 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;46;F;Urban;578
+741;4; 328 ; 347 ; 244 ; 204 ; -   ; -   ; -   ;Commercial;Sedan;38;M;Rural;669
+742;1; 557 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;41;F;Urban;929
+743;5; 756 ; 309 ; 472 ; 416 ; 362 ; -   ; -   ;Commercial;Pickup;41;F;Urban;730
+744;1; 508 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;42;M;Urban;642
+745;1; 865 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;37;M;Urban;756
+746;1; 204 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;26;F;Urban;883
+747;1; 512 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;47;F;Urban;590
+748;3; 372 ; 285 ; 303 ; -   ; -   ; -   ; -   ;Commercial;SUV;44;F;Rural;908
+749;1; 379 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;55;F;Rural;574
+750;2; 315 ; 315 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;39;M;Urban;582
+751;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;56;F;Urban;785
+752;4; 467 ; 214 ; 526 ; 460 ; -   ; -   ; -   ;Private;Sports Car;48;F;Urban;808
+753;1; 406 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;45;F;Urban;657
+754;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;50;F;Urban;634
+755;4; 283 ; 285 ; 647 ; 156 ; -   ; -   ; -   ;Private;Sedan;56;M;Urban;737
+756;2; 367 ; 1 025 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;51;M;Urban;713
+757;2; 622 ; 394 ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;36;F;Urban;823
+758;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;31;M;Urban;510
+759;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;40;M;Urban;508
+760;4; 1 331 ; 755 ; 450 ; 244 ; -   ; -   ; -   ;Private;Sedan;44;M;Urban;749
+761;1; 194 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;54;F;Urban;980
+762;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;33;F;Rural;669
+763;5; 332 ; 290 ; 336 ; 332 ; 436 ; -   ; -   ;Private;Sports Car;54;F;Urban;970
+764;3; 422 ; 308 ; 423 ; -   ; -   ; -   ; -   ;Commercial;Van;40;M;Rural;619
+765;1; 369 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;38;F;Urban;702
+766;2; 797 ; 493 ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;58;M;Urban;934
+767;3; 549 ; 344 ; 285 ; -   ; -   ; -   ; -   ;Private;SUV;42;F;Urban;981
+768;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;43;M;Urban;529
+769;1; 458 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;41;F;Urban;775
+770;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;45;F;Urban;665
+771;2; 534 ; 344 ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;53;M;Urban;937
+772;1; 144 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;53;M;Urban;796
+773;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;30;F;Urban;920
+774;3; 561 ; 554 ; 778 ; -   ; -   ; -   ; -   ;Commercial;Pickup;32;M;Urban;832
+775;3; 689 ; 323 ; 257 ; -   ; -   ; -   ; -   ;Private;Sedan;50;F;Urban;922
+776;2; 336 ; 295 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;42;F;Urban;685
+777;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;42;F;Urban;579
+778;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;41;F;Rural;690
+779;2; 260 ; 459 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;39;F;Urban;918
+780;4; 328 ; 213 ; 348 ; 334 ; -   ; -   ; -   ;Private;Pickup;27;F;Urban;699
+781;1; 414 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;43;M;Urban;712
+782;1; 290 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;45;F;Urban;610
+783;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;43;F;Rural;567
+784;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;33;M;Urban;704
+785;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;48;F;Urban;603
+786;4; 406 ; 392 ; 463 ; 302 ; -   ; -   ; -   ;Private;Pickup;52;M;Urban;618
+787;4; 173 ; 301 ; 469 ; 272 ; -   ; -   ; -   ;Private;SUV;47;F;Urban;727
+788;2; 418 ; 396 ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;55;M;Urban;538
+789;3; 445 ; 314 ; 355 ; -   ; -   ; -   ; -   ;Private;SUV;51;F;Urban;828
+790;2; 425 ; 537 ; -   ; -   ; -   ; -   ; -   ;Private;Van;47;M;Urban;672
+791;1; 365 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;28;M;Urban;650
+792;1; 402 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;51;F;Urban;601
+793;1; 419 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;42;M;Urban;829
+794;4; 681 ; 433 ; 431 ; 543 ; -   ; -   ; -   ;Commercial;Pickup;47;M;Urban;778
+795;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Van;40;M;Urban;639
+796;2; 392 ; 471 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;30;M;Urban;761
+797;2; 371 ; 617 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;53;M;Urban;934
+798;2; 422 ; 811 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;33;F;Urban;931
+799;2; 545 ; 366 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;42;F;Rural;556
+800;2; 370 ; 323 ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;53;M;Urban;671
+801;3; 351 ; 454 ; 284 ; -   ; -   ; -   ; -   ;Commercial;Sedan;43;F;Urban;727
+802;2; 525 ; 217 ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;36;M;Urban;689
+803;5; 680 ; 485 ; 285 ; 688 ; 332 ; -   ; -   ;Private;SUV;38;F;Rural;553
+804;4; 556 ; 302 ; 819 ; 268 ; -   ; -   ; -   ;Private;Sedan;41;F;Rural;694
+805;1; 432 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;38;M;Rural;637
+806;4; 919 ; 178 ; 722 ; 310 ; -   ; -   ; -   ;Private;SUV;36;F;Urban;972
+807;1; 367 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;28;F;Urban;860
+808;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;35;F;Rural;894
+809;4; 721 ; 642 ; 490 ; 147 ; -   ; -   ; -   ;Commercial;Pickup;51;M;Rural;814
+810;1; 259 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;56;M;Rural;742
+811;2; 330 ; 444 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;47;F;Urban;661
+812;1; 274 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;46;F;Urban;599
+813;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;43;M;Urban;762
+814;1; 709 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;53;F;Urban;887
+815;2; 345 ; 609 ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;37;F;Urban;719
+816;2; 999 ; 345 ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;46;F;Urban;932
+817;2; 136 ; 387 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;57;F;Urban;776
+818;2; 408 ; 411 ; -   ; -   ; -   ; -   ; -   ;Private;Van;37;M;Urban;810
+819;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;47;F;Urban;858
+820;1; 273 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;55;F;Urban;975
+821;2; 426 ; 802 ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;50;M;Urban;675
+822;1; 659 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;55;F;Rural;634
+823;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;40;F;Urban;505
+824;2; 625 ; 269 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;47;F;Urban;903
+825;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;37;F;Urban;924
+826;3; 314 ; 382 ; 288 ; -   ; -   ; -   ; -   ;Private;Sedan;34;M;Urban;769
+827;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;44;M;Rural;746
+828;1; 225 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;53;M;Urban;950
+829;2; 616 ; 493 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;37;M;Urban;752
+830;2; 142 ; 544 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;38;M;Urban;705
+831;4; 630 ; 220 ; 365 ; 402 ; -   ; -   ; -   ;Private;SUV;53;F;Urban;712
+832;1; 481 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;56;F;Urban;968
+833;1; 622 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;52;M;Urban;837
+834;1; 255 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;39;M;Urban;829
+835;1; 295 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;58;F;Urban;526
+836;3; 326 ; 441 ; 453 ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;43;M;Urban;534
+837;2; 433 ; 238 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;42;F;Urban;891
+838;2; 402 ; 684 ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;52;F;Rural;711
+839;3; 263 ; 383 ; 596 ; -   ; -   ; -   ; -   ;Private;SUV;45;F;Urban;683
+840;1; 345 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;41;M;Urban;632
+841;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;39;F;Urban;755
+842;2; 507 ; 418 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;47;F;Rural;738
+843;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;46;M;Urban;835
+844;2; 195 ; 220 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;34;F;Urban;895
+845;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;28;M;Urban;500
+846;1; 221 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;37;M;Rural;917
+847;2; 452 ; 358 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;46;F;Urban;612
+848;1; 242 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;30;M;Urban;766
+849;3; 160 ; 320 ; 267 ; -   ; -   ; -   ; -   ;Private;SUV;49;F;Rural;593
+850;2; 437 ; 350 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;46;F;Rural;649
+851;3; 471 ; 409 ; 356 ; -   ; -   ; -   ; -   ;Private;Van;41;M;Urban;921
+852;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;57;F;Urban;523
+853;3; 263 ; 277 ; 460 ; -   ; -   ; -   ; -   ;Private;Sedan;40;F;Urban;621
+854;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;36;F;Rural;810
+855;1; 449 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;47;F;Urban;651
+856;1; 392 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;53;F;Urban;976
+857;4; 646 ; 379 ; 171 ; 232 ; -   ; -   ; -   ;Private;Pickup;39;F;Urban;662
+858;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;28;M;Rural;621
+859;1; 199 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;46;M;Rural;819
+860;4; 512 ; 513 ; 660 ; 401 ; -   ; -   ; -   ;Commercial;Panel Truck;38;M;Urban;963
+861;2; 299 ; 217 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;53;M;Urban;667
+862;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sports Car;48;F;Urban;650
+863;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;53;M;Urban;982
+864;1; 327 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;48;F;Urban;517
+865;1; 950 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;39;F;Urban;557
+866;2; 613 ; 251 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;44;F;Urban;868
+867;1; 785 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;38;F;Urban;908
+868;1; 428 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;30;F;Urban;702
+869;4; 372 ; 518 ; 872 ; 358 ; -   ; -   ; -   ;Commercial;SUV;44;F;Urban;577
+870;2; 454 ; 557 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;44;M;Urban;778
+871;2; 357 ; 475 ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;37;M;Urban;756
+872;2; 180 ; 635 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;24;F;Urban;750
+873;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;44;F;Urban;902
+874;4; 626 ; 1 334 ; 631 ; 532 ; -   ; -   ; -   ;Commercial;Panel Truck;57;M;Urban;730
+875;2; 377 ; 371 ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;52;F;Urban;991
+876;1; 416 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;55;F;Urban;605
+877;1; 551 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;49;M;Urban;820
+878;1; 766 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;54;M;Urban;738
+879;1; 475 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;55;M;Urban;826
+880;2; 409 ; 619 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;41;F;Urban;562
+881;2; 392 ; 397 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;52;F;Urban;537
+882;2; 581 ; 443 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;51;F;Urban;890
+883;2; 444 ; 680 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;51;F;Urban;738
+884;2; 465 ; 964 ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;57;M;Urban;773
+885;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;48;M;Urban;935
+886;2; 238 ; 225 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;48;F;Urban;787
+887;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;48;F;Urban;854
+888;2; 458 ; 933 ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;45;M;Urban;776
+889;1; 387 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;51;F;Urban;717
+890;3; 248 ; 480 ; 424 ; -   ; -   ; -   ; -   ;Private;Sedan;53;M;Urban;518
+891;1; 287 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Van;43;M;Urban;589
+892;2; 464 ; 344 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;46;F;Urban;530
+893;3; 298 ; 305 ; 283 ; -   ; -   ; -   ; -   ;Private;Van;54;M;Urban;759
+894;1; 232 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;31;F;Urban;506
+895;4; 320 ; 328 ; 254 ; 599 ; -   ; -   ; -   ;Commercial;Sports Car;47;F;Rural;773
+896;1; 578 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;51;F;Rural;853
+897;1; 340 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;47;M;Urban;915
+898;1; 686 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;38;M;Rural;786
+899;1; 400 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;55;F;Urban;856
+900;2;-450 ; 30 000 ; -   ; -   ; -   ; -   ; -   ;Private;Panel Truck; 32 ;M;Urban; 735 
+901;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;45;M;Urban;558
+902;2; 381 ; 362 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;52;F;Rural;815
+903;2; 329 ; 354 ; -   ; -   ; -   ; -   ; -   ;Private;Van;48;F;Urban;957
+904;1; 229 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;50;M;Urban;789
+905;3; 289 ; 594 ; 678 ; -   ; -   ; -   ; -   ;Private;SUV;41;F;Urban;900
+906;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;47;F;Urban;993
+907;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;27;F;Rural;557
+908;4; 216 ; 233 ; 489 ; 779 ; -   ; -   ; -   ;Commercial;Panel Truck;42;M;Urban;628
+909;1; 408 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;42;F;Urban;507
+910;1; 1 092 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;25;M;Rural;790
+911;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;32;M;Urban;888
+912;3; 604 ; 531 ; 388 ; -   ; -   ; -   ; -   ;Private;Sedan;34;F;Urban;846
+913;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;46;F;Urban;947
+914;7; 615 ; 241 ; 468 ; 228 ; 432 ; 154 ; 679 ;Private;SUV;36;F;Urban;695
+915;1; 236 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;44;F;Rural;566
+916;2; 376 ; 247 ; -   ; -   ; -   ; -   ; -   ;Private;Van;49;M;Urban;948
+917;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;41;F;Urban;733
+918;3; 476 ; 384 ; 162 ; -   ; -   ; -   ; -   ;Private;Sedan;46;F;Urban;518
+919;3; 436 ; 816 ; 464 ; -   ; -   ; -   ; -   ;Private;SUV;54;F;Urban;875
+920;2; 417 ; 211 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;46;F;Urban;983
+921;2; 400 ; 586 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;46;F;Urban;989
+922;3; 653 ; 261 ; 529 ; -   ; -   ; -   ; -   ;Commercial;Van;40;M;Rural;510
+923;4; 215 ; 260 ; 356 ; 490 ; -   ; -   ; -   ;Private;Sports Car;50;F;Urban;825
+924;3; 642 ; 773 ; 547 ; -   ; -   ; -   ; -   ;Private;Sports Car;43;F;Urban;949
+925;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;33;F;Urban;801
+926;1; 346 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;45;M;Urban;581
+927;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;36;M;Rural;777
+928;3; 324 ; 215 ; 348 ; -   ; -   ; -   ; -   ;Commercial;Van;50;M;Urban;655
+929;2; 231 ; 395 ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;47;M;Urban;694
+930;5; 299 ; 639 ; 356 ; 743 ; 351 ; -   ; -   ;Private;Sedan;44;F;Urban;1000
+931;1; 345 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;46;M;Urban;589
+932;1; 541 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;35;F;Urban;656
+933;1; 365 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;47;M;Urban;843
+934;1; 657 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;59;M;Rural;537
+935;5; 130 ; 349 ; 485 ; 195 ; 354 ; -   ; -   ;Private;SUV;37;F;Urban;709
+936;1; 334 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;41;F;Urban;556
+937;3; 269 ; 290 ; 533 ; -   ; -   ; -   ; -   ;Private;SUV;43;F;Urban;632
+938;5; 590 ; 241 ; 493 ; 653 ; 356 ; -   ; -   ;Private;Sedan;30;M;Urban;514
+939;1; 229 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;46;F;Urban;568
+940;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;56;F;Urban;645
+941;2; 473 ; 438 ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;43;M;Urban;612
+942;2; 610 ; 438 ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;50;F;Urban;903
+943;1; 475 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;40;M;Urban;863
+944;2; 509 ; 553 ; -   ; -   ; -   ; -   ; -   ;Private;Van;49;M;Urban;570
+945;3; 635 ; 405 ; 271 ; -   ; -   ; -   ; -   ;Commercial;Van;40;F;Urban;723
+946;1; 822 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;51;M;Rural;720
+947;3; 553 ; 388 ; 684 ; -   ; -   ; -   ; -   ;Commercial;SUV;40;F;Rural;782
+948;1; 828 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;38;F;Urban;682
+949;1; 514 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;33;M;Urban;869
+950;4; 446 ; 563 ; 468 ; 843 ; -   ; -   ; -   ;Commercial;Sedan;36;F;Urban;956
+951;2; 288 ; 273 ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;37;M;Urban;980
+952;1; 296 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;35;F;Urban;516
+953;1; 417 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;26;F;Rural;775
+954;2; 519 ; 208 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;42;F;Urban;832
+955;5; 311 ; 384 ; 368 ; 357 ; 390 ; -   ; -   ;Private;SUV;35;F;Urban;581
+956;1; 510 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;55;F;Urban;940
+957;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;48;M;Urban;676
+958;2; 442 ; 335 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;49;F;Urban;704
+959;2; 213 ; 471 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;37;F;Urban;553
+960;1; 280 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;48;M;Urban;803
+961;1; 321 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;30;M;Rural;558
+962;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;55;F;Rural;907
+963;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Van;43;M;Urban;851
+964;2; 342 ; 376 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;62;M;Urban;559
+965;5; 259 ; 721 ; 345 ; 301 ; 564 ; -   ; -   ;Commercial;Pickup;42;M;Rural;860
+966;1; 375 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;54;F;Rural;708
+967;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;47;M;Urban;941
+968;4; 471 ; 510 ; 412 ; 256 ; -   ; -   ; -   ;Commercial;Van;36;M;Urban;938
+969;2; 213 ; 628 ; -   ; -   ; -   ; -   ; -   ;Commercial;Sedan;44;F;Urban;850
+970;2; 367 ; 789 ; -   ; -   ; -   ; -   ; -   ;Commercial;Pickup;39;M;Urban;681
+971;3; 235 ; 390 ; 765 ; -   ; -   ; -   ; -   ;Private;Sedan;48;M;Urban;704
+972;1; 430 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;31;M;Urban;678
+973;1; 248 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;40;F;Urban;980
+974;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;40;M;Urban;641
+975;5; 492 ; 421 ; 381 ; 704 ; 290 ; -   ; -   ;Private;SUV;39;F;Rural;788
+976;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;33;F;Urban;638
+977;2; 580 ; 445 ; -   ; -   ; -   ; -   ; -   ;Private;SUV;37;F;Urban;608
+978;4; 781 ; 484 ; 456 ; 431 ; -   ; -   ; -   ;Private;Sedan;51;M;Urban;703
+979;2; 288 ; 754 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;35;M;Urban;506
+980;3; 287 ; 496 ; 429 ; -   ; -   ; -   ; -   ;Commercial;Sedan;54;F;Rural;658
+981;2; 338 ; 374 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;36;M;Rural;1000
+982;5; 605 ; 455 ; 440 ; 251 ; 589 ; -   ; -   ;Private;SUV;48;F;Urban;509
+983;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;53;F;Urban;842
+984;2; 239 ; 641 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;38;M;Urban;1000
+985;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Van;48;M;Rural;900
+986;2; 262 ; 406 ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;41;M;Urban;537
+987;2; 417 ; 237 ; -   ; -   ; -   ; -   ; -   ;Private;Pickup;44;M;Urban;804
+988;1; 386 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;48;M;Urban;762
+989;1; 343 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;38;F;Urban;596
+990;1; 500 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;SUV;32;F;Urban;975
+991;2; 789 ; 573 ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;45;F;Urban;819
+992;1; 721 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;25;M;Rural;834
+993;0; -   ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;SUV;48;F;Urban;677
+994;1; 234 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;30;F;Rural;501
+995;1; 447 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;46;M;Urban;679
+996;1; 436 ; -   ; -   ; -   ; -   ; -   ; -   ;Private;Sedan;36;M;Urban;845
+997;2; 290 ; 342 ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;45;F;Urban;902
+998;2; 307 ; 595 ; -   ; -   ; -   ; -   ; -   ;Private;Sports Car;41;F;Rural;779
+999;1; 637 ; -   ; -   ; -   ; -   ; -   ; -   ;Commercial;Panel Truck;43;M;Urban;632
+1000;3; 414 ; 345 ; 466 ; -   ; -   ; -   ; -   ;Private;Sedan;28;M;Rural;964
+1001;3; 309 ; 499 ; 324 ; -   ; -   ; -   ; -   ;Private;SUV;53;F;Urban;929
+1002;3; 361 ; 697 ; 324 ; -   ; -   ; -   ; -   ;Commercial;Pickup;47;M;Rural;897
