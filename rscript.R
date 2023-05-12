@@ -1,19 +1,40 @@
 ############################################################################################################################
 ####################################################### Read libraries #####################################################
 ############################################################################################################################
+library(readr)
 library(magrittr)
+library(dplyr)
 
 
 
 ############################################################################################################################
 #################################################### Read and store data ###################################################
 ############################################################################################################################
-data <-read.csv(file = "DATA_SET_8.csv",sep = ";") %>% as.data.frame()
+
+data_orig <-read.csv(file = "DATA_SET_8.csv",sep = ";",encoding = "ASCII") %>%
+  as.data.frame() # specify encodeing to use regex
+
+#Always keep original data as is.
+data <- data_orig
+rm(data) #memory management
+############################################################################################################################
+#################################################### Function Definitions ##################################################
+############################################################################################################################
+# Check whether number of claims matches the number of row entries.
+
+pdf_poisson <- function(lambda,x){
+  return(lambda^x * exp(-lambda) / factorial((x)))
+}
+
+
+
+
+
 
 
 
 ############################################################################################################################
-#################################################### Data Exploration ######################################################
+################################################# Data Quality Check #######################################################
 ############################################################################################################################
 #Read data types
 for(col in colnames(data)){
@@ -35,34 +56,121 @@ for(col in colnames(data)){
 #[14] "character"
 #[15] "double"
 
-
-# Char data types should be numeric
-for(i in 2:7){
-  data[,i] <- as.double(data[,i])
+##Careful conversion from string to numeric
+#Count data amount in the columns to be converted
+missing_data_count <- c() # To be used for validation after conversion
+for(i in 3:9){
+  counter <- 0
+  for(j in 1:nrow(data)){
+    if(is.na(data[j,i])){
+      counter= counter + 1
+    }
+    missing_data_count[i-2] <- counter
+  }
 }
+#Result: No missing data
+
+#Use regex to remove potential white spaces.
+for(i in 3:9){
+    data[,i] <- gsub("\\s+", "", data[,i])
+}
+
+#Count data amount in the columns to be converted
+zero_data_count <- c() # To be used for validation after conversion
+for(i in 3:9){
+  counter = 0
+  for(j in 1:nrow(data)){
+    if(data[j,i]=="-"){
+      data[j,i]<-"0" #to make-sure conversion went correctly without NA coercion
+      counter= counter + 1
+    }
+  }
+  zero_data_count[i-2] <- counter
+}
+
+#Convert to numeric
+for(i in 3:9){
+    data[i] <- as.double(data[[i]])
+}
+
+
+zero_data_count_after_conversion <- c() # To be used for validation after conversion
+for(i in 3:9){
+  counter_2 = 0
+  for(j in 1:nrow(data)){
+    if(data[j,i]==0){
+      counter_2= counter_2 + 1
+    }
+    zero_data_count_after_conversion[i-2] <- counter_2
+  }
+  counter_2 <- 0
+}
+# zero data count matches
+# check correct conversion of -ve values
+data[3][data[3]<0] #still exist
+#check greater than 3 digit values
+data[4][data[4]>999]
+
+
+# Analyse negative values
+negative_value_indices <- rep(FALSE,nrow(data))
+for(i in 3:9){
+  for(j in 1:nrow(data)){
+    if(data[j,i]<0){
+      negative_value_indices[j] <- TRUE
+    }
+  }
+}
+dplyr::filter(data,negative_value_indices)
+#Result: We decided on excluding two policies with -ve CLM_AMT_1 values
+data <- dplyr::filter(data,!negative_value_indices)
+
+
+
+
+
+############################################################################################################################
+################################################### Data Exploration #######################################################
+############################################################################################################################
+
 
 # Get summary of the data
 summary(data)
 
-features_cat <- c(  'CLM_AMT_6',
-                    'CLM_AMT_7',
-                    'CAR_USE',
+features_cat <- c(  'CAR_USE',
                     'CAR_TYPE',
                     'GENDER',
                     'AREA')
 
-features_num <- c(  'CLM_FREQ',
-                    'CLM_AMT_1',
+features_num <- c(  'CLM_AMT_1',
                     'CLM_AMT_2',
                     'CLM_AMT_3',
                     'CLM_AMT_4',
                     'CLM_AMT_5',
+                    'CLM_AMT_6',
+                    'CLM_AMT_7',
                     'Age')
 
-target <- "PREMIUM"
 
 
+############################################################################################################################
+#################################################### Q1 Check Poisson ######################################################
+############################################################################################################################
 
+#We check the expected number of claims per policy
+#N~Poi(lambda_hat)
+
+
+#Maximum likelihood Estimator for poisson case to estimate lambda
+lambda_hat <- 1/length(data$CLM_FREQ) * sum(data$CLM_FREQ)
+
+
+claims <- data$CLM_FREQ
+hist(claims, breaks = 30, freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
+#overlay density
+x <- seq(0,10,length.out = 1000)
+y <- pdf_poisson(lambda_hat,x)
+lines(x,y)
 
 
 
