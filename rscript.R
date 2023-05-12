@@ -4,6 +4,7 @@
 library(readr)
 library(magrittr)
 library(dplyr)
+library(ggplot2)
 
 
 
@@ -127,8 +128,6 @@ data <- dplyr::filter(data,!negative_value_indices)
 
 
 
-
-
 ############################################################################################################################
 ################################################### Data Exploration #######################################################
 ############################################################################################################################
@@ -142,15 +141,45 @@ features_cat <- c(  'CAR_USE',
                     'GENDER',
                     'AREA')
 
-features_num <- c(  'CLM_AMT_1',
+# convert to factors for plotting
+for (v in features_cat) {
+  data[,v] <- as.factor(data[,v])
+}
+
+
+features_int <- 'Age'
+
+
+claims_amounts <- c('CLM_AMT_1',
                     'CLM_AMT_2',
                     'CLM_AMT_3',
                     'CLM_AMT_4',
                     'CLM_AMT_5',
                     'CLM_AMT_6',
-                    'CLM_AMT_7',
-                    'Age')
+                    'CLM_AMT_7')
 
+
+
+for (f in features_cat) {
+  plot(data[,f], main=f, xlab='', las=2,col=data$CLM_FREQ)
+  grid()
+}
+# Results: (%-wise)
+# Rural has higher impact on the number of claims
+# Being Female has higher impact on the number of claims
+# Panel truck has higher impact on the number of claims
+# Commercial car use has higher impact on the number of claims
+
+
+for (f in claims_amounts) {
+  plot(data[,f], main=f, xlab='' ,las=2,col=data$CLM_FREQ)
+  grid()
+}
+#CLM_AMT_6 and CLM_AMT_7 rare occurrence
+
+
+plot(data$CLM_FREQ, data$AGE, main='Age', xlab='',las = 2)
+grid()
 
 
 ############################################################################################################################
