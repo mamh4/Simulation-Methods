@@ -1,10 +1,11 @@
 ############################################################################################################################
 ####################################################### Read libraries #####################################################
 ############################################################################################################################
-library(readr)
-library(magrittr)
-library(dplyr)
-library(ggplot2)
+library(readr) # Check encoding
+library(magrittr) # Pipe operator
+library(dplyr) # data wrangling
+library(purrr) # efficient one liner pattern-matching
+library(ggplot2) # additional graphics
 
 
 
@@ -17,17 +18,51 @@ data_orig <-read.csv(file = "DATA_SET_8.csv",sep = ";",encoding = "ASCII") %>%
 
 #Always keep original data as is.
 data <- data_orig
-rm(data) #memory management
+rm(data_orig) #memory management
 ############################################################################################################################
 #################################################### Function Definitions ##################################################
 ############################################################################################################################
 # Check whether number of claims matches the number of row entries.
 
+# In the end store data here
+############################################## Prototype ##################################################################
+models <- list( claim_freq_models = list (
+                                            poisson = list(
+                                                            pdf = function(lambda,x){
+                                                              return(lambda^x * exp(-lambda) / factorial((x)))}
+                                                            random_poisson = "to be defined",
+                                                            hist,
+                                                            lines),
+                                            
+                                            negative_binomial = list(
+                                                            pdf = function(){return(3)}
+                                            )),
+                claim_severity_models = list (
+                                            exponential = list(
+                                                          pdf = function(lambda,x){
+                                                            return(lambda *exp(-x*lambda))}),
+                                            gamma = list(
+                                                          pdf = function(){})
+                                            )
+                                            )
+
+##########################################################################################################################
+
+
 pdf_poisson <- function(lambda,x){
   return(lambda^x * exp(-lambda) / factorial((x)))
 }
 
+pdf_exponential <- function(lambda,x){
+  return(lambda *exp(-x*lambda))
+}
 
+#Our Own RNG? function?
+
+# TODO 
+random_poisson <- function(normal_vector){
+  
+}
 
 
 
@@ -50,8 +85,8 @@ for(col in colnames(data)){
 #[7] "character"  => should be numeric
 #[8] "character"  => should be numeric
 #[9] "character"  => should be numeric
-#[10] "character"
-#[11] "character"
+#[10] "character" => should be numeric
+#[11] "character" => should be numeric
 #[12] "double"
 #[13] "character"
 #[14] "character"
@@ -198,7 +233,43 @@ claims <- data$CLM_FREQ
 hist(claims, breaks = 30, freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
 #overlay density
 x <- seq(0,10,length.out = 1000)
-y <- pdf_poisson(lambda_hat,x)
+y <- pdf_poisson(lambda_hat,x) #Theoretical Distribution
+lines(x,y)
+
+
+#Monte Carlo Estimator with the same parameter lambda
+
+
+#Mixed Poisson Approach N follows  LAMBDA which it self follows Poi(lambda_hat)?
+
+############################################################################################################################
+############################################# Q1 Check Negative binomial ###################################################
+############################################################################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+############################################################################################################################
+############################################# Q2 Check Exponential #########################################################
+############################################################################################################################
+
+claim_size_vector <- apply(data[,3:9],1 ,sum)
+
+hist(claim_size_vector,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
+x <- seq(0,3500,length.out = 1000)
+
+#Maximum Likelihood Estimator
+lambda_hat <- 1 / (1/nrow(data) * sum(claim_size_vector))
+y <- pdf_exponential(lambda_hat,x) #Theoretical Distribution
 lines(x,y)
 
 
