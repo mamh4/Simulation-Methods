@@ -35,17 +35,24 @@ rm(data_orig) #memory management
 #                                                             lines),
 #                                             
 #                                             negative_binomial = list(
-#                                                             pdf = function(){return(3)}
+#                                                             pdf = function(r, p, k){return(choose((k+r-1),k) * p^r * (1-p)^k)}
 #                                             )),
 #                 claim_severity_models = list (
 #                                             exponential = list(
 #                                                           pdf = function(lambda,x){
 #                                                             return(lambda *exp(-x*lambda))}),
 #                                             gamma = list(
-#                                                           pdf = function(){})
-#                                             )
-#                 )
-#                                             
+#                                                           pdf = function(alpha, lamba, x ){
+#                                                             #no idea if the following works 
+#                                                             if (x < 0) 
+#                                                               {return(0.0) } 
+#                                                             else 
+#                                                               #needs gamma function 
+#                                                               {return(lambda * exp(- lambda * x )*(lambda*x)^(alpha -1 )/1 )}
+#                                                           }
+#                                             ),
+#                                             ))
+
 ##########################################################################################################################
 
 
@@ -254,10 +261,6 @@ lines(x,y)
 #Hi Mohamed this is some change I am doing
 
 
-
-
-
-
 ############################################################################################################################
 ############################################# Q2 Check Exponential #########################################################
 ############################################################################################################################
@@ -272,5 +275,7 @@ lambda_hat <- 1 / (1/nrow(data) * sum(claim_size_vector))
 y <- pdf_exponential(lambda_hat,x) #Theoretical Distribution
 lines(x,y)
 
+
+#tonia
 
 
