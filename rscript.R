@@ -55,7 +55,6 @@ rm(data_orig) #memory management
 
 ##########################################################################################################################
 
-
 pdf_poisson <- function(lambda,x){
   return(lambda^x * exp(-lambda) / factorial((x)))
 }
@@ -84,7 +83,16 @@ poisson_simulation <- function(lambda, size){
   return (simulated_poisson)
 }
 
-
+exponential_simulation <- function(lambda, size){
+  simulated_exponential <- rep(0, size)
+  for (i in 1:size){
+    initial_random_number <- runif(1,0,1)
+    single_simulated_exponential <- - log(1 - initial_random_number )/lambda
+    #given by inversion method
+    simulated_exponential[i] <- single_simulated_exponential
+  }
+  return (simulated_exponential)
+}
 
 
 
@@ -315,20 +323,33 @@ chisq.test(empirical_pdf,theoretical_pdf)
 
 claim_size_vector <- apply(data[,3:9],1 ,sum)
 
-hist(claim_size_vector,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
+claim_size_vector_ecxl_zero <- claim_size_vector[claim_size_vector>0]
+
+hist(claim_size_vector_ecxl_zero,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
 x <- seq(0,3500,length.out = 1000)
 
 #Maximum Likelihood Estimator
-lambda_hat <- 1 / (1/nrow(data) * sum(claim_size_vector))
+lambda_hat <- 1 / (1/length((claim_size_vector_ecxl_zero)) * sum(claim_size_vector_ecxl_zero))
 y <- pdf_exponential(lambda_hat,x) #Theoretical Distribution
 lines(x,y)
 
 
 ## Test whether exponential is a good model.
 
+exponential_simulation(lambda_hat,length(claim_size_vector_ecxl_zero))
+
+qqplot(claim_size_vector,exponential_simulation(lambda_hat,length(claim_size_vector_ecxl_zero)))
 
 
 
 
+
+
+
+
+
+############################################################################################################################
+############################################ Q3 Monte Carlo Poisson ########################################################
+############################################################################################################################
 
 
