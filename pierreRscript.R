@@ -59,5 +59,8 @@ sample_variance <- function(random_vector){
   }
 }
 
-
+theoretical_poisson <- function(lambda, k){
+  return (exp(-lambda ) * lambda^k / factorial(k )  ) 
+}
+#gen for 0 to 7 with our lambda then take 1- sum of previous for final category (0 observations, values of 8 and above ) 
 
