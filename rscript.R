@@ -26,26 +26,26 @@ rm(data_orig) #memory management
 
 # In the end store data here
 ############################################## Prototype ##################################################################
-models <- list( claim_freq_models = list (
-                                            poisson = list(
-                                                            pdf = function(lambda,x){
-                                                              return(lambda^x * exp(-lambda) / factorial((x)))}
-                                                            random_poisson = "to be defined",
-                                                            hist,
-                                                            lines),
-                                            
-                                            negative_binomial = list(
-                                                            pdf = function(){return(3)}
-                                            )),
-                claim_severity_models = list (
-                                            exponential = list(
-                                                          pdf = function(lambda,x){
-                                                            return(lambda *exp(-x*lambda))}),
-                                            gamma = list(
-                                                          pdf = function(){})
-                                            )
-                                            )
-
+# models <- list( claim_freq_models = list (
+#                                             poisson = list(
+#                                                             pdf = function(lambda,x){
+#                                                               return(lambda^x * exp(-lambda) / factorial((x)))}
+#                                                             random_poisson = "to be defined",
+#                                                             hist,
+#                                                             lines),
+#                                             
+#                                             negative_binomial = list(
+#                                                             pdf = function(){return(3)}
+#                                             )),
+#                 claim_severity_models = list (
+#                                             exponential = list(
+#                                                           pdf = function(lambda,x){
+#                                                             return(lambda *exp(-x*lambda))}),
+#                                             gamma = list(
+#                                                           pdf = function(){})
+#                                             )
+#                 )
+#                                             
 ##########################################################################################################################
 
 
