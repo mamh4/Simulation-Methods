@@ -64,3 +64,17 @@ theoretical_poisson <- function(lambda, k){
 }
 #gen for 0 to 7 with our lambda then take 1- sum of previous for final category (0 observations, values of 8 and above ) 
 
+#negative binomial with parameters r p 
+# p estimator -> var / e 
+# r estimator -> e * p / (1 - p ) 
+
+negativeBinomialPEstimator <- function(random_vector){
+  return(sample_variance(random_vector ) / sample_mean(random_vector )) 
+}
+
+negativeBinomialREstimator <- function(random_vector){
+  p <- negativeBinomialPEstimator(random_vector)
+  return(sample_mean(random_vector )*p/(1-p)) 
+}
+
+
