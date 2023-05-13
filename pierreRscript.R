@@ -21,4 +21,16 @@ poisson_simulation <- function(lambda, size){
   return (simulated_poisson)
 }
 
+exponential_simulation <- function(lambda, size){
+  simulated_exponential <- rep(0, size)
+  for (i in 1:size){
+    initial_random_number <- runif(1,0,1)
+    single_simulated_exponential <- - log(1 - initial_random_number )/lambda
+    #given by inversion method
+    simulated_exponential[i] <- single_simulated_exponential
+  }
+  return (simulated_exponential)
+}
+
+
 
