@@ -50,7 +50,7 @@ models <- list( claim_freq_models = list (
                                                               #needs gamma function 
                                                               {return(lambda * exp(- lambda * x )*(lambda*x)^(alpha -1 )/1 )}
                                                           }
-                                            )
+                                            ),
                                             )
 
 ##########################################################################################################################
