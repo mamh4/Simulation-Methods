@@ -66,9 +66,22 @@ pdf_exponential <- function(lambda,x){
 
 #Our Own RNG? function?
 
-# TODO 
-random_poisson <- function(normal_vector){
-  
+poisson_simulation <- function(lambda, size){
+  simulated_poisson <- rep(0, size)
+  for (i in 1:size){
+    sum_of_exponentials <- 0.0 
+    counter <- 0 
+    while (! (sum_of_exponentials > lambda )) {
+      initial_random_number <- runif(1,0,1) 
+      #length 1 lower bound 0 upper bound 1 
+      simulated_exponential <- - log(1 - initial_random_number ) 
+      #given by inversion method for parameter = 1 
+      sum_of_exponentials <- sum_of_exponentials + simulated_exponential
+      counter <- counter + 1 
+    }
+    simulated_poisson[i] <- counter -1
+  }
+  return (simulated_poisson)
 }
 
 
@@ -236,18 +249,45 @@ grid()
 lambda_hat <- 1/length(data$CLM_FREQ) * sum(data$CLM_FREQ)
 
 
-claims <- data$CLM_FREQ
-hist(claims, breaks = 30, freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
+hist(data$CLM_FREQ, breaks = 30, freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
 #overlay density
 x <- seq(0,10,length.out = 1000)
 y <- pdf_poisson(lambda_hat,x) #Theoretical Distribution
 lines(x,y)
 
+#Check whether poisson is a good model
+hist(poisson_simulation(lambda_hat,size = 1000), breaks = 30, freq = FALSE, main = "Empirical Histogram with Simulated Histogram")
+ks.test(data$CLM_FREQ, poisson_simulation(lambda_hat,size = 1000))
+chisq.test(data$CLM_FREQ,poisson_simulation(lambda_hat,size = 1000))
 
-#Monte Carlo Estimator with the same parameter lambda
+pval_vector<- c()
+for(i in 1:1000){
+  pval_vector[i] <- ks.test(data$CLM_FREQ,poisson_simulation(lambda_hat,size = 1000))$p.val
+}
+
+#Test against cdf
+x <- data$CLM_FREQ
+
+# Compute the empirical cumulative distribution function
+empirical_pdf <- rep(0,9)
+theoretical_pdf <- c(0,9)
+for(i in 1:8){
+  theoretical_pdf[i] <- poisson_pdf(i-1,lambda_hat)
+}
+theoretical_pdf[9] <- 1-sum(theoretical_pdf[1:8])
+
+for(i in 1:8){
+  empirical_pdf[i] <- table(data$CLM_FREQ)[i] / sum(data$CLM_FREQ)
+}
+empirical_pdf[9] <- 0
+
+
+chisq.test(empirical_pdf,theoretical_pdf)
+
 
 
 #Mixed Poisson Approach N follows  LAMBDA which it self follows Poi(lambda_hat)?
+
 
 ############################################################################################################################
 ############################################# Q1 Check Negative binomial ###################################################
@@ -257,8 +297,16 @@ lines(x,y)
 
 
 
+############################################################################################################################
+############################################# Q1 Check Mixed Poisson #######################################################
+############################################################################################################################
 
-#Hi Mohamed this is some change I am doing
+
+
+
+
+
+
 
 
 ############################################################################################################################
@@ -274,6 +322,13 @@ x <- seq(0,3500,length.out = 1000)
 lambda_hat <- 1 / (1/nrow(data) * sum(claim_size_vector))
 y <- pdf_exponential(lambda_hat,x) #Theoretical Distribution
 lines(x,y)
+
+
+## Test whether exponential is a good model.
+
+
+
+
 
 
 
