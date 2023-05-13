@@ -11,7 +11,7 @@ poisson_simulation <- function(lambda, size){
     while (! (sum_of_exponentials > lambda )) {
       initial_random_number <- runif(1,0,1) 
       #length 1 lower bound 0 upper bound 1 
-      simulated_exponential <- - log(1 - initial_random_number ) 
+      simulated_exponential <- -log(1 - initial_random_number ) 
       #given by inversion method for parameter = 1 
       sum_of_exponentials <- sum_of_exponentials + simulated_exponential
       counter <- counter + 1 
@@ -30,6 +30,33 @@ exponential_simulation <- function(lambda, size){
     simulated_exponential[i] <- single_simulated_exponential
   }
   return (simulated_exponential)
+}
+
+sample_mean <- function(random_vector){
+  sum <- 0 
+  for (i in 1:length(random_vector)){
+    sum <- sum + random_vector[i]
+  }
+  if (length(random_vector) == 0 ){
+    return (0)
+  } 
+  else {
+    return (sum/length(random_vector)) 
+  }
+}
+
+sample_variance <- function(random_vector){
+  sum <- 0 
+  sample_mean <- sample_mean(random_vector)
+  for (i in 1:length(random_vector)){
+    sum <- sum + (random_vector[i] - sample_mean)^2
+  }
+  if (length(random_vector)>1){
+    return (sum / (length(random_vector) - 1) ) 
+  }
+  else {
+    return (0) 
+  }
 }
 
 
