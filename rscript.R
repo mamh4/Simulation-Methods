@@ -276,6 +276,4 @@ y <- pdf_exponential(lambda_hat,x) #Theoretical Distribution
 lines(x,y)
 
 
-#tonia
-
 
