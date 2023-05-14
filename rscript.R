@@ -54,7 +54,7 @@ rm(data_orig) #memory management
 #                                             ))
 
 ##########################################################################################################################
-
+##perhaps remove
 pdf_poisson <- function(lambda,x){
   return(lambda^x * exp(-lambda) / factorial((x)))
 }
@@ -62,10 +62,10 @@ pdf_poisson <- function(lambda,x){
 pdf_exponential <- function(lambda,x){
   return(lambda *exp(-x*lambda))
 }
-
+##unitel here
 #Our Own RNG? function?
 
-poisson_simulation <- function(lambda, size){
+simulate_poisson <- function(lambda, size){
   simulated_poisson <- rep(0, size)
   for (i in 1:size){
     sum_of_exponentials <- 0.0 
@@ -83,7 +83,7 @@ poisson_simulation <- function(lambda, size){
   return (simulated_poisson)
 }
 
-exponential_simulation <- function(lambda, size){
+simulate_exponential <- function(lambda, size){
   simulated_exponential <- rep(0, size)
   for (i in 1:size){
     initial_random_number <- runif(1,0,1)
@@ -94,7 +94,7 @@ exponential_simulation <- function(lambda, size){
   return (simulated_exponential)
 }
 
-
+simulate_gamma <- function(shape,scale,size){}
 
 
 ############################################################################################################################
@@ -251,105 +251,65 @@ grid()
 
 
 #################################################### Q1 Check Poisson ######################################################
-#We check the expected number of claims per policy
-#N~Poi(lambda_hat)
+#Here we assume that the number of claims follows a poisson distribution. We apply the maximum likelihood method to obtain
+#an estimator for the poisson parameter lambda.
 
 
 #Maximum likelihood Estimator for poisson case to estimate lambda
 lambda_hat <- 1/length(data$CLM_FREQ) * sum(data$CLM_FREQ)
 
-
+#Here we plot a histogram of our claim frequency data against the theoretical pdf of parameter lambda hat.
 hist(data$CLM_FREQ, breaks = 30, freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
 #overlay density
 x <- seq(0,10,length.out = 1000)
 y <- pdf_poisson(lambda_hat,x) #Theoretical Distribution
 lines(x,y)
 
-#Check whether poisson is a good model
-hist(poisson_simulation(lambda_hat,size = 1000), breaks = 30, freq = FALSE, main = "Empirical Histogram with Simulated Histogram")
 
-pval_vector<- c()
-for(i in 1:1000){
-  pval_vector[i] <- ks.test(data$CLM_FREQ,poisson_simulation(lambda_hat,size = 1000))$p.val
-}
-
-#Test against theoretical pdf
-
-
-# Compute the empirical cumulative distribution function
+#Result: Graphically poisson seems to be a good model, to quantify how good of a fit it is we test it agains a theoretical pdf.
+# To make the pdfs comparable we will discetise the theoretical pdf to make them "comparable".
 empirical_pdf <- rep(0,9)
+for(i in 1:8){
+  empirical_pdf[i] <- table(data$CLM_FREQ)[i] / sum(data$CLM_FREQ)
+}
 theoretical_pdf <- c(0,9)
 for(i in 1:8){
   theoretical_pdf[i] <- poisson_pdf(i-1,lambda_hat)
 }
 theoretical_pdf[9] <- 1-sum(theoretical_pdf[1:8])
 
-for(i in 1:8){
-  empirical_pdf[i] <- table(data$CLM_FREQ)[i] / sum(data$CLM_FREQ)
-}
-empirical_pdf[9] <- 0
-
-
+#We now have two comparable vectors. We test them using Chi-squared test.
 chisq.test(empirical_pdf,theoretical_pdf)
 
 
-### To do:
 
-simulated_pdfs <- vector(mode = "list", length = 1000)
-for(i in seq_along(simulated_pdfs)) {
-  simulated_pdfs[[i]] <- vector(mode = "list", length = 9)
-}
-
-generate_random_comparable_poisson <- function(lambda){
-  
-  my_poisson_simulation <- poisson_simulation(lambda,1000)
-
-
-  random_vector <- c()
-  
-  for (i in 1:8) {
-    prob <- table(my_poisson_simulation)[as.character(i-1)] / 1000
-    if (is.na(prob)) {
-      random_vector[i] <- 0
-    } else {
-      random_vector[i] <- prob
-    }
-      
-  }
-  random_vector[9] <- 1- sum(random_vector[1:8])
-  return(random_vector)    
-}
-  
-
-
-for(i in 1:1000){
-    simulated_pdfs[[i]] <- generate_random_comparable_poisson(lambda_hat)##issue here
-}
-
-pval_vector <- c()
-for(i in 1:1000){
-  pval_vector[i] <- chisq.test(simulated_pdfs[[i]],empirical_pdf)$p.val
-}
-  
 
 
 
 #Mixed Poisson Approach N follows  LAMBDA which it self follows Poi(lambda_hat)?
 
 
-############################################################################################################################
 ############################################# Q1 Check Negative binomial ###################################################
-############################################################################################################################
+
+#MME Estimator
+r_hat <- mean(data$CLM_FREQ)^2 / (var(data$CLM_FREQ) - mean(data$CLM_FREQ)) ###Rubbish
+p_hat <- 1- (mean(data$CLM_FREQ ) / var(data$CLM_FREQ )) ##Rubbish
+
+#Here we plot a histogram of our claim frequency data against the theoretical pdf of parameter p_hat and r_hat.
+hist(data$CLM_FREQ, breaks = 30, freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
+#overlay density
+x <- seq(0,10,length.out = 11)
+y <- dnbinom(x,size = r_hat,prob = p_hat) #Theoretical Distribution
+lines(x,y)
 
 
 
-
-
-############################################################################################################################
-############################################# Q1 Check Mixed Poisson #######################################################
-############################################################################################################################
-
-
+#To make the pdf comparable, we discretise and apply the chi.sq test
+theoretical_pdf <- c(0,9)
+for(i in 1:8){
+  theoretical_pdf[i] <- dnbinom(x=i-1 , size = r_hat, prob = p_hat)
+}
+theoretical_pdf[9] <- 1-sum(theoretical_pdf[1:8])
 
 
 
@@ -378,13 +338,30 @@ lines(x,y)
 
 ## Test whether exponential is a good model.
 
-exponential_simulation(lambda_hat,length(claim_size_vector_ecxl_zero))
+simulate_exponential(lambda_hat,length(claim_size_vector_ecxl_zero))
 
 ks.test(claim_size_vector_ecxl_zero, "pexp", lambda_hat) #kolomogorov smirnov test
 
-qqplot(claim_size_vector,exponential_simulation(lambda_hat,length(claim_size_vector_ecxl_zero)))
+qqplot(claim_size_vector_ecxl_zero,simulate_exponential(lambda_hat,length(claim_size_vector_ecxl_zero)))
 
 
+
+################################################ Q2 Check Gamma ############################################################
+
+
+
+hist(claim_size_vector_ecxl_zero,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
+x <- seq(0,3500,length.out = 812)
+
+#Maximum Likelihood Estimator
+gamma_estimated_theta <- var(claim_size_vector_ecxl_zero) / mean(claim_size_vector_ecxl_zero)
+gamma_estimated_k <- mean(claim_size_vector_ecxl_zero)^2/ var(claim_size_vector_ecxl_zero)
+
+y_2 <- dgamma(x,shape = gamma_estimated_k, scale = gamma_estimated_theta ) #Theoretical Distribution
+lines(x,y_2)
+
+
+qqplot(claim_size_vector_ecxl_zero,rgamma(1000,shape = gamma_estimated_k,gamma_estimated_theta))
 
 
 ############################################################################################################################
@@ -392,7 +369,104 @@ qqplot(claim_size_vector,exponential_simulation(lambda_hat,length(claim_size_vec
 ############################################################################################################################
 
 
-############################################ Q3 Monte Carlo Poisson ########################################################
+################################################# Q3 Monte Carlo Poisson ###################################################
+
+#Here we will simulate a Poisson random variables using the same parameter lambda we obtained from the MLE estimator.
+#The simulation algorithm is in the function simulate poisson. To assess the reliability of our Monte Carlo estimator to
+#Our data we follow two approaches motivated by the concept of multiple testing. That is, due to randomness a simple one
+#time chi squared test could be significant whereas it should not or vice versa. To mitigate this issue we will generate
+#1000 randomly generated poisson random variables with the parameter we estimated and test against each of them obtaining
+#1000 pv-values instead of a single. We could then take its average value as a more robust statistical test.
+
+#In that we follow two approaches 
+#1) We apply the goodness of fit on the 1000 randomly generated poisson.
+#2) We apply the goodness of fit on 1000 randomly generated poisson PDFs. Which should overall be less volatile since
+# it would not be susceptible to changes in magnitude in comparison to the first approach.
+
+#Approach 1
+poisson_simulations_list <- vector(mode = "list", length = 1000)
+for(i in 1:1000) {
+  poisson_simulations_list[[i]] <- vector(mode = "list", length = 1000)
+}
+for(i in 1:1000){
+  poisson_simulations_list[[i]] <- simulate_poisson(lambda_hat,1000)
+}
+
+pval_vector <- vector()
+for(i in 1:1000){
+  pval_vector[i] <- chisq.test(poisson_simulations_list[[i]],data$CLM_FREQ)$p.val
+}
+mean(pval_vector)
+
+#Approach 2
+#Essentially we will create a similar table containing comparable pdfs based on the poisson monte carlo estimators
+simulated_pdfs <- vector(mode = "list", length = 1000)
+for(i in seq_along(simulated_pdfs)) {
+  simulated_pdfs[[i]] <- vector(mode = "list", length = 9)
+}
+
+generate_random_comparable_poisson <- function(lambda){
+  
+  my_poisson_simulation <- simulate_poisson(lambda,1000)
+  
+  
+  random_vector <- c()
+  
+  for (i in 1:8) {
+    prob <- table(my_poisson_simulation)[as.character(i-1)] / 1000
+    if (is.na(prob)) {
+      random_vector[i] <- 0
+    } else {
+      random_vector[i] <- prob
+    }
+    
+  }
+  random_vector[9] <- 1- sum(random_vector[1:8])
+  return(random_vector)    
+}
+
+
+
+
+for(i in 1:1000){
+  simulated_pdfs[[i]] <- generate_random_comparable_poisson(lambda_hat)##issue here
+}
+#In deed much more stable p-values in comparison to using randomly generated poisson
+pval_vector <- c()
+for(i in 1:1000){
+  pval_vector[i] <- chisq.test(simulated_pdfs[[i]],empirical_pdf)$p.val
+}
+
+mean(pval_vector)
+
+
+
+
+################################################# Q3 Variance Reduction Poisson ###################################################
+
+# We now consider variance reduction techniques
+# Does it make sense, Expected value of poisson is the variance!! Do we really want to reduce the variance??
+
+
+
+
+
+
+
+
+
+
+
+################################################# Q3 Monte Carlo Gamma ############################################################
+
+
+
+
+
+
+
+
+
 
 
 
