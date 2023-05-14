@@ -112,6 +112,7 @@ empiricalCDFVector <- vector()
 
 print(lossesVector) 
 
+
 hist(lossesVector)
 
 #epdfPlot(lossesVector, discrete = TRUE)
@@ -138,7 +139,7 @@ gamma_estimated_k <- sample_mean(lossesVector)/ gamma_estimated_teta
 #prototype for FF plot of losses vector , here in the gamma case 
 plot.ecdf(lossesVector, main = "FF plot", xlab = "Loss Amount", ylab = "Empirical Cumulative Distribution Function", col.points = rgb(0.5,0,0,0.25))
 x = seq(0,1500, 0.1)
-y = pgamma(x, shape = gamma_estimated_k, scale =  gamma_estimated_teta) #gamma as an example 
+y = pgamma(x, shape = gamma_estimated_k, scale =  gamma_estimated_teta) 
 lines(x,y, col = "blue")
 #pretty nice 
 #exp special case of gamma so remove it 
@@ -146,6 +147,13 @@ lines(x,y, col = "blue")
 #inverse gaussian distribution 
 #estimators 
 
+hist(lossesVector)
+x = seq(0,1500, 0.1)
+y = 400000*dgamma(x, shape = gamma_estimated_k, scale =  gamma_estimated_teta) #gamma as an example 
+lines(x,y, col = "blue")
+
+#weibul estimators
+#Method of moments -> no exact solution 
 
 
 # plot(x, ecdf(lossesVector)(x))
