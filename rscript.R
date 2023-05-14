@@ -246,9 +246,11 @@ grid()
 
 
 ############################################################################################################################
-#################################################### Q1 Check Poisson ######################################################
+########################################################### Q1 #############################################################
 ############################################################################################################################
 
+
+#################################################### Q1 Check Poisson ######################################################
 #We check the expected number of claims per policy
 #N~Poi(lambda_hat)
 
@@ -265,16 +267,14 @@ lines(x,y)
 
 #Check whether poisson is a good model
 hist(poisson_simulation(lambda_hat,size = 1000), breaks = 30, freq = FALSE, main = "Empirical Histogram with Simulated Histogram")
-ks.test(data$CLM_FREQ, poisson_simulation(lambda_hat,size = 1000))
-chisq.test(data$CLM_FREQ,poisson_simulation(lambda_hat,size = 1000))
 
 pval_vector<- c()
 for(i in 1:1000){
   pval_vector[i] <- ks.test(data$CLM_FREQ,poisson_simulation(lambda_hat,size = 1000))$p.val
 }
 
-#Test against cdf
-x <- data$CLM_FREQ
+#Test against theoretical pdf
+
 
 # Compute the empirical cumulative distribution function
 empirical_pdf <- rep(0,9)
@@ -291,6 +291,46 @@ empirical_pdf[9] <- 0
 
 
 chisq.test(empirical_pdf,theoretical_pdf)
+
+
+### To do:
+
+simulated_pdfs <- vector(mode = "list", length = 1000)
+for(i in seq_along(simulated_pdfs)) {
+  simulated_pdfs[[i]] <- vector(mode = "list", length = 9)
+}
+
+generate_random_comparable_poisson <- function(lambda){
+  
+  my_poisson_simulation <- poisson_simulation(lambda,1000)
+
+
+  random_vector <- c()
+  
+  for (i in 1:8) {
+    prob <- table(my_poisson_simulation)[as.character(i-1)] / 1000
+    if (is.na(prob)) {
+      random_vector[i] <- 0
+    } else {
+      random_vector[i] <- prob
+    }
+      
+  }
+  random_vector[9] <- 1- sum(random_vector[1:8])
+  return(random_vector)    
+}
+  
+
+
+for(i in 1:1000){
+    simulated_pdfs[[i]] <- generate_random_comparable_poisson(lambda_hat)##issue here
+}
+
+pval_vector <- c()
+for(i in 1:1000){
+  pval_vector[i] <- chisq.test(simulated_pdfs[[i]],empirical_pdf)$p.val
+}
+  
 
 
 
@@ -316,11 +356,13 @@ chisq.test(empirical_pdf,theoretical_pdf)
 
 
 
-
 ############################################################################################################################
+########################################################### Q2 #############################################################
+############################################################################################################################
+
+
+
 ############################################# Q2 Check Exponential #########################################################
-############################################################################################################################
-
 claim_size_vector <- apply(data[,3:9],1 ,sum)
 
 claim_size_vector_ecxl_zero <- claim_size_vector[claim_size_vector>0]
@@ -338,18 +380,19 @@ lines(x,y)
 
 exponential_simulation(lambda_hat,length(claim_size_vector_ecxl_zero))
 
+ks.test(claim_size_vector_ecxl_zero, "pexp", lambda_hat) #kolomogorov smirnov test
+
 qqplot(claim_size_vector,exponential_simulation(lambda_hat,length(claim_size_vector_ecxl_zero)))
 
 
 
 
-
-
-
-
-
 ############################################################################################################################
+########################################################### Q3 #############################################################
+############################################################################################################################
+
+
 ############################################ Q3 Monte Carlo Poisson ########################################################
-############################################################################################################################
+
 
 
