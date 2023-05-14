@@ -154,6 +154,50 @@ lines(x,y, col = "blue")
 
 #weibul estimators
 #Method of moments -> no exact solution 
+#instead go for MLE for n observations 
+#lamba <- ( sum of observation power k div by n ) power 1/ k 
+#for k solution of lin equation 
+# no direct way to solve such an equation in R 
+# although eweibull(x, method = "mle") with x set of observations 
+hist(lossesVector)
+
+print(eweibull(x= lossesVector, method = "mle"))
+
+names(eweibull(x= lossesVector, method = "mle")) 
+
+estimate <- eweibull(x= lossesVector, method = "mle")
+
+print(estimate$parameters)
+
+names(estimate$parameters)
+
+value <- estimate$parameters
+
+print (value)
+
+print (value[[1]]) #cannot access atomic vecors with $ 
+
+print (value[[2]])
+
+#prototype for FF plot of losses vector , here in the weibul case 
+plot.ecdf(lossesVector, main = "FF plot", xlab = "Loss Amount", ylab = "Empirical Cumulative Distribution Function", col.points = rgb(0.5,0,0,0.25))
+x = seq(0,1500, 0.1)
+y = pweibull(x, shape = value[[1]], scale =  value[[2]]) 
+lines(x,y, col = "blue")
+y = pgamma(x, shape = gamma_estimated_k, scale =  gamma_estimated_teta) 
+lines(x,y, col = "green")
+#not as good as above 
+
+shape <- eweibull(x= lossesVector, method = "mle").obj$parameters$shape
+print(shape)
+      
+
+hist(eweibull(x= lossesVector, method = "mle"))
+
+x = seq(0,1500, 0.1)
+y = 400000*dgamma(x, shape = gamma_estimated_k, scale =  gamma_estimated_teta) #gamma as an example 
+lines(x,y, col = "blue")
+
 
 
 # plot(x, ecdf(lossesVector)(x))
