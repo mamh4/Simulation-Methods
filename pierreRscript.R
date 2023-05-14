@@ -77,4 +77,18 @@ negativeBinomialREstimator <- function(random_vector){
   return(sample_mean(random_vector )*p/(1-p)) 
 }
 
+#compute mean of a given model, MC estimator, same as sample mean above, passing random vector 
+# same for sample mean above 
+
+totalLossComputation <- function(){
+  loss <-0 
+  for (i in 3:9 ){
+    loss = loss + sum(data[i])
+  }
+  return (loss) 
+}
+
+totalPremium <- sum(data$PREMIUM) 
+#tariff 
+
 
