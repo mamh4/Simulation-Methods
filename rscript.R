@@ -363,9 +363,12 @@ for(i in 1:1000){
 
 
 ############################################# Q2 Check Exponential #########################################################
-claim_size_vector <- apply(data[,3:9],1 ,sum)
+claim_size_vector <- apply(data[,3:9],1 ,sum) #aggregates the claim amounts spent per 
+#several periods for each car
 
-claim_size_vector_ecxl_zero <- claim_size_vector[claim_size_vector>0]
+claim_size_vector_ecxl_zero <- claim_size_vector #we excluded the car IDs with no claims
+#because it would inappropriately influence the claim size of the ones that they did have
+#a claim
 
 hist(claim_size_vector_ecxl_zero,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
 x <- seq(0,3500,length.out = 1000)
