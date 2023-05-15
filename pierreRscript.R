@@ -386,11 +386,11 @@ poisson_inversion_method <- function(random_number, lambda) {
     counter <- counter + 1 
     lower_bound <- upper_bound 
     upper_bound <- upper_bound +  dpois(counter,lambda=lambda) 
+    #cat("lower bound ", lower_bound, "   upper bound ", upper_bound, " random number ", random_number, "   counter ", counter)
+    #print(" ")
   }
   return (counter)
 }
-
-
 
 
   
