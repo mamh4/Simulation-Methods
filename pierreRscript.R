@@ -143,13 +143,17 @@ print(gamma_estimated_k)
 print(gamma_estimated_teta)
 
 
-
+#FFTEMPLATE 
 #prototype for FF plot of losses vector , here in the gamma case 
 plot.ecdf(lossesVector, main = "FF plot", xlab = "Loss Amount", ylab = "Empirical Cumulative Distribution Function")
 #rgb(0.5,0,0,0.25)
 x = seq(0,1500, 0.1)
 y = pgamma(x, shape = gamma_estimated_k, scale =  gamma_estimated_teta) 
-lines(x,y, col = "green")
+lines(x,y, col = "red")
+
+
+
+
 #pretty nice 
 #exp special case of gamma so remove it 
 
