@@ -1,6 +1,7 @@
 source("rscript.r")
 library(EnvStats)
 library(ffbase)
+library(Matching)
 
 #make this accurate 
 
@@ -136,13 +137,28 @@ lines(x,y, col = "blue")
 gamma_estimated_teta <- sample_variance(lossesVector) / sample_mean(lossesVector)
 gamma_estimated_k <- sample_mean(lossesVector)/ gamma_estimated_teta 
 
+print(gamma_estimated_k) 
+print(gamma_estimated_teta)
+
+
+
 #prototype for FF plot of losses vector , here in the gamma case 
-plot.ecdf(lossesVector, main = "FF plot", xlab = "Loss Amount", ylab = "Empirical Cumulative Distribution Function", col.points = rgb(0.5,0,0,0.25))
+plot.ecdf(lossesVector, main = "FF plot", xlab = "Loss Amount", ylab = "Empirical Cumulative Distribution Function")
+#rgb(0.5,0,0,0.25)
 x = seq(0,1500, 0.1)
 y = pgamma(x, shape = gamma_estimated_k, scale =  gamma_estimated_teta) 
-lines(x,y, col = "blue")
+lines(x,y, col = "green")
 #pretty nice 
 #exp special case of gamma so remove it 
+
+print(length(lossesVector))
+
+
+print( ks.test(lossesVector, pgamma(x, shape = gamma_estimated_k, scale =  gamma_estimated_teta) ) ) 
+
+
+#comment on presence of ties warning in the report 
+#else encouraging pvalue 
 
 #inverse gaussian distribution 
 #estimators 
@@ -151,6 +167,8 @@ hist(lossesVector)
 x = seq(0,1500, 0.1)
 y = 400000*dgamma(x, shape = gamma_estimated_k, scale =  gamma_estimated_teta) #gamma as an example 
 lines(x,y, col = "blue")
+
+
 
 #weibul estimators
 #Method of moments -> no exact solution 
@@ -188,8 +206,26 @@ y = pgamma(x, shape = gamma_estimated_k, scale =  gamma_estimated_teta)
 lines(x,y, col = "green")
 #not as good as above 
 
-shape <- eweibull(x= lossesVector, method = "mle").obj$parameters$shape
+
+
+parameters_mmue <- eweibull(x= lossesVector, method = "mmue")$parameters
+parameters_mle <- eweibull(x= lossesVector, method = "mle")$parameters
+parameters_mle <- eweibull(x= lossesVector, method = "mme")$parameters
 print(shape)
+#slightly different mme and mmue => compare them in qq pp ff ks and chi square -> check better fit 
+#prototype for FF plot of losses vector , here in the weibul case 
+plot.ecdf(lossesVector, main = "FF plot", xlab = "Loss Amount", ylab = "Empirical Cumulative Distribution Function")
+x = seq(0,1500, 0.1)
+y = pweibull(x, shape = parameters_mmue[[1]], scale =  parameters_mmue[[2]]) 
+lines(x,y, col = "blue")
+z = pweibull(x, shape = parameters_mle[[1]], scale =  parameters_mle[[2]]) 
+lines(x,z, col = "green")
+a = pweibull(x, shape = parameters_mme[[1]], scale =  parameters_mme[[2]]) 
+lines(x,z, col = "red")
+#not as good as above 
+#mininal differences 
+
+#same for gamma versus our MoM gamma ? 
       
 
 hist(eweibull(x= lossesVector, method = "mle"))
@@ -198,7 +234,28 @@ x = seq(0,1500, 0.1)
 y = 400000*dgamma(x, shape = gamma_estimated_k, scale =  gamma_estimated_teta) #gamma as an example 
 lines(x,y, col = "blue")
 
+print( ks.test(lossesVector, pweibull(x, shape = value[[1]], scale =  value[[2]]) ) ) 
 
+
+
+#print( ks.test(lossesVector, pgamma(x, shape = gamma_estimated_k, scale =  gamma_estimated_teta) ) ) 
+
+print( ks.test(lossesVector,"pgamma",  shape = gamma_estimated_k, scale =  gamma_estimated_teta , exact = TRUE )  )
+
+print(gamma_estimated_k) 
+print(gamma_estimated_teta) 
+
+
+
+testVector <- rgamma(1000, shape = gamma_estimated_k, scale =  gamma_estimated_teta)
+
+print( ks.test(testVector, pgamma(x, shape = gamma_estimated_k, scale =  gamma_estimated_teta) ) , exact = FALSE) 
+
+#same p-values ? very peculiar since on the F plot one is clearly a better match than the other, comment on it 
+
+#qq plot and pp plot for the two candidates above ? 
+
+pgamma(x, shape = gamma_estimated_k, scale =  gamma_estimated_teta)
 
 # plot(x, ecdf(lossesVector)(x))
 
@@ -227,5 +284,47 @@ lines(x,y, col = "blue")
 #      add = TRUE, # Add plot to previous one!
 #      col = gray(1, .8))
 
+gamma_estimated_teta <- sample_variance(lossesVector) / sample_mean(lossesVector)
+gamma_estimated_k <- sample_mean(lossesVector)/ gamma_estimated_teta 
+
+simulatedGamma <- vector() 
+for (i in 1:length(lossesVector)){
+  simulatedGamma <- append( simulatedGamma, rgamma(n= 1,shape = gamma_estimated_k, scale =  gamma_estimated_teta))
+}
+ks.test(lossesVector, simulatedGamma)
+
+#ks.boot(lossesVector, pgamma(x, shape = gamma_estimated_k, scale =  gamma_estimated_teta) ) 
+#no ties issue but NA with the above, only for two vectors 
+for (i in 1:10){
+  print (i) 
+}
 
 
+ks_test_sum <-0 
+for (i in 1:100){
+  print (i) 
+  simulatedGamma <- vector() 
+  for (i in 1:length(lossesVector)){
+    simulatedGamma <- append( simulatedGamma, rgamma(n= 1,shape = gamma_estimated_k, scale =  gamma_estimated_teta))
+  }
+  ks_test_sum <- ks_test_sum + ks.boot(lossesVector, simulatedGamma)$ks$p.value
+}
+print (ks_test_sum/100) 
+#avg pvalue (print i above behaves strangely when placed at the end of the loop)
+# avg for 10 as for 100 is approx 0.015 (0.01688333 for a 100 run) 
+
+
+for (i in 1:length(lossesVector)){
+  simulatedGamma <- append( simulatedGamma, rgamma(n= 1,shape = gamma_estimated_k, scale =  gamma_estimated_teta))
+}
+names(ks.boot(lossesVector, simulatedGamma))
+
+object <- ks.boot(lossesVector, simulatedGamma)
+
+print (object)
+
+names(object)
+
+print(object$ks$p.value)
+
+#same for weibull and maybe for 
