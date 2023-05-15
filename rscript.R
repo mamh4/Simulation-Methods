@@ -94,7 +94,37 @@ simulate_exponential <- function(lambda, size){
   return (simulated_exponential)
 }
 
-simulate_gamma <- function(shape,scale,size){}
+simulate_erlang <- function(size,shape,scale_lambda){
+  simulation_vector <- c()
+  
+  for(j in 1:size){
+    simulated_gamma <- 0
+      for(i in 1:shape){
+        simulated_gamma <- simulated_gamma + simulate_exponential(scale_lambda,1)
+      }
+    simulation_vector[j] <- simulated_gamma
+  }
+  return(simulation_vector)
+}
+
+simulate_nb <- function(size, r, p) {
+  random_numbers <- runif(size,0,1)
+  result <- c()
+  for(i in 1:size){
+  counter <- 0 
+  lower_bound <- 0 
+  upper_bound <- choose(counter + r - 1 , counter )* p^r * (1-p)^counter
+  while (! ((upper_bound > random_numbers[i] ) & (lower_bound <= random_numbers[i]) )) {
+    counter <- counter + 1 
+    lower_bound <- upper_bound 
+    upper_bound <- upper_bound +  choose(counter + r - 1 , counter )* p^r * (1-p)^counter
+    #cat("lower bound ", lower_bound, "   upper bound ", upper_bound, " random number ", random_number, "   counter ", counter)
+    #print(" ")
+  }
+  result[i] <- counter
+  }
+  return(result)
+}
 
 
 ############################################################################################################################
@@ -234,6 +264,8 @@ for (f in features_cat) {
 # Commercial car use has higher impact on the number of claims
 
 
+default_par <- par(no.readonly = TRUE) #save default drawing parameter
+
 for (f in claims_amounts) {
   plot(data[,f], main=f, xlab='' ,las=2,col=data$CLM_FREQ)
   grid()
@@ -291,7 +323,7 @@ chisq.test(empirical_pdf,theoretical_pdf)
 
 ############################################# Q1 Check Negative binomial ###################################################
 
-#MME Estimator
+#MoM Estimator
 p_hat <- 1 / var(data$CLM_FREQ) * mean(data$CLM_FREQ)
 r_hat <- mean(data$CLM_FREQ)*p_hat /(1-p_hat)
 
@@ -303,9 +335,8 @@ y <- dnbinom(x,size = r_hat,prob = p_hat) #Theoretical Distribution
 lines(x,y)
 
 
-
 #To make the pdf comparable, we discretise and apply the chi.sq test
-theoretical_pdf <- c(0,9)
+theoretical_pdf_nb <- c(0,9)
 for(i in 1:8){
   theoretical_pdf[i] <- dnbinom(x=i-1 , size = r_hat, prob = p_hat)
 }
@@ -365,9 +396,6 @@ lines(x,y)
 ## Test whether exponential is a good model.
 
 ks.test(claim_size_vector, rate = lambda_hat_exp) #kolomogorov smirnov test
-
-
-ks.test(claim_size_vector, theoretical_quantiles) #kolomogorov smirnov test
 
 
 theoretical_quantiles <- qexp(ppoints(length(claim_size_vector)),rate = lambda_hat_exp )
@@ -439,115 +467,15 @@ legend("topright", legend = c("Exonential Distribution", "Gamma Distribution"),
 ########################################################### Q3 #############################################################
 ############################################################################################################################
 
-
-################################################# Q3 Monte Carlo Poisson ###################################################
-
-#Here we will simulate 1000 Poisson random variables using the same parameter lambda we obtained from the ***MLE*** estimator.
-#The simulation algorithm is in the function simulate poisson. To assess the reliability of our Monte Carlo estimator in relation
-#to the data we have. We simulate 10,000 poisson random variables with the same method of moments parameter lambda hat.We then
-#Generate 10,000 t-tests, and take the mean p-value. This is motivated by the approach "multiple testing" to give a more robust
-#estimation of the p-value, since we know that by design "seldom" we would generate p-values that support significance even 
-#though it may not be the case.
-
-
-
-mean_vector_poisson <- c()
-var_vector_poisson <- c()
-
-poisson_simulations_list <- vector(mode = "list", length = 1000)
-for(i in 1:1000) {
-  poisson_simulations_list[[i]] <- vector(mode = "list", length = 1000)
-}
-for(i in 1:1000){
-  poisson_simulations_list[[i]] <- simulate_poisson(lambda_hat_poisson,1000)
-}
-
-# Now that we have the 10,000 samples we compute the monte carlo estimator for the mean and the variance
-for(i in 1:1000){
-  mean_vector_poisson[i] <- mean(poisson_simulations_list[[i]])
-  var_vector_poisson[i] <- var(poisson_simulations_list[[i]])
-}
-
-
-hist(mean_vector_poisson, main = "Expectation of 1000 Poisson Simulations")
-abline(v = mean(data$CLM_FREQ),col="Red")
-legend("topright", legend = "Data", col = "red", lty = 1)
-
-hist(var_vector_poisson, main = "Variance of 1000 Poisson Simulations")
-abline(v = mean(var(data$CLM_FREQ)),col="Red")
-legend("topright", legend = "Data", col = "red", lty = 1)
-
-
-
-
-
-#We can also plot the claim frequency against the average of the 10,000 simulations
-generate_random_comparable_poisson <- function(lambda){
-  
-  my_poisson_simulation <- simulate_poisson(lambda,1000)
-  
-  
-  random_vector <- c()
-  
-  for (i in 1:8) {
-    result <- table(my_poisson_simulation)[as.character(i-1)] 
-    if (is.na(result)) {
-      random_vector[i] <- 0
-    } else {
-      random_vector[i] <- result
-    }
-    
-  }
-  random_vector[9] <- 1000- sum(random_vector[1:8])
-  return(random_vector)    
-}
-
-
-
-poisson_simulations_list_comparable <- vector(mode = "list", length = 1000)
-for(i in 1:1000) {
-  poisson_simulations_list_comparable[[i]] <- vector(mode = "list", length = 9)
-}
-for(i in 1:1000){
-  poisson_simulations_list_comparable[[i]] <- generate_random_comparable_poisson(lambda_hat_poisson)
-}
-
-# We can plot the average of the 1000 simulations against the data
-avg_of_simulations_poisson <- c()
-for(j in 1:9){
-  for(i in 1:1000){
-    avg_of_simulations_poisson[j] <- mean(sapply(poisson_simulations_list_comparable, "[[", j))
-  }
-}
-
-barplot(table(data$CLM_FREQ), col = gray(0,0.5), beside = T)
-barplot(avg_of_simulations_poisson, col = gray(1,0.8),beside = T,add = T)
-legend("topright", legend = c("Original Data", "Average of 1000 Simulations"), 
-       fill = c(gray(0, 0.5), gray(1, 0.8)))
-
-
-
-
-t.test(x = mean_vector_poisson, mu = mean(data$CLM_FREQ))
-
-
-
-################################################# Q3 Variance Reduction Poisson ############################################
-
-# We now consider variance reduction techniques
-# Does it make sense, Expected value of poisson is the variance!! Do we really want to reduce the variance??
-
-
-
-
-
-
-
-
-
-
-
+set.seed(2023)
 ############################################## Q3 Monte Carlo Negative Binomial ###########################################
+#To assess the reliability of our monte carlo estimators in relation to the data we have, we will simulate 1000 negative 
+#binomial random variables using the same parameter p and r we obtained from the ***MoM*** estimator. We will do the following
+#1) Plot histograms of the mean and variance values of the simulation to compare to the data.
+#2) Plot a histogram of the average of those 1000 simulations (converting to the true value) and compare them to the data.
+#3) Make a sample t-test to test whether the mean value could serve as an expectation of the mean value of the simluations
+
+
 
 #Approach 1
 nb_simulations_list <- vector(mode = "list", length = 1000)
@@ -567,17 +495,17 @@ for(i in 1:1000){
 }
 
 
-hist(mean_vector_poisson, main = "Expectation of 1000 Negative Binomial Simulations")
+hist(mean_vector_nb, main = "Expectation of 1000 Negative Binomial Simulations")
 abline(v = mean(data$CLM_FREQ),col="Red")
 legend("topright", legend = "Data", col = "red", lty = 1)
 
-hist(var_vector_nb, main = "Variance of 1000 Poisson Simulations")
+hist(var_vector_nb, main = "Variance of 1000 Negative Binomial Simulations")
 abline(v = mean(var(data$CLM_FREQ)),col="Red")
 legend("topright", legend = "Data", col = "red", lty = 1)
 
 
 
-
+#Approach 2
 #We can also plot the claim frequency against the average of the 10,000 simulations
 generate_random_comparable_nb <- function(r,p){
   
@@ -626,7 +554,7 @@ legend("topright", legend = c("Original Data", "Average of 1000 Simulations"),
        fill = c(gray(0, 0.5), gray(1, 0.8)))
 
 
-
+#Approach 3
 t.test(x = mean_vector_nb, mu = mean(data$CLM_FREQ))
 
 
@@ -635,6 +563,66 @@ t.test(x = mean_vector_nb, mu = mean(data$CLM_FREQ))
 
 ########################################### Q3 Variance reduction Negative Binomial #######################################
 
+simulate_nb_with_u_input <- function(random_numbers, r, p) {
+  result <- c()
+  for(i in 1:length(random_numbers)){
+    counter <- 0 
+    lower_bound <- 0 
+    upper_bound <- choose(counter + r - 1 , counter )* p^r * (1-p)^counter
+    while (! ((upper_bound > random_numbers[i] ) & (lower_bound <= random_numbers[i]) )) {
+      counter <- counter + 1 
+      lower_bound <- upper_bound 
+      upper_bound <- upper_bound +  choose(counter + r - 1 , counter )* p^r * (1-p)^counter
+    }
+    result[i] <- counter
+  }
+  return(result)
+}
+
+
+antithetic_variates_nb <- function(size, r, p){
+  if(size %% 2 == 0){
+    u1_vector <- runif(size/2,0,1)
+    u2_vector <- 1-u1_vector
+  } else {
+    u1_vector <- runif(size/2 +1,0,1)
+    u2_vector <- 1-u1_vector
+  }
+  
+  f_u1 <- simulate_nb_with_u_input(random_numbers=u1_vector,r = r, p = p)
+  f_u2 <- simulate_nb_with_u_input(random_numbers=u2_vector,r = r, p = p)
+  
+  return(append(f_u1,f_u2))
+}
+
+
+
+nb_simulations_list_anthithetic <- vector(mode = "list", length = 1000)
+for(i in 1:1000) {
+  nb_simulations_list_anthithetic[[i]] <- vector(mode = "list", length = 1000)
+}
+for(i in 1:1000){
+  nb_simulations_list_anthithetic[[i]] <- antithetic_variates_nb(size = 1000,r = r_hat, p = p_hat)
+}
+
+mean_vector_nb_antithetic <- c()
+var_vector_nb_antithetic <- c()
+
+
+
+for(i in 1:1000){
+  mean_vector_nb_antithetic[i] <- mean(nb_simulations_list_anthithetic[[i]])
+  var_vector_nb_antithetic[i] <- var(nb_simulations_list_anthithetic[[i]])
+}
+
+
+hist(mean_vector_nb_antithetic, main = "Expectation of 1000 Negative Binomial Simulations - Antithetic Method")
+abline(v = mean(data$CLM_FREQ),col="Red")
+legend("topright", legend = "Data", col = "red", lty = 1)
+
+hist(var_vector_nb_antithetic, main = "Variance of 1000 Negative Binomial Simulations - Antithetic Method")
+abline(v = mean(var(data$CLM_FREQ)),col="Red")
+legend("topright", legend = "Data", col = "red", lty = 1)
 
 
 
@@ -642,15 +630,27 @@ t.test(x = mean_vector_nb, mu = mean(data$CLM_FREQ))
 
 
 
-########################################### Q3 Variance reduction Negative Binomial #######################################
+
+#******************************************************** Results ********************************************************#
+
+par(mfrow = c(2, 2),cex.main = 0.8)
+hist(mean_vector_nb, main = "Expectation NB w/o variance reduction")
+abline(v = mean(data$CLM_FREQ),col="Red")
 
 
+hist(var_vector_nb, breaks = 40,main = "Variance NB w/o variance reduction")
+abline(v = mean(var(data$CLM_FREQ)),col="Red")
+legend("topright", legend = "Data", col = "red", lty = 1)
 
 
+hist(mean_vector_nb_antithetic, main = "Expectation NB Antithetic Method")
+abline(v = mean(data$CLM_FREQ),col="Red")
 
 
-
-########################################### Q3 Variance reduction Negative Binomial #######################################
+hist(var_vector_nb_antithetic,breaks = 40, main = "Variance NB Antithetic Method")
+abline(v = mean(var(data$CLM_FREQ)),col="Red")
+par(no.readonly = T)
+length(claim_size_vector)
 
 
 ##################################################### Q3 Monte Carlo Gamma ################################################
@@ -662,15 +662,137 @@ gamma_simulations_list <- vector(mode = "list", length = 1000)
 for(i in 1:1000) {
   gamma_simulations_list[[i]] <- vector(mode = "list", length = length(claim_size_vector))
 }
-for(i in 1:10e4){
-  gamma_simulations_list[[i]] <- rgamma(10e4,shape = gamma_estimated_k, scale = gamma_estimated_theta)##Switch with our own simulation function
+for(i in 1:1000){
+  gamma_simulations_list[[i]] <- rgamma(length(claim_size_vector),shape = gamma_estimated_k, 
+                                          scale = gamma_estimated_theta)##Switch with our own simulation function
 }
 
-pval_vector <- vector()
+
+
+mean_vector_gamma <- c()
+var_vector_gamma <- c()
+
 for(i in 1:1000){
-  pval_vector[i] <- ks.test(gamma_simulations_list[[i]],claim_size_vector)$p.val
+  mean_vector_gamma[i] <- mean(gamma_simulations_list[[i]])
+  var_vector_gamma[i] <- var(gamma_simulations_list[[i]])
 }
-mean(pval_vector)
+
+
+hist(mean_vector_gamma, main = "Expectation of 1000 Gamma Simulations")
+abline(v = mean(claim_size_vector),col="Red")
+legend("topright", legend = "Data", col = "red", lty = 1)
+
+hist(var_vector_gamma, main = "Variance of 1000 Gamma Simulations")
+abline(v = mean(var(claim_size_vector)),col="Red")
+legend("topright", legend = "Data", col = "red", lty = 1)
+
+
+t.test(x = mean_vector_gamma, mu = mean(claim_size_vector))
+t.test(x = var_vector_gamma, mu = mean(var(claim_size_vector)))
+
+
+
+
+
+############################################### Q3 variance reduction Gamma ###############################################
+
+
+
+
+
+simulate_gamma_with_u_input <- function(random_numbers, shape, scale) {
+  return(qgamma(random_numbers, shape = shape , scale = scale))
+}
+
+
+antithetic_variates_gamma <- function(size, shape, scale){
+  if(size %% 2 == 0){
+    u1_vector <- runif(size/2,0,1)
+    u2_vector <- 1-u1_vector
+  } else {
+    u1_vector <- runif(size/2 +1,0,1)
+    u2_vector <- 1-u1_vector
+  }
+  
+  f_u1 <- simulate_gamma_with_u_input(random_numbers=u1_vector,shape = shape, scale = scale)
+  f_u2 <- simulate_gamma_with_u_input(random_numbers=u2_vector,shape = shape, scale = scale)
+  
+  return(append(f_u1,f_u2))
+}
+
+
+
+
+gamma_simulations_list_anthithetic <- vector(mode = "list", length = 1000)
+for(i in 1:1000) {
+  gamma_simulations_list_anthithetic[[i]] <- vector(mode = "list", length = length(claim_size_vector))
+}
+for(i in 1:1000){
+  gamma_simulations_list_anthithetic[[i]] <- antithetic_variates_gamma(size = length(claim_size_vector),
+                                                                       shape = gamma_estimated_k,
+                                                                        scale = gamma_estimated_theta)
+}
+
+mean_vector_gamma_antithetic <- c()
+var_vector_gamma_antithetic <- c()
+
+
+for(i in 1:1000){
+  mean_vector_gamma_antithetic[i] <- mean(gamma_simulations_list_anthithetic[[i]])
+  var_vector_gamma_antithetic[i] <- var(gamma_simulations_list_anthithetic[[i]])
+}
+
+
+hist(mean_vector_gamma_antithetic, main = "Expectation of 1000 Gamma Simulations - Antithetic Method")
+abline(v = mean(data$CLM_FREQ),col="Red")
+legend("topright", legend = "Data", col = "red", lty = 1)
+
+hist(var_vector_gamma_antithetic, main = "Variance of 1000 Gamma Simulations - Antithetic Method")
+abline(v = mean(var(data$CLM_FREQ)),col="Red")
+legend("topright", legend = "Data", col = "red", lty = 1)
+
+
+
+# Control Variate method:
+# We introduce Pareto with parameter 500 and 8
+x <- sort(rgamma(length(claim_size_vector),shape = gamma_estimated_k, scale = gamma_estimated_theta))
+y <- sort(rPareto(length(claim_size_vector), 500, 8, truncation = NULL))
+z <- x - cov(x,y)*1/var(y)*(y - 8*500/(8-1)) #Works
+
+
+#Importance sampling, higher variance :o
+#I = Gamma
+#F = F_tilda = lambda*e^(-lambda*x)
+x <- rexp(1000,lambda_hat_exp)
+ICE <- dgamma(x,shape = gamma_estimated_k, scale = gamma_estimated_theta) / dexp(x,rate = lambda_hat_exp) * x
+
+
+
+
+#*******************************************************Results*********************************************************#
+
+
+hist(mean_vector_gamma, main = "Expectation Gamma w/o variance reduction ")
+abline(v = mean(claim_size_vector),col="Red")
+
+
+hist(var_vector_gamma, main = "Variance Gamma w/o variance reduction",breaks = 40)
+abline(v = mean(var(claim_size_vector)),col="Red")
+legend("topright", legend = "Data", col = "red", lty = 1)
+
+
+hist(mean_vector_gamma_antithetic, main = "Expectation Gamma Simulations - Antithetic Method")
+abline(v = mean(claim_size_vector),col="Red")
+
+
+hist(var_vector_gamma_antithetic, main = "Variance Gamma - Antithetic Method", breaks = 40)
+abline(v = var(claim_size_vector),col="Red")
+
+
+
+
+
+
 
 
 
