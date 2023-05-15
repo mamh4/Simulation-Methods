@@ -102,6 +102,8 @@ empirical_data
 
 chisq.test(unlist(empirical_data),unlist(observed_data))
 
+chisq.test(unlist(observed_data),unlist(observed_data))
+
 #p-value = 0.2289
 #since the p-value (0.2289) is greater than the typical significance level of 0.05
 #we cannot reject the null hypothesis.
