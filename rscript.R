@@ -443,21 +443,14 @@ legend("topright", legend = c("Exonential Distribution", "Gamma Distribution"),
 ################################################# Q3 Monte Carlo Poisson ###################################################
 
 #Here we will simulate 1000 Poisson random variables using the same parameter lambda we obtained from the ***MLE*** estimator.
-#The simulation algorithm is in the function simulate poisson. To assess the reliability of our Monte Carlo estimator to
-#Our data 
+#The simulation algorithm is in the function simulate poisson. To assess the reliability of our Monte Carlo estimator in relation
+#to the data we have. We simulate 10,000 poisson random variables with the same method of moments parameter lambda hat.We then
+#Generate 10,000 t-tests, and take the mean p-value. This is motivated by the approach "multiple testing" to give a more robust
+#estimation of the p-value, since we know that by design "seldom" we would generate p-values that support significance even 
+#though it may not be the case.
 
 
-#we follow two approaches motivated by the concept of multiple testing. That is, due to randomness a simple one
-#time chi squared test could be significant whereas it should not or vice versa. To mitigate this issue we will generate
-#1000 randomly generated poisson random variables with the parameter we estimated and test against each of them obtaining
-#1000 pv-values instead of a single. We could then take its average value as a more robust statistical test.
 
-#In that we follow two approaches 
-#1) We apply the goodness of fit on the 1000 randomly generated poisson.
-#2) We apply the goodness of fit on 1000 randomly generated poisson PDFs. Which should overall be less volatile since
-# it would not be susceptible to changes in magnitude in comparison to the first approach.
-
-#Approach 1
 mean_vector_poisson <- c()
 var_vector_poisson <- c()
 
@@ -465,29 +458,30 @@ poisson_simulations_list <- vector(mode = "list", length = 1000)
 for(i in 1:1000) {
   poisson_simulations_list[[i]] <- vector(mode = "list", length = 1000)
 }
-for(i in 1:10000){
-  poisson_simulations_list[[i]] <- simulate_poisson(lambda_hat_poisson,10000)
-}
-
 for(i in 1:1000){
-  mean_vector_poisson[i] <- 
+  poisson_simulations_list[[i]] <- simulate_poisson(lambda_hat_poisson,1000)
 }
 
-
-mean_vector_poisson <- c()
-var_vector_poisson <- c()
-
-pval_vector <- vector()
+# Now that we have the 10,000 samples we compute the monte carlo estimator for the mean and the variance
 for(i in 1:1000){
-  pval_vector[i] <- chisq.test(poisson_simulations_list[[i]],data$CLM_FREQ)$p.val
+  mean_vector_poisson[i] <- mean(poisson_simulations_list[[i]])
+  var_vector_poisson[i] <- var(poisson_simulations_list[[i]])
 }
-mean(pval_vector)
+
+
+hist(mean_vector_poisson, main = "Expectation of 1000 Poisson Simulations")
+abline(v = mean(data$CLM_FREQ),col="Red")
+legend("topright", legend = "Data", col = "red", lty = 1)
+
+hist(var_vector_poisson, main = "Variance of 1000 Poisson Simulations")
+abline(v = mean(var(data$CLM_FREQ)),col="Red")
+legend("topright", legend = "Data", col = "red", lty = 1)
 
 
 
 
 
-#Plot the avg of 1000 simulations against the data
+#We can also plot the claim frequency against the average of the 10,000 simulations
 generate_random_comparable_poisson <- function(lambda){
   
   my_poisson_simulation <- simulate_poisson(lambda,1000)
@@ -509,71 +503,32 @@ generate_random_comparable_poisson <- function(lambda){
 }
 
 
+
 poisson_simulations_list_comparable <- vector(mode = "list", length = 1000)
 for(i in 1:1000) {
-  poisson_simulations_list_comparable[[i]] <- vector(mode = "list", length = 1000)
+  poisson_simulations_list_comparable[[i]] <- vector(mode = "list", length = 9)
 }
 for(i in 1:1000){
   poisson_simulations_list_comparable[[i]] <- generate_random_comparable_poisson(lambda_hat_poisson)
 }
 
 # We can plot the average of the 1000 simulations against the data
-avg_of_simulations <- c()
+avg_of_simulations_poisson <- c()
 for(j in 1:9){
   for(i in 1:1000){
-    avg_of_simulations[j] <- mean(sapply(poisson_simulations_list_comparable, "[[", j))
+    avg_of_simulations_poisson[j] <- mean(sapply(poisson_simulations_list_comparable, "[[", j))
   }
 }
 
 barplot(table(data$CLM_FREQ), col = gray(0,0.5), beside = T)
-barplot(avg_of_simulations, col = gray(1,0.8),beside = T,add = T)
+barplot(avg_of_simulations_poisson, col = gray(1,0.8),beside = T,add = T)
 legend("topright", legend = c("Original Data", "Average of 1000 Simulations"), 
        fill = c(gray(0, 0.5), gray(1, 0.8)))
 
 
-#Approach 2
-#Essentially we will create a similar table containing comparable pdfs based on the poisson monte carlo estimators
-simulated_pdfs <- vector(mode = "list", length = 1000)
-for(i in seq_along(simulated_pdfs)) {
-  simulated_pdfs[[i]] <- vector(mode = "list", length = 9)
-}
-
-generate_random_comparable_poisson_pdf <- function(lambda){
-  
-  my_poisson_simulation <- simulate_poisson(lambda,1000)
-  
-  
-  random_vector <- c()
-  
-  for (i in 1:8) {
-    prob <- table(my_poisson_simulation)[as.character(i-1)] / 1000
-    if (is.na(prob)) {
-      random_vector[i] <- 0
-    } else {
-      random_vector[i] <- prob
-    }
-    
-  }
-  random_vector[9] <- 1- sum(random_vector[1:8])
-  return(random_vector)    
-}
 
 
-
-#Multiple testing against pdfs
-for(i in 1:1000){
-  simulated_pdfs[[i]] <- generate_random_comparable_poisson_pdf(lambda_hat)##issue here
-}
-#In deed much more stable p-values in comparison to using randomly generated poisson
-pval_vector <- c()
-for(i in 1:1000){
-  pval_vector[i] <- chisq.test(simulated_pdfs[[i]],empirical_pdf)$p.val
-}
-
-mean(pval_vector)
-
-
-
+t.test(x = mean_vector_poisson, mu = mean(data$CLM_FREQ))
 
 
 
@@ -603,57 +558,78 @@ for(i in 1:1000){
   nb_simulations_list[[i]] <- rnbinom(1000,size = r_hat, p = p_hat)##Switch with our own simulation function
 }
 
-pval_vector <- vector()
+mean_vector_nb <- c()
+var_vector_nb <- c()
+
 for(i in 1:1000){
-  pval_vector[i] <- chisq.test(nb_simulations_list[[i]],data$CLM_FREQ)$p.val
-}
-mean(pval_vector)
-
-
-
-
-
-
-#Approach 2
-#Essentially we will create a similar table containing comparable pdfs based on the poisson monte carlo estimators
-simulated_pdfs <- vector(mode = "list", length = 1000)
-for(i in seq_along(simulated_pdfs)) {
-  simulated_pdfs[[i]] <- vector(mode = "list", length = 9)
+  mean_vector_nb[i] <- mean(nb_simulations_list[[i]])
+  var_vector_nb[i] <- var(nb_simulations_list[[i]])
 }
 
-generate_random_comparable_nb <- function(r_hat,p_hat){
+
+hist(mean_vector_poisson, main = "Expectation of 1000 Negative Binomial Simulations")
+abline(v = mean(data$CLM_FREQ),col="Red")
+legend("topright", legend = "Data", col = "red", lty = 1)
+
+hist(var_vector_nb, main = "Variance of 1000 Poisson Simulations")
+abline(v = mean(var(data$CLM_FREQ)),col="Red")
+legend("topright", legend = "Data", col = "red", lty = 1)
+
+
+
+
+#We can also plot the claim frequency against the average of the 10,000 simulations
+generate_random_comparable_nb <- function(r,p){
   
-  my_nb_simulation <- rnbinom(1000,size = r_hat, p = p_hat)#Switch with our own simulation function
+  my_nb_simulation <- rnbinom(1000,size = r, p = p)
   
   
   random_vector <- c()
   
   for (i in 1:8) {
-    prob <- table(my_nb_simulation)[as.character(i-1)] / 1000
-    if (is.na(prob)) {
+    result <- table(my_nb_simulation)[as.character(i-1)] 
+    if (is.na(result)) {
       random_vector[i] <- 0
     } else {
-      random_vector[i] <- prob
+      random_vector[i] <- result
     }
     
   }
-  random_vector[9] <- 1- sum(random_vector[1:8])
+  random_vector[9] <- 1000- sum(random_vector[1:8])
   return(random_vector)    
 }
 
 
 
 
-for(i in 1:1000){
-  simulated_pdfs[[i]] <- generate_random_comparable_nb(r_hat,p_hat)##issue here
-}
-#In deed much more stable p-values in comparison to using randomly generated poisson
-pval_vector <- c()
-for(i in 1:1000){
-  pval_vector[i] <- chisq.test(simulated_pdfs[[i]],empirical_pdf)$p.val
+nb_simulations_list_comparable <- vector(mode = "list", length = 1000)
+for(i in 1:1000) {
+  nb_simulations_list_comparable[[i]] <- vector(mode = "list", length = 9)
 }
 
-mean(pval_vector) #Ever so slightly better
+
+for(i in 1:1000){
+  nb_simulations_list_comparable[[i]] <- generate_random_comparable_nb(r=r_hat,p = p_hat)
+}
+
+# We can plot the average of the 1000 simulations against the data
+avg_of_simulations_nb <- c()
+for(j in 1:9){
+  for(i in 1:1000){
+    avg_of_simulations_nb[j] <- mean(sapply(nb_simulations_list_comparable, "[[", j))
+  }
+}
+
+barplot(table(data$CLM_FREQ), col = gray(0,0.5), beside = T)
+barplot(avg_of_simulations_nb, col = gray(1,0.8),beside = T,add = T)
+legend("topright", legend = c("Original Data", "Average of 1000 Simulations"), 
+       fill = c(gray(0, 0.5), gray(1, 0.8)))
+
+
+
+t.test(x = mean_vector_nb, mu = mean(data$CLM_FREQ))
+
+
 
 
 
