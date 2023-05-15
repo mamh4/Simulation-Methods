@@ -100,6 +100,7 @@ totalPremium <- sum(data$PREMIUM)
 print(data[4,3])
 
 #HERE MOMO 
+#test
 lossesVector <- vector()
 for  (i in 3:9 ){
   for (j in 1:length(data[,i])) 
