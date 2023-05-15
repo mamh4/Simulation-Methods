@@ -111,6 +111,7 @@ for  (i in 3:9 ){
 }
 empiricalCDFVector <- vector() 
 
+print(length(lossesVector) )
 
 
 print(lossesVector) 
@@ -334,3 +335,104 @@ names(object)
 print(object$ks$p.value)
 
 #same for weibull and maybe for 
+
+#simulation : poisson negbin exponential gamma weibull 
+#above poisson and exp 
+
+simulate_negative_binomial <- function(r, p, size){
+  simulated_negative_binomial <- rep(0, size)
+  for (i in 1:size){
+    cat("item", i)
+    lower_bound <- 0 
+    upper_bound <- choose(counter + r - 1 , counter )* p^r * (1-p)^counter
+
+    print(lower_bound) 
+    print(upper_bound) 
+    counter <- 0 
+    random_number <- runif(1,0,1)
+    print(random_number)
+    while (! ((upper_bound > random_number ) & (lower_bound <= random_number) )) {
+      print(" ")
+      counter <- counter + 1 
+      lower_bound <- upper_bound 
+      upper_bound <- upper_bound +  choose(counter + r - 1 , counter )* p^r * (1-p)^counter
+      cat("lower bound ", lower_bound, "   upper bound ", upper_bound, " random number ", random_number, "   counter ", counter)
+    }
+    simulated_negative_binomial[i] <- counter
+  }
+  return (simulated_negative_binomial)
+}
+
+print(simulate_negative_binomial(10, 0.5, 10))
+
+
+#antithetic estimator attempt 
+
+
+
+# poisson inversion method 
+
+negative_binomial_inversion_method <- function(random_number, r, p) {
+  counter <- 0 
+  lower_bound <- 0 
+  upper_bound <- choose(counter + r - 1 , counter )* p^r * (1-p)^counter
+  while (! ((upper_bound > random_number ) & (lower_bound <= random_number) )) {
+    counter <- counter + 1 
+    lower_bound <- upper_bound 
+    upper_bound <- upper_bound +  choose(counter + r - 1 , counter )* p^r * (1-p)^counter
+    #cat("lower bound ", lower_bound, "   upper bound ", upper_bound, " random number ", random_number, "   counter ", counter)
+    #print(" ")
+  }
+  return (counter)
+}
+
+negative_binomial_antithetic_estimator <- function (sample_size, r, p) {
+  sum <- 0 
+  for (i in 1:sample_size) {
+    random_number <-  runif(1,0,1)
+    sum <- sum + negative_binomial_inversion_method(random_number, r, p) + negative_binomial_inversion_method(1-random_number, r, p)  
+  }
+  sum <- sum /(2* sample_size )
+}
+
+
+
+poisson_inversion_method <- function(random_number, lambda) {
+  counter <- 0 
+  lower_bound <- 0 
+  upper_bound <- dpois(counter,lambda=lambda) 
+  while (! ((upper_bound > random_number ) & (lower_bound <= random_number) )) {
+    counter <- counter + 1 
+    lower_bound <- upper_bound 
+    upper_bound <- upper_bound +  dpois(counter,lambda=lambda) 
+    #cat("lower bound ", lower_bound, "   upper bound ", upper_bound, " random number ", random_number, "   counter ", counter)
+    #print(" ")
+  }
+  return (counter)
+}
+
+poisson_antithetic_estimator <- function (sample_size, lambda) {
+  sum <- 0 
+  for (i in 1:sample_size) {
+    random_number <-  runif(1,0,1)
+    sum <- sum + poisson_inversion_method(random_number, lambda) + poisson_inversion_method(1-random_number, lambda)  
+  }
+  sum <- sum /(2* sample_size )
+}
+
+#no need for a funcion really 
+gamma_inversion_method <- function (random_number, k, theta) {
+  return qgamma(random_number, shape = k, scale =  theta) 
+}
+
+gamma_antithetic_estimator <- function (sample_size, k, theta) {
+  sum <- 0 
+  for (i in 1:sample_size) {
+    random_number <-  runif(1,0,1)
+    sum <- sum + gamma_inversion_method(random_number, k, theta) + poisson_inversion_method(1-random_number, k, theta)  
+  }
+  sum <- sum /(2* sample_size )
+}
+
+#importance sampling -> optimal is disqualified ? g(x) is x is positive so e(abs val not known) (technically is)
+
