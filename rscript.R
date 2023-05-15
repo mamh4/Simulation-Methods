@@ -56,11 +56,11 @@ rm(data_orig) #memory management
 ##########################################################################################################################
 ##perhaps remove
 pdf_poisson <- function(lambda,x){
-  return(lambda^x * exp(-lambda) / factorial((x)))
+  return((lambda^x) * exp(-lambda) / factorial(x))
 }
 
 pdf_exponential <- function(lambda,x){
-  return(lambda *exp(-x*lambda))
+  return(lambda *exp(-lambda))
 }
 ##unitel here
 #Our Own RNG? function?
@@ -256,13 +256,13 @@ grid()
 
 
 #Maximum likelihood Estimator for poisson case to estimate lambda
-lambda_hat <- 1/length(data$CLM_FREQ) * sum(data$CLM_FREQ)
+lambda_hat_poisson <- 1/length(data$CLM_FREQ) * sum(data$CLM_FREQ)
 
 #Here we plot a histogram of our claim frequency data against the theoretical pdf of parameter lambda hat.
 hist(data$CLM_FREQ, breaks = 30, freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
 #overlay density
-x <- seq(0,10,length.out = 1000)
-y <- pdf_poisson(lambda_hat,x) #Theoretical Distribution
+x <- seq(0,10,length.out = 11)
+y <- dpois(x,lambda=lambda_hat_poisson) #Theoretical Distribution
 lines(x,y)
 
 
@@ -274,13 +274,13 @@ for(i in 1:8){
 }
 theoretical_pdf <- c(0,9)
 for(i in 1:8){
-  theoretical_pdf[i] <- poisson_pdf(i-1,lambda_hat)
+  theoretical_pdf[i] <- dpois(i-1,lambda =lambda_hat_poisson)
 }
 theoretical_pdf[9] <- 1-sum(theoretical_pdf[1:8])
 
 #We now have two comparable vectors. We test them using Chi-squared test.
 chisq.test(empirical_pdf,theoretical_pdf)
-
+# Warning message because the frequency in some bins is less than 5 which considered to be minimum
 
 
 
@@ -292,8 +292,8 @@ chisq.test(empirical_pdf,theoretical_pdf)
 ############################################# Q1 Check Negative binomial ###################################################
 
 #MME Estimator
-r_hat <- mean(data$CLM_FREQ)^2 / (var(data$CLM_FREQ) - mean(data$CLM_FREQ)) ###Rubbish
-p_hat <- 1- (mean(data$CLM_FREQ ) / var(data$CLM_FREQ )) ##Rubbish
+p_hat <- 1 / var(data$CLM_FREQ) * mean(data$CLM_FREQ)
+r_hat <- mean(data$CLM_FREQ)*p_hat /(1-p_hat)
 
 #Here we plot a histogram of our claim frequency data against the theoretical pdf of parameter p_hat and r_hat.
 hist(data$CLM_FREQ, breaks = 30, freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
@@ -311,6 +311,26 @@ for(i in 1:8){
 }
 theoretical_pdf[9] <- 1-sum(theoretical_pdf[1:8])
 
+chisq.test(empirical_pdf,theoretical_pdf)
+# Warning message because the frequency in some bins is less than 5 which considered to be minimum
+
+
+
+#******************************************************* Q1 Result *********************************************************
+
+hist(data$CLM_FREQ, breaks = 30, freq = FALSE, main = "Empirical Histogram with Theoretical PDFs")
+x <- seq(0,10,length.out = 11)
+y <- dpois(x, lambda = lambda_hat_poisson) #Theoretical Distribution
+y_2 <- dnbinom(x,size = r_hat,prob = p_hat) #Theoretical Distribution
+lines(x,y, col = "Red")
+lines(x,y_2, col = "Blue")
+legend("topright", legend = c("Poisson Distribution", "Negative Binomial Distribution"),
+       col = c("red", "blue"), lty = 1)
+
+#Claim Frequency:
+#We decided to stick with poisson for claim frequency. Both p-values against the theoretical distribution are exactly
+#the same. However, poisson has interesting properties.... etc..
+
 
 
 
@@ -323,26 +343,39 @@ theoretical_pdf[9] <- 1-sum(theoretical_pdf[1:8])
 
 
 ############################################# Q2 Check Exponential #########################################################
-claim_size_vector <- apply(data[,3:9],1 ,sum)
 
-claim_size_vector_ecxl_zero <- claim_size_vector[claim_size_vector>0]
+claim_size_vector <- vector()
+for  (i in 3:9 ){
+  for (j in 1:nrow(data)) 
+    if ( data[j,i] > 0 ){
+      claim_size_vector <- append(claim_size_vector, data[j,i])
+    }
+}
 
-hist(claim_size_vector_ecxl_zero,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
-x <- seq(0,3500,length.out = 1000)
+
+hist(claim_size_vector,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
+x <- seq(0,3500,length.out = length(claim_size_vector))
 
 #Maximum Likelihood Estimator
-lambda_hat <- 1 / (1/length((claim_size_vector_ecxl_zero)) * sum(claim_size_vector_ecxl_zero))
-y <- pdf_exponential(lambda_hat,x) #Theoretical Distribution
+lambda_hat_exp <- 1 / (1/length((claim_size_vector)) * sum(claim_size_vector))
+y <- dexp(x, lambda = lambda_hat_exp) #Theoretical Distribution
 lines(x,y)
 
 
 ## Test whether exponential is a good model.
 
-simulate_exponential(lambda_hat,length(claim_size_vector_ecxl_zero))
+ks.test(claim_size_vector, rate = lambda_hat_exp) #kolomogorov smirnov test
 
-ks.test(claim_size_vector_ecxl_zero, "pexp", lambda_hat) #kolomogorov smirnov test
 
-qqplot(claim_size_vector_ecxl_zero,simulate_exponential(lambda_hat,length(claim_size_vector_ecxl_zero)))
+ks.test(claim_size_vector, theoretical_quantiles) #kolomogorov smirnov test
+
+
+theoretical_quantiles <- qexp(ppoints(length(claim_size_vector)),rate = lambda_hat_exp )
+
+qqplot(theoretical_quantiles, claim_size_vector,
+       xlab = "Theoretical Quantiles", ylab = "Observed Quantiles",
+       main = "QQ Plot for Exponential Distribution")
+abline(0, 1, col = "red", lty = 2)  # Add reference line
 
 
 
@@ -350,18 +383,56 @@ qqplot(claim_size_vector_ecxl_zero,simulate_exponential(lambda_hat,length(claim_
 
 
 
-hist(claim_size_vector_ecxl_zero,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
-x <- seq(0,3500,length.out = 812)
+hist(claim_size_vector,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
+x <- seq(0,3500,length.out = length(claim_size_vector))
 
 #Maximum Likelihood Estimator
-gamma_estimated_theta <- var(claim_size_vector_ecxl_zero) / mean(claim_size_vector_ecxl_zero)
-gamma_estimated_k <- mean(claim_size_vector_ecxl_zero)^2/ var(claim_size_vector_ecxl_zero)
+gamma_estimated_theta <- var(claim_size_vector) / mean(claim_size_vector)
+gamma_estimated_k <- mean(claim_size_vector)^2/ var(claim_size_vector)
 
 y_2 <- dgamma(x,shape = gamma_estimated_k, scale = gamma_estimated_theta ) #Theoretical Distribution
 lines(x,y_2)
 
 
-qqplot(claim_size_vector_ecxl_zero,rgamma(1000,shape = gamma_estimated_k,gamma_estimated_theta))
+
+#Additionally we include 11 plot against the theoretical distribution
+theoretical_quantiles <- qgamma(ppoints(100), shape = gamma_estimated_k, scale = gamma_estimated_theta )
+
+qqplot(theoretical_quantiles, claim_size_vector,
+       xlab = "Theoretical Quantiles", ylab = "Observed Quantiles",
+       main = "QQ Plot for Gamma Distribution")
+abline(0, 1, col = "red", lty = 2)  # Add reference line
+
+ks.test(claim_size_vector, theoretical_quantiles)
+
+
+qqplot(claim_size_vector,rgamma(length(claim_size_vector),
+                                            shape = gamma_estimated_k,scale = gamma_estimated_theta),
+                                            main = "QQ Plot for Gamma Distribution")
+
+
+
+
+
+
+
+
+
+#******************************************************* Q2 Result *********************************************************
+#Claim Severity:
+#With regard to claim frequency we decided to select the gamma distribution. 
+
+hist(claim_size_vector,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
+x <- seq(0,3500,length.out = 812)
+
+y <- dexp(x,lambda = lambda_hat_exp)
+y_2 <- dgamma(x,shape = gamma_estimated_k, scale = gamma_estimated_theta ) #Theoretical Distribution
+lines(x,y, col = "Red")
+lines(x,y_2, col = "Blue")
+legend("topright", legend = c("Exonential Distribution", "Gamma Distribution"),
+       col = c("red", "blue"), lty = 1)
+
+
 
 
 ############################################################################################################################
@@ -371,9 +442,12 @@ qqplot(claim_size_vector_ecxl_zero,rgamma(1000,shape = gamma_estimated_k,gamma_e
 
 ################################################# Q3 Monte Carlo Poisson ###################################################
 
-#Here we will simulate a Poisson random variables using the same parameter lambda we obtained from the MLE estimator.
+#Here we will simulate 1000 Poisson random variables using the same parameter lambda we obtained from the ***MLE*** estimator.
 #The simulation algorithm is in the function simulate poisson. To assess the reliability of our Monte Carlo estimator to
-#Our data we follow two approaches motivated by the concept of multiple testing. That is, due to randomness a simple one
+#Our data 
+
+
+#we follow two approaches motivated by the concept of multiple testing. That is, due to randomness a simple one
 #time chi squared test could be significant whereas it should not or vice versa. To mitigate this issue we will generate
 #1000 randomly generated poisson random variables with the parameter we estimated and test against each of them obtaining
 #1000 pv-values instead of a single. We could then take its average value as a more robust statistical test.
@@ -384,19 +458,78 @@ qqplot(claim_size_vector_ecxl_zero,rgamma(1000,shape = gamma_estimated_k,gamma_e
 # it would not be susceptible to changes in magnitude in comparison to the first approach.
 
 #Approach 1
+mean_vector_poisson <- c()
+var_vector_poisson <- c()
+
 poisson_simulations_list <- vector(mode = "list", length = 1000)
 for(i in 1:1000) {
   poisson_simulations_list[[i]] <- vector(mode = "list", length = 1000)
 }
-for(i in 1:1000){
-  poisson_simulations_list[[i]] <- simulate_poisson(lambda_hat,1000)
+for(i in 1:10000){
+  poisson_simulations_list[[i]] <- simulate_poisson(lambda_hat_poisson,10000)
 }
+
+for(i in 1:1000){
+  mean_vector_poisson[i] <- 
+}
+
+
+mean_vector_poisson <- c()
+var_vector_poisson <- c()
 
 pval_vector <- vector()
 for(i in 1:1000){
   pval_vector[i] <- chisq.test(poisson_simulations_list[[i]],data$CLM_FREQ)$p.val
 }
 mean(pval_vector)
+
+
+
+
+
+#Plot the avg of 1000 simulations against the data
+generate_random_comparable_poisson <- function(lambda){
+  
+  my_poisson_simulation <- simulate_poisson(lambda,1000)
+  
+  
+  random_vector <- c()
+  
+  for (i in 1:8) {
+    result <- table(my_poisson_simulation)[as.character(i-1)] 
+    if (is.na(result)) {
+      random_vector[i] <- 0
+    } else {
+      random_vector[i] <- result
+    }
+    
+  }
+  random_vector[9] <- 1000- sum(random_vector[1:8])
+  return(random_vector)    
+}
+
+
+poisson_simulations_list_comparable <- vector(mode = "list", length = 1000)
+for(i in 1:1000) {
+  poisson_simulations_list_comparable[[i]] <- vector(mode = "list", length = 1000)
+}
+for(i in 1:1000){
+  poisson_simulations_list_comparable[[i]] <- generate_random_comparable_poisson(lambda_hat_poisson)
+}
+
+# We can plot the average of the 1000 simulations against the data
+avg_of_simulations <- c()
+for(j in 1:9){
+  for(i in 1:1000){
+    avg_of_simulations[j] <- mean(sapply(poisson_simulations_list_comparable, "[[", j))
+  }
+}
+
+barplot(table(data$CLM_FREQ), col = gray(0,0.5), beside = T)
+barplot(avg_of_simulations, col = gray(1,0.8),beside = T,add = T)
+legend("topright", legend = c("Original Data", "Average of 1000 Simulations"), 
+       fill = c(gray(0, 0.5), gray(1, 0.8)))
+
 
 #Approach 2
 #Essentially we will create a similar table containing comparable pdfs based on the poisson monte carlo estimators
@@ -405,7 +538,7 @@ for(i in seq_along(simulated_pdfs)) {
   simulated_pdfs[[i]] <- vector(mode = "list", length = 9)
 }
 
-generate_random_comparable_poisson <- function(lambda){
+generate_random_comparable_poisson_pdf <- function(lambda){
   
   my_poisson_simulation <- simulate_poisson(lambda,1000)
   
@@ -427,9 +560,9 @@ generate_random_comparable_poisson <- function(lambda){
 
 
 
-
+#Multiple testing against pdfs
 for(i in 1:1000){
-  simulated_pdfs[[i]] <- generate_random_comparable_poisson(lambda_hat)##issue here
+  simulated_pdfs[[i]] <- generate_random_comparable_poisson_pdf(lambda_hat)##issue here
 }
 #In deed much more stable p-values in comparison to using randomly generated poisson
 pval_vector <- c()
@@ -442,7 +575,9 @@ mean(pval_vector)
 
 
 
-################################################# Q3 Variance Reduction Poisson ###################################################
+
+
+################################################# Q3 Variance Reduction Poisson ############################################
 
 # We now consider variance reduction techniques
 # Does it make sense, Expected value of poisson is the variance!! Do we really want to reduce the variance??
@@ -457,7 +592,72 @@ mean(pval_vector)
 
 
 
-################################################# Q3 Monte Carlo Gamma ############################################################
+############################################## Q3 Monte Carlo Negative Binomial ###########################################
+
+#Approach 1
+nb_simulations_list <- vector(mode = "list", length = 1000)
+for(i in 1:1000) {
+  nb_simulations_list[[i]] <- vector(mode = "list", length = 1000)
+}
+for(i in 1:1000){
+  nb_simulations_list[[i]] <- rnbinom(1000,size = r_hat, p = p_hat)##Switch with our own simulation function
+}
+
+pval_vector <- vector()
+for(i in 1:1000){
+  pval_vector[i] <- chisq.test(nb_simulations_list[[i]],data$CLM_FREQ)$p.val
+}
+mean(pval_vector)
+
+
+
+
+
+
+#Approach 2
+#Essentially we will create a similar table containing comparable pdfs based on the poisson monte carlo estimators
+simulated_pdfs <- vector(mode = "list", length = 1000)
+for(i in seq_along(simulated_pdfs)) {
+  simulated_pdfs[[i]] <- vector(mode = "list", length = 9)
+}
+
+generate_random_comparable_nb <- function(r_hat,p_hat){
+  
+  my_nb_simulation <- rnbinom(1000,size = r_hat, p = p_hat)#Switch with our own simulation function
+  
+  
+  random_vector <- c()
+  
+  for (i in 1:8) {
+    prob <- table(my_nb_simulation)[as.character(i-1)] / 1000
+    if (is.na(prob)) {
+      random_vector[i] <- 0
+    } else {
+      random_vector[i] <- prob
+    }
+    
+  }
+  random_vector[9] <- 1- sum(random_vector[1:8])
+  return(random_vector)    
+}
+
+
+
+
+for(i in 1:1000){
+  simulated_pdfs[[i]] <- generate_random_comparable_nb(r_hat,p_hat)##issue here
+}
+#In deed much more stable p-values in comparison to using randomly generated poisson
+pval_vector <- c()
+for(i in 1:1000){
+  pval_vector[i] <- chisq.test(simulated_pdfs[[i]],empirical_pdf)$p.val
+}
+
+mean(pval_vector) #Ever so slightly better
+
+
+
+########################################### Q3 Variance reduction Negative Binomial #######################################
 
 
 
@@ -466,6 +666,35 @@ mean(pval_vector)
 
 
 
+########################################### Q3 Variance reduction Negative Binomial #######################################
+
+
+
+
+
+
+
+########################################### Q3 Variance reduction Negative Binomial #######################################
+
+
+##################################################### Q3 Monte Carlo Gamma ################################################
+
+#Here we will simulate random gamma distributions with the Method of moments scale and shape parameters and test our data against
+#each of them and take the mean p-value.
+
+gamma_simulations_list <- vector(mode = "list", length = 1000)
+for(i in 1:1000) {
+  gamma_simulations_list[[i]] <- vector(mode = "list", length = length(claim_size_vector))
+}
+for(i in 1:10e4){
+  gamma_simulations_list[[i]] <- rgamma(10e4,shape = gamma_estimated_k, scale = gamma_estimated_theta)##Switch with our own simulation function
+}
+
+pval_vector <- vector()
+for(i in 1:1000){
+  pval_vector[i] <- ks.test(gamma_simulations_list[[i]],claim_size_vector)$p.val
+}
+mean(pval_vector)
 
 
 
