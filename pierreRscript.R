@@ -99,6 +99,7 @@ totalPremium <- sum(data$PREMIUM)
 #tentative ff plot
 print(data[4,3])
 
+#HERE MOMO 
 lossesVector <- vector()
 for  (i in 3:9 ){
   for (j in 1:length(data[,i])) 
