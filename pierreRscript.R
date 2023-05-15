@@ -1,7 +1,6 @@
 source("rscript.r")
 library(EnvStats)
 library(ffbase)
-library(Matching)
 
 #make this accurate 
 
@@ -91,7 +90,7 @@ totalLossComputation <- function(){
   return (loss) 
 }
 
-totalPremium <- sum(data$PREMIUM) 
+#totalPremium <- sum(data$PREMIUM) 
 #tariff 
 
 
@@ -99,19 +98,16 @@ totalPremium <- sum(data$PREMIUM)
 #tentative ff plot
 print(data[4,3])
 
-#HERE MOMO 
-#test
 lossesVector <- vector()
 for  (i in 3:9 ){
   for (j in 1:length(data[,i])) 
-  if ( data[j,i] > 0 ){
-    lossesVector <- append(lossesVector, data[j,i])
-    print (data[j,i])
-  }
+    if ( data[j,i] > 0 ){
+      lossesVector <- append(lossesVector, data[j,i])
+      print (data[j,i])
+    }
 }
 empiricalCDFVector <- vector() 
 
-print(length(lossesVector) )
 
 
 print(lossesVector) 
@@ -140,32 +136,13 @@ lines(x,y, col = "blue")
 gamma_estimated_teta <- sample_variance(lossesVector) / sample_mean(lossesVector)
 gamma_estimated_k <- sample_mean(lossesVector)/ gamma_estimated_teta 
 
-print(gamma_estimated_k) 
-print(gamma_estimated_teta)
-
-
-#FFTEMPLATE 
 #prototype for FF plot of losses vector , here in the gamma case 
-plot.ecdf(lossesVector, main = "FF plot", xlab = "Loss Amount", ylab = "Empirical Cumulative Distribution Function")
-#rgb(0.5,0,0,0.25)
+plot.ecdf(lossesVector, main = "FF plot", xlab = "Loss Amount", ylab = "Empirical Cumulative Distribution Function", col.points = rgb(0.5,0,0,0.25))
 x = seq(0,1500, 0.1)
 y = pgamma(x, shape = gamma_estimated_k, scale =  gamma_estimated_teta) 
-lines(x,y, col = "red")
-
-
-
-
+lines(x,y, col = "blue")
 #pretty nice 
 #exp special case of gamma so remove it 
-
-print(length(lossesVector))
-
-
-print( ks.test(lossesVector, pgamma(x, shape = gamma_estimated_k, scale =  gamma_estimated_teta) ) ) 
-
-
-#comment on presence of ties warning in the report 
-#else encouraging pvalue 
 
 #inverse gaussian distribution 
 #estimators 
@@ -174,8 +151,6 @@ hist(lossesVector)
 x = seq(0,1500, 0.1)
 y = 400000*dgamma(x, shape = gamma_estimated_k, scale =  gamma_estimated_teta) #gamma as an example 
 lines(x,y, col = "blue")
-
-
 
 #weibul estimators
 #Method of moments -> no exact solution 
@@ -213,27 +188,10 @@ y = pgamma(x, shape = gamma_estimated_k, scale =  gamma_estimated_teta)
 lines(x,y, col = "green")
 #not as good as above 
 
-
-
-parameters_mmue <- eweibull(x= lossesVector, method = "mmue")$parameters
-parameters_mle <- eweibull(x= lossesVector, method = "mle")$parameters
-parameters_mle <- eweibull(x= lossesVector, method = "mme")$parameters
+shape <- eweibull(x= lossesVector, method = "mle")$parameters[[1]]
+print (eweibull(x= lossesVector, method = "mle"))
 print(shape)
-#slightly different mme and mmue => compare them in qq pp ff ks and chi square -> check better fit 
-#prototype for FF plot of losses vector , here in the weibul case 
-plot.ecdf(lossesVector, main = "FF plot", xlab = "Loss Amount", ylab = "Empirical Cumulative Distribution Function")
-x = seq(0,1500, 0.1)
-y = pweibull(x, shape = parameters_mmue[[1]], scale =  parameters_mmue[[2]]) 
-lines(x,y, col = "blue")
-z = pweibull(x, shape = parameters_mle[[1]], scale =  parameters_mle[[2]]) 
-lines(x,z, col = "green")
-a = pweibull(x, shape = parameters_mme[[1]], scale =  parameters_mme[[2]]) 
-lines(x,z, col = "red")
-#not as good as above 
-#mininal differences 
 
-#same for gamma versus our MoM gamma ? 
-      
 
 hist(eweibull(x= lossesVector, method = "mle"))
 
@@ -241,28 +199,7 @@ x = seq(0,1500, 0.1)
 y = 400000*dgamma(x, shape = gamma_estimated_k, scale =  gamma_estimated_teta) #gamma as an example 
 lines(x,y, col = "blue")
 
-print( ks.test(lossesVector, pweibull(x, shape = value[[1]], scale =  value[[2]]) ) ) 
 
-
-
-#print( ks.test(lossesVector, pgamma(x, shape = gamma_estimated_k, scale =  gamma_estimated_teta) ) ) 
-
-print( ks.test(lossesVector,"pgamma",  shape = gamma_estimated_k, scale =  gamma_estimated_teta , exact = TRUE )  )
-
-print(gamma_estimated_k) 
-print(gamma_estimated_teta) 
-
-
-
-testVector <- rgamma(1000, shape = gamma_estimated_k, scale =  gamma_estimated_teta)
-
-print( ks.test(testVector, pgamma(x, shape = gamma_estimated_k, scale =  gamma_estimated_teta) ) , exact = FALSE) 
-
-#same p-values ? very peculiar since on the F plot one is clearly a better match than the other, comment on it 
-
-#qq plot and pp plot for the two candidates above ? 
-
-pgamma(x, shape = gamma_estimated_k, scale =  gamma_estimated_teta)
 
 # plot(x, ecdf(lossesVector)(x))
 
@@ -290,21 +227,6 @@ pgamma(x, shape = gamma_estimated_k, scale =  gamma_estimated_teta)
 #      breaks = 30,
 #      add = TRUE, # Add plot to previous one!
 #      col = gray(1, .8))
-
-gamma_estimated_teta <- sample_variance(lossesVector) / sample_mean(lossesVector)
-gamma_estimated_k <- sample_mean(lossesVector)/ gamma_estimated_teta 
-
-simulatedGamma <- vector() 
-for (i in 1:length(lossesVector)){
-  simulatedGamma <- append( simulatedGamma, rgamma(n= 1,shape = gamma_estimated_k, scale =  gamma_estimated_teta))
-}
-ks.test(lossesVector, simulatedGamma)
-
-#ks.boot(lossesVector, pgamma(x, shape = gamma_estimated_k, scale =  gamma_estimated_teta) ) 
-#no ties issue but NA with the above, only for two vectors 
-for (i in 1:10){
-  print (i) 
-}
 
 
 ks_test_sum <-0 
@@ -345,7 +267,7 @@ simulate_negative_binomial <- function(r, p, size){
     cat("item", i)
     lower_bound <- 0 
     upper_bound <- choose(counter + r - 1 , counter )* p^r * (1-p)^counter
-
+    
     print(lower_bound) 
     print(upper_bound) 
     counter <- 0 
@@ -365,10 +287,7 @@ simulate_negative_binomial <- function(r, p, size){
 
 print(simulate_negative_binomial(10, 0.5, 10))
 
-
 #antithetic estimator attempt 
-
-
 
 # poisson inversion method 
 
@@ -420,9 +339,11 @@ poisson_antithetic_estimator <- function (sample_size, lambda) {
   sum <- sum /(2* sample_size )
 }
 
+
+
 #no need for a funcion really 
 gamma_inversion_method <- function (random_number, k, theta) {
-  return qgamma(random_number, shape = k, scale =  theta) 
+  return (qgamma(random_number, shape = k, scale =  theta) )
 }
 
 gamma_antithetic_estimator <- function (sample_size, k, theta) {
@@ -434,5 +355,7 @@ gamma_antithetic_estimator <- function (sample_size, k, theta) {
   sum <- sum /(2* sample_size )
 }
 
-#importance sampling -> optimal is disqualified ? g(x) is x is positive so e(abs val not known) (technically is)
+
+#importance sampling -> optimal is disqualified ? g(x) is x is positive so e(abs val not known) (technically is but defeats the purpose )
+# shifting and scalind fo not make for easier simulation, exponential twisting neither 
 
