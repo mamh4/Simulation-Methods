@@ -356,6 +356,280 @@ gamma_antithetic_estimator <- function (sample_size, k, theta) {
 }
 
 
+
+
 #importance sampling -> optimal is disqualified ? g(x) is x is positive so e(abs val not known) (technically is but defeats the purpose )
 # shifting and scalind fo not make for easier simulation, exponential twisting neither 
+
+#vehicle discrimination 
+# SUV     .  .    Sports Car.    Van 
+
+vehicleType <- factor("Panel Truck", "Pickup", "Sedan", "Sports Car", "SUV", "Van") 
+
+print(vehicleType)
+
+class("Panel Truck")
+
+levels(data[,11])
+
+class(data[3,11][[1]]) 
+
+class(data[3,11]) 
+
+as.character(data[3,11])
+
+data[3,11]
+
+
+claimFrequencyOccurencesPerVehicleType <- matrix(0, 6, 8 )
+for (i in 1:length(data[,1])){
+  counter <- 1
+  print (data[i,12])
+  while (! (as.character(data[i,11]) == vehicleType[counter]) ){
+    counter <- counter + 1 
+  }
+  claimFrequencyOccurencesPerVehicleType[counter , data[i,2] + 1 ] <- claimFrequencyOccurencesPerVehicleType[counter + 1 , data[i,2] + 1 ] + 1 
+}
+print(claimFrequencyOccurencesPerVehicleType)
+
+
+plot.ecdf(lossesVector, main = "FF plot", xlab = "Loss Amount", ylab = "Empirical Cumulative Distribution Function", col.points = rgb(0,0,0,0.25))
+
+
+
+hist(data[data$CAR_TYPE=="SUV","CLM_FREQ"], col = gray(0,0.5)) 
+#hist(data[data$CAR_TYPE=="Sedan","CLM_FREQ"], col = gray(1,0.8), add = T) 
+
+hist(data[data$CAR_TYPE=="Sports Car","CLM_FREQ"], col = gray(1,0.8)) 
+
+
+
+
+     
+plot.ecdf(data[data$CAR_TYPE=="SUV","CLM_FREQ"], col = gray(0,0.5))
+plot.ecdf(data[data$CAR_TYPE=="Sedan","CLM_FREQ"], col = gray(1,0.8), add = T)
+
+
+
+vehicleType <- c("Panel Truck", "Pickup", "Sedan", "Sports Car", "SUV", "Van") 
+vehicleTypeAverage <- rep(0, 6 )
+for (i in 1:length(vehicleType)){
+  vehicleTypeAverage[i] <- mean(data[data$CAR_TYPE==vehicleType[i],"CLM_FREQ"])
+}
+print(vehicleTypeAverage)
+
+vehicleType <- c("Panel Truck", "Pickup", "Sedan", "Sports Car", "SUV", "Van") 
+vehicleTypeAverageClaimSeverity <- rep(0, 6 )
+for (i in 1:length(vehicleType)){
+  currentVector <- vector() 
+  currentVector <- append(currentVector, data[data$CAR_TYPE==vehicleType[i],"CLM_AMT_1"]) 
+  currentVector <- append(currentVector, data[data$CAR_TYPE==vehicleType[i],"CLM_AMT_2"]) 
+  currentVector <- append(currentVector, data[data$CAR_TYPE==vehicleType[i],"CLM_AMT_3"]) 
+  currentVector <- append(currentVector, data[data$CAR_TYPE==vehicleType[i],"CLM_AMT_4"]) 
+  currentVector <- append(currentVector, data[data$CAR_TYPE==vehicleType[i],"CLM_AMT_5"]) 
+  currentVector <- append(currentVector, data[data$CAR_TYPE==vehicleType[i],"CLM_AMT_6"]) 
+  currentVector <- append(currentVector, data[data$CAR_TYPE==vehicleType[i],"CLM_AMT_7"]) 
+  cleanUp <- vector() 
+  for( j in 1:length(currentVector)){
+    if (currentVector[j] > 0 ){
+      cleanUp <- append(cleanUp, currentVector[j])
+    }
+  }
+  hist(cleanUp)
+  vehicleTypeAverageClaimSeverity[i] <- mean(cleanUp)
+}
+print(vehicleTypeAverageClaimSeverity)
+# disappointing, disparity is not that great 
+
+useType <- c("Private", "Commercial") 
+useTypeAverageClaimSeverity <- rep(0, 2 )
+useTypeVarianceClaimSeverity <- rep(0, 2 )
+
+for (i in 1:length(useType)){
+  currentVector <- vector() 
+  currentVector <- append(currentVector, data[data$CAR_USE==useType[i],"CLM_AMT_1"]) 
+  currentVector <- append(currentVector, data[data$CAR_USE==useType[i],"CLM_AMT_2"]) 
+  currentVector <- append(currentVector, data[data$CAR_USE==useType[i],"CLM_AMT_3"]) 
+  currentVector <- append(currentVector, data[data$CAR_USE==useType[i],"CLM_AMT_4"]) 
+  currentVector <- append(currentVector, data[data$CAR_USE==useType[i],"CLM_AMT_5"]) 
+  currentVector <- append(currentVector, data[data$CAR_USE==useType[i],"CLM_AMT_6"]) 
+  currentVector <- append(currentVector, data[data$CAR_USE==useType[i],"CLM_AMT_7"]) 
+  cleanUp <- vector() # remove the zeroes 
+  for( j in 1:length(currentVector)){
+    if (currentVector[j] > 0 ){
+      cleanUp <- append(cleanUp, currentVector[j])
+    }
+  }
+  hist(cleanUp) 
+  useTypeAverageClaimSeverity[i] <- mean(cleanUp)
+  useTypeVarianceClaimSeverity[i] <- var(cleanUp)
+}
+print(useTypeAverageClaimSeverity)
+print(useTypeVarianceClaimSeverity) # variance more significant maybe 
+# disappointing, disparity is not that great either 
+# put together and do a versus plot 
+
+
+areaType <- c("Urban", "Rural") 
+areaTypeAverageClaimSeverity <- rep(0, 2 )
+areaTypeVarianceClaimSeverity <- rep(0, 2 )
+for (i in 1:length(areaType)){
+  currentVector <- vector() 
+  currentVector <- append(currentVector, data[data$AREA==areaType[i],"CLM_AMT_1"]) 
+  currentVector <- append(currentVector, data[data$AREA==areaType[i],"CLM_AMT_2"]) 
+  currentVector <- append(currentVector, data[data$AREA==areaType[i],"CLM_AMT_3"]) 
+  currentVector <- append(currentVector, data[data$AREA==areaType[i],"CLM_AMT_4"]) 
+  currentVector <- append(currentVector, data[data$AREA==areaType[i],"CLM_AMT_5"]) 
+  currentVector <- append(currentVector, data[data$AREA==areaType[i],"CLM_AMT_6"]) 
+  currentVector <- append(currentVector, data[data$AREA==areaType[i],"CLM_AMT_7"]) 
+  cleanUp <- vector() # remove the zeroes 
+  for( j in 1:length(currentVector)){
+    if (currentVector[j] > 0 ){
+      cleanUp <- append(cleanUp, currentVector[j])
+    }
+  }
+  hist(cleanUp) 
+  areaTypeAverageClaimSeverity[i] <- mean(cleanUp)
+  areaTypeVarianceClaimSeverity[i] <- var(cleanUp)
+}
+print(areaTypeAverageClaimSeverity)
+print(areaTypeVarianceClaimSeverity) # variance more significant maybe 
+# disappointing, disparity is not that great either 
+# put together and do a versus plot 
+
+
+
+print(data[data$CAR_TYPE=="Pickup","CLM_AMT_1"] )
+
+
+#use discrimination Private Commercial 
+
+# age discrimination 19 to 80 
+
+#urban vs Rural 
+
+#covariance with categorical variables 
+
+# get hypothesis on relevant categories with further data exploration 
+# gender is illegal 
+
+# intuitively : age classes for frequency, vehicle type for severity 
+
+#claim frequency dist as function of age 
+
+19 to 80 
+16 categories 
+- 3 
+13 categories 
+15 
+20
+
+
+#INITIALISE NUMBER OF AGE BRACKETS 
+numberOfAgeBrackets <- 14
+ageBracketVector <- rep(0, numberOfAgeBrackets + 1 )
+for (i in 1:length(ageBracketVector)){
+  ageBracketVector[i] <- 15 + (i-1)*5 
+}  
+#print (ageBracketVector) 
+#COLLECT CLAIM FREQUENCY DATA AS FUNCTION OF AGE 
+claimFrequencyOccurencesPerAgeBracket <- matrix(0, numberOfAgeBrackets, 8 )
+print (claimFrequencyOccurencesPerAgeBracket) 
+for (i in 1:length(data[,1])){
+  counter <-1
+  print (data[i,12]) 
+  while (! ((data[i,12] > ageBracketVector[counter]) & (data[i,12] <= ageBracketVector[counter + 1 ] )) ){
+    counter <- counter + 1 
+  }
+  claimFrequencyOccurencesPerAgeBracket[counter , data[i,2] + 1 ] <- claimFrequencyOccurencesPerAgeBracket[counter + 1 , data[i,2] + 1 ] + 1 
+}
+#technically no data in last bracket 
+#print  (claimFrequencyOccurencesPerAgeBracket) 
+claimFrequencyAveragePerAgeBracket <- rep(0, numberOfAgeBrackets)
+for (i in 1:numberOfAgeBrackets){
+  currentSum <-0 
+  itemCounter <- 0 
+  for (j in 1:8){
+    currentSum <- currentSum + (j-1)*claimFrequencyOccurencesPerAgeBracket[i,j ]
+    itemCounter <- itemCounter + claimFrequencyOccurencesPerAgeBracket[i,j ]
+  }
+  if (itemCounter > 0 ) {
+    claimFrequencyAveragePerAgeBracket[i] <- currentSum/ itemCounter
+  }
+}
+print (claimFrequencyAveragePerAgeBracket) 
+#fake age bracket <- middle of age brackets 
+fakeAgeBracketsVector <- rep(0, numberOfAgeBrackets)
+for (i in 1:numberOfAgeBrackets ){
+  fakeAgeBracketsVector[i] <- 17.5 + (i-1)*5 
+}
+plot(fakeAgeBracketsVector, claimFrequencyAveragePerAgeBracket, type = "b") 
+
+# number of claim model -> should have a parameter informed by the age bracket ? function of age bracket 
+# same for the claim severity model ... parameters as functions of car type 
+
+
+
+
+
+
+
+# INITIALISE AGE BRACKETS 
+ageBracketsVector <- vector() 
+for (i in 1:13 ){
+  print (i) 
+  ageBracketsVector <- append(ageBracketsVector, 15 + 5*i )
+}
+#print( ageBracketsVector)
+# INITIALISE AGE BRACKETS 
+sumClaimFrequencyVectorPerAgeBracket <- vector() 
+itemClaimFrequencyVectorPerAgeBracket <- vector(0, 0) 
+for (j in 1:length(data[,2])) 
+    if ( data[j,i] > 0 ){
+      counter <-0 
+      while (! ((data[j,12] > (15 + 5*counter)) & (data[j,12] <= (15 + 5*(counter+ 1 )) )) ){
+        counter <- counter + 1 
+      }
+      claimFrequencyVectorPerAgeBracket[counter + 1 ] <- claimFrequencyVectorPerAgeBracket[counter + 1 ] + data[j,2]
+      itemClaimFrequencyVectorPerAgeBracket[counter + 1 ] <- itemClaimFrequencyVectorPerAgeBracket[counter + 1 ] + 1 
+    }
+averageClaimFrequencyVectorPerAgeBracket <- vector() 
+for (i in 1:length(sumClaimFrequencyVectorPerAgeBracket)  ){
+  if (itemClaimFrequencyVectorPerAgeBracket[i] > 0 ) {
+    averageClaimFrequencyVectorPerAgeBracket[i] <- sumClaimFrequencyVectorPerAgeBracket[i] / itemClaimFrequencyVectorPerAgeBracket[i]
+  }
+}
+
+print(fakeAgeBracketsVector) 
+print(length(fakeAgeBracketsVector) ) 
+print(length(averageClaimFrequencyVectorPerAgeBracket))
+plot (fakeAgeBracketsVector, averageClaimFrequencyVectorPerAgeBracket) 
+
+print ( cov(data[,2], data[,12])) 
+
+
+
+for  (i in 3:9 ){
+  for (j in 1:length(data[,i])) 
+    if ( data[j,i] > 0 ){
+      counter <-0 
+      while (! ((data[j,12] > (15 + 5*counter)) & (data[j,12] <= (15 + 5*(counter+ 1 )) )) ){
+        counter <- counter + 1 
+      }
+      claimFrequencyVectorPerAgeBracket[counter + 1 ] <- claimFrequencyVectorPerAgeBracket[counter + 1 ] + 
+    }
+}
+
+
+
+claimFrequencyVector <- vector()
+for  (i in 3:9 ){
+  for (j in 1:length(data[,i])) 
+    if ( data[j,i] > 0 ){
+      lossesVector <- append(lossesVector, data[j,i])
+      print (data[j,i])
+    }
+}
+empiricalCDFVector <- vector() 
+
 
