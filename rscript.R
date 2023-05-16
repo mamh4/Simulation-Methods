@@ -846,7 +846,7 @@ for(i in 1:1000){
 
 
 #Variance is even bigger!
-hist(mean_vector_gamma_IS, main = "Expectation of 1000 Gamma Simulations - CV", breaks = 40)
+hist(mean_vector_gamma_IS, main = "Expectation of 1000 Gamma Simulations - IS", breaks = 40)
 abline(v = mean(claim_size_vector),col="Red")
 legend("topright", legend = "Data", col = "red", lty = 1)
 mtext(as.character(round(var(mean_vector_gamma_IS),4)), side = 3, line = -2,
