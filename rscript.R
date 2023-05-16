@@ -6,7 +6,7 @@ library(magrittr) # Pipe operator
 library(dplyr) # data wrangling
 library(purrr) # efficient one liner pattern-matching
 library(ggplot2) # additional graphics
-
+library(TeachingDemos) # For overlaying plots
 
 
 ############################################################################################################################
@@ -467,13 +467,13 @@ legend("topright", legend = c("Exonential Distribution", "Gamma Distribution"),
 ########################################################### Q3 #############################################################
 ############################################################################################################################
 
-set.seed(2023)
+set.seed(2022)
 ############################################## Q3 Monte Carlo Negative Binomial ###########################################
 #To assess the reliability of our monte carlo estimators in relation to the data we have, we will simulate 1000 negative 
 #binomial random variables using the same parameter p and r we obtained from the ***MoM*** estimator. We will do the following
 #1) Plot histograms of the mean and variance values of the simulation to compare to the data.
 #2) Plot a histogram of the average of those 1000 simulations (converting to the true value) and compare them to the data.
-#3) Make a sample t-test to test whether the mean value could serve as an expectation of the mean value of the simluations
+#3) Make a sample t-test to test whether the mean value could serve as an expectation of the mean value of the simulations.
 
 
 
@@ -495,14 +495,13 @@ for(i in 1:1000){
 }
 
 
-hist(mean_vector_nb, main = "Expectation of 1000 Negative Binomial Simulations")
+hist(mean_vector_nb, main = "Expectation of 1000 Negative Binomial Simulations",breaks = 40)
 abline(v = mean(data$CLM_FREQ),col="Red")
 legend("topright", legend = "Data", col = "red", lty = 1)
 
-hist(var_vector_nb, main = "Variance of 1000 Negative Binomial Simulations")
-abline(v = mean(var(data$CLM_FREQ)),col="Red")
+hist(var_vector_nb, main = "Variance of 1000 Negative Binomial Simulations",breaks = seq(2,3,0.01))
+abline(v = var(data$CLM_FREQ),col="Red")
 legend("topright", legend = "Data", col = "red", lty = 1)
-
 
 
 #Approach 2
@@ -556,13 +555,15 @@ legend("topright", legend = c("Original Data", "Average of 1000 Simulations"),
 
 #Approach 3
 t.test(x = mean_vector_nb, mu = mean(data$CLM_FREQ))
-
+t.test(x = var_vector_nb, mu = var(data$CLM_FREQ))
 
 
 
 
 ########################################### Q3 Variance reduction Negative Binomial #######################################
 
+
+### NB Antithetic Method###################################################################################################
 simulate_nb_with_u_input <- function(random_numbers, r, p) {
   result <- c()
   for(i in 1:length(random_numbers)){
@@ -615,14 +616,102 @@ for(i in 1:1000){
   var_vector_nb_antithetic[i] <- var(nb_simulations_list_anthithetic[[i]])
 }
 
+#Histogram of Antithetic covariate method estimators 
+hist(mean_vector_nb_antithetic, main = "Expectation of 1000 NB Simulations - Antithetic Method")
+abline(v = mean(mean_vector_nb),col="Red")
+legend("topright", legend = "CMC", col = "red", lty = 1)
+mtext(paste0("Mean: ",round(mean(mean_vector_nb_antithetic),4),
+             " vs CMC:",round(mean(mean_vector_nb),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 
-hist(mean_vector_nb_antithetic, main = "Expectation of 1000 Negative Binomial Simulations - Antithetic Method")
-abline(v = mean(data$CLM_FREQ),col="Red")
-legend("topright", legend = "Data", col = "red", lty = 1)
+#are they biased?
+hist(mean_vector_nb_antithetic-mean_vector_nb, main = "Differences: Antithetic Method - CMC")
+mtext(paste0("pval: ", round(t.test(mean_vector_nb, mean_vector_nb_antithetic)$p.val, 6), "\n",
+            "conf.Int 95%: (", round(t.test(mean_vector_nb, mean_vector_nb_antithetic)$conf[1],6), ";",
+            round(t.test(mean_vector_nb, mean_vector_nb_antithetic)$conf[2],6), ")")
+      , side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 
-hist(var_vector_nb_antithetic, main = "Variance of 1000 Negative Binomial Simulations - Antithetic Method")
-abline(v = mean(var(data$CLM_FREQ)),col="Red")
-legend("topright", legend = "Data", col = "red", lty = 1)
+
+
+#Compare variance
+hist(var_vector_nb_antithetic, main = "Variance - Antithetic Method")
+abline(v = mean(var_vector_nb_antithetic),col="Red")
+legend("topright", legend = "Var CMC", col = "red", lty = 1)
+mtext(paste0("Var: ",round(mean(var_vector_nb_antithetic),4),
+             " vs CMC:",round(mean(var_vector_nb),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+
+
+
+### NB Control Variate Method #############################################################################################
+
+simulate_nb_cv_poisson <- function(sample_size,size,prob, lambda ){
+  x <- sort(rnbinom(n = sample_size, size = size, prob = prob))
+  y <- sort(rpois(n = sample_size,lambda = lambda))
+  z <- x - cov(x,y)*1/var(y)*(y - lambda)
+  return(z)
+}
+
+nb_simulations_list_cv <- vector(mode = "list", length = 1000)
+for(i in 1:1000) {
+  nb_simulations_list_cv[[i]] <- vector(mode = "list", length = length(claim_size_vector))
+}
+for(i in 1:1000){
+  nb_simulations_list_cv[[i]] <- simulate_nb_cv_poisson(sample_size = 1000,
+                                                             size = r_hat,
+                                                             prob = p_hat,
+                                                             lambda = lambda_hat_poisson)
+}
+
+mean_vector_nb_cv <- c()
+var_vector_nb_cv <- c()
+
+for(i in 1:1000){
+  mean_vector_nb_cv[i] <- mean(nb_simulations_list_cv[[i]])
+  var_vector_nb_cv[i] <- var(nb_simulations_list_cv[[i]])
+}
+
+
+#Histogram of Antithetic covariate method estimators 
+hist(mean_vector_nb_cv, main = "Expectation of 1000 NB Simulations - Antithetic Method")
+abline(v = mean(mean_vector_nb_cv),col="Red")
+legend("topright", legend = "Mean CMC", col = "red", lty = 1)
+mtext(paste0("Mean: ",round(mean(mean_vector_nb_cv),4),
+             " vs CMC:",round(mean(mean_vector_nb),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+
+#are they biased? #Theoretically unbiased
+hist(mean_vector_nb_cv-mean_vector_nb, main = "Differences: CV Method - CMC")
+mtext(paste0("pval: ", round(t.test(mean_vector_nb, mean_vector_nb_cv)$p.val, 6), "\n",
+             "conf.Int 95%: (", round(t.test(mean_vector_nb, mean_vector_nb_cv)$conf[1],6), ";",
+             round(t.test(mean_vector_nb, mean_vector_nb_cv)$conf[2],6), ")")
+      , side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+
+
+
+#Compare variance
+hist(var_vector_nb_cv, main = "Variance - CV Method")
+abline(v = mean(var_vector_nb_cv),col="Red")
+legend("topright", legend = "Var CMC", col = "red", lty = 1,cex = 0.8)
+mtext(paste0("Var: ",round(mean(var_vector_nb_cv),4),
+             " vs CMC:",round(mean(var_vector_nb),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+
+
+### NB Importance Sampling Method #########################################################################################
+
+#try geometric / binomial
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -634,23 +723,36 @@ legend("topright", legend = "Data", col = "red", lty = 1)
 #******************************************************** Results ********************************************************#
 
 par(mfrow = c(2, 2),cex.main = 0.8)
-hist(mean_vector_nb, main = "Expectation NB w/o variance reduction")
-abline(v = mean(data$CLM_FREQ),col="Red")
+hist(var_vector_nb, main = "Expectation NB w/o variance reduction")
+abline(v = mean(var_vector_nb),col="Red")
+
+legend("topright", legend = "Var CMC", col = "red", lty = 1,cex = 0.8)
+
+subplot(hist(nb_simulations_list[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "Sample Simulation",cex.main = 0.7)
+        , grconvertX(c(.04, .3), "npc"), grconvertY(c(.7, .9), "npc"))
 
 
-hist(var_vector_nb, breaks = 40,main = "Variance NB w/o variance reduction")
-abline(v = mean(var(data$CLM_FREQ)),col="Red")
-legend("topright", legend = "Data", col = "red", lty = 1)
 
 
-hist(mean_vector_nb_antithetic, main = "Expectation NB Antithetic Method")
-abline(v = mean(data$CLM_FREQ),col="Red")
+
+hist(var_vector_nb_antithetic, main = "Variance - Antithetic Method")
+abline(v = mean(var_vector_nb_antithetic),col="Red")
+legend("topright", legend = "Var Antithetic", col = "red", lty = 1,cex = 0.8)
+mtext(paste0("Var: ",round(mean(var_vector_nb_antithetic),4),
+             " vs CMC:",round(mean(var_vector_nb),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+subplot(hist(nb_simulations_list_anthithetic[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n")
+        , grconvertX(c(.06, .3), "npc"), grconvertY(c(.7, .9), "npc"))
 
 
-hist(var_vector_nb_antithetic,breaks = 40, main = "Variance NB Antithetic Method")
-abline(v = mean(var(data$CLM_FREQ)),col="Red")
-par(no.readonly = T)
-length(claim_size_vector)
+hist(var_vector_nb_cv, main = "Variance - CV Method")
+abline(v = mean(var_vector_nb_cv),col="Red")
+legend("topright", legend = "Var CV", col = "red", lty = 1,cex = 0.8)
+mtext(paste0("Var: ",round(mean(var_vector_nb_cv),4),
+             " vs CMC:",round(mean(var_vector_nb),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+subplot(hist(nb_simulations_list_cv[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n")
+        , grconvertX(c(.06, .3), "npc"), grconvertY(c(.7, .9), "npc"))
+
+
 
 
 ##################################################### Q3 Monte Carlo Gamma ################################################
@@ -697,7 +799,7 @@ t.test(x = var_vector_gamma, mu = mean(var(claim_size_vector)))
 ############################################### Q3 variance reduction Gamma ###############################################
 
 
-
+### Antithetic Method #####################################################################################################
 
 
 simulate_gamma_with_u_input <- function(random_numbers, shape, scale) {
@@ -742,33 +844,43 @@ for(i in 1:1000){
   var_vector_gamma_antithetic[i] <- var(gamma_simulations_list_anthithetic[[i]])
 }
 
-
+#Histogram of Antithetic covariate method estimators 
 hist(mean_vector_gamma_antithetic, main = "Expectation of 1000 Gamma Simulations - Antithetic Method")
-abline(v = mean(claim_size_vector),col="Red")
-legend("topright", legend = "Data", col = "red", lty = 1)
-mtext(as.character(round(var(mean_vector_gamma_antithetic),4)), side = 3, line = -2,
-      at = par("usr")[1], adj = -1, col = "black", cex = 0.6)
+abline(v = mean(mean_vector_gamma_antithetic),col="Red")
+legend("topright", legend = "Mean CMC", col = "red", lty = 1)
+mtext(paste0("Mean: ",round(mean(mean_vector_gamma_antithetic),4),
+             " vs CMC:",round(mean(mean_vector_gamma_antithetic),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 
-#hist(var_vector_gamma_antithetic, main = "Variance of 1000 Gamma Simulations - Antithetic Method")
-#abline(v = var(claim_size_vector),col="Red")
-#legend("topright", legend = "Data", col = "red", lty = 1)
-
-
-
-# Control Variate method:
-# We introduce Pareto with parameter 500 and 8
-x <- sort(rgamma(length(claim_size_vector),shape = gamma_estimated_k, scale = gamma_estimated_theta))
-y <- sort(rPareto(length(claim_size_vector), t = 500,alpha =  8, truncation = NULL))
-z <- x - cov(x,y)*1/var(y)*(y - 8*500/(8-1)) #Works
+#are they biased? #Theoretically unbiased
+hist(mean_vector_gamma-mean_vector_gamma_antithetic, main = "Differences: Antithetic Method - CMC")
+mtext(paste0("pval: ", round(t.test(mean_vector_gamma, mean_vector_gamma_antithetic)$p.val, 6), "\n",
+             "conf.Int 95%: (", round(t.test(mean_vector_gamma, mean_vector_gamma_antithetic)$conf[1],6), ";",
+             round(t.test(mean_vector_gamma, mean_vector_gamma_antithetic)$conf[2],6), ")")
+      , side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 
 
 
-simulate_gamma_cv_pareto <- function(size,shape,scale, pareto_alpha, pareto_ymin ){
+#Compare variance
+hist(var_vector_gamma_antithetic, main = "Variance - Antithetic Method")
+abline(v = mean(var_vector_gamma_antithetic),col="Red")
+legend("topright", legend = "Var Antithetic", col = "red", lty = 1,cex = 0.8)
+mtext(paste0("Var: ",round(mean(var_vector_gamma_antithetic),4),
+             " vs CMC:",round(mean(var_vector_gamma),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+
+
+
+### Control Variate ######################################################################################################
+
+#Bad####
+simulate_gamma_cv_weibull <- function(size,shape,scale, shape_w, scale_w ){
   x <- sort(rgamma(size,shape = shape, scale = scale))
-  y <- sort(rPareto(size,t = pareto_ymin, alpha = pareto_alpha, truncation = NULL))
-  z <- x - cov(x,y)*1/var(y)*(y - pareto_ymin*pareto_alpha/(pareto_alpha-1))
+  y <- sort(rweibull(size,shape = shape_w, scale = scale_w))
+  z <- x - cov(x,y)*1/var(y)*(y - scale_w*gamma(1+1/shape_w))
   return(z)
 }
+#######
+
+
 
 
 gamma_simulations_list_cv <- vector(mode = "list", length = 1000)
@@ -776,13 +888,12 @@ for(i in 1:1000) {
   gamma_simulations_list_cv[[i]] <- vector(mode = "list", length = length(claim_size_vector))
 }
 for(i in 1:1000){
-  gamma_simulations_list_cv[[i]] <- simulate_gamma_cv_pareto(size = length(claim_size_vector),
+  gamma_simulations_list_cv[[i]] <- simulate_gamma_cv_weibull(size = length(claim_size_vector),
                                                                        shape = gamma_estimated_k,
                                                                        scale = gamma_estimated_theta,
-                                                                       pareto_alpha =8,
-                                                                       pareto_ymin = 500)
+                                                                       scale_w = 489.8513,
+                                                                       shape_w = 2.496191)
 }
-
 
 
 mean_vector_gamma_cv <- c()
@@ -791,25 +902,40 @@ var_vector_gamma_cv <- c()
 
 for(i in 1:1000){
   mean_vector_gamma_cv[i] <- mean(gamma_simulations_list_cv[[i]])
-}
+  var_vector_gamma_cv[i] <- var(gamma_simulations_list_cv[[i]])
+  }
 
-#Higher variance
-hist(mean_vector_gamma_cv, main = "Expectation of 1000 Gamma Simulations - CV", breaks = 40)
-abline(v = mean(claim_size_vector),col="Red")
-legend("topright", legend = "Data", col = "red", lty = 1)
-mtext(as.character(round(var(mean_vector_gamma_cv),4)), side = 3, line = -2,
-      at = par("usr")[1], adj = -1, col = "black", cex = 0.6)
+#Histogram of Antithetic covariate method estimators 
+hist(mean_vector_gamma_cv, main = "Expectation of 1000 Gamma Simulations - CV Method")
+abline(v = mean(mean_vector_gamma_cv),col="Red")
+legend("topright", legend = "Mean CMC", col = "red", lty = 1)
+mtext(paste0("Mean: ",round(mean(mean_vector_gamma_cv),4),
+             " vs CMC:",round(mean(mean_vector_gamma_cv),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+
+#are they biased? #Theoretically unbiased
+hist(mean_vector_gamma-mean_vector_gamma_cv, main = "Differences: CV Method - CMC")
+mtext(paste0("pval: ", round(t.test(mean_vector_gamma, mean_vector_gamma_cv)$p.val, 6), "\n",
+             "conf.Int 95%: (", round(t.test(mean_vector_gamma, mean_vector_gamma_cv)$conf[1],6), ";",
+             round(t.test(mean_vector_gamma, mean_vector_gamma_cv)$conf[2],6), ")")
+      , side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+
+
+
+#Compare variance
+hist(var_vector_gamma_cv, main = "Variance - CV Method")
+abline(v = mean(var_vector_gamma_cv),col="Red")
+legend("topright", legend = "Var CV", col = "red", lty = 1,cex = 0.8)
+mtext(paste0("Var: ",round(mean(var_vector_gamma_cv),4),
+             " vs CMC:",round(mean(var_vector_gamma),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 
 
 
 
+### Importance Sampling ###################################################################################################
 
-
-
-
-#Importance sampling, higher variance :o
+#Importance sampling, higher variance
 #I = Gamma
-#F = F_tilda = lambda*e^(-lambda*x)
+#F = F_tilda = lambda*e^(-lambda*x), g(x) = I(x) = x
 x <- rexp(1000,lambda_hat_exp)
 ICE <- dgamma(x,shape = gamma_estimated_k, scale = gamma_estimated_theta) / dexp(x,rate = lambda_hat_exp) * x
 
@@ -844,8 +970,6 @@ for(i in 1:1000){
   mean_vector_gamma_IS[i] <- mean(gamma_simulations_list_IS[[i]])
 }
 
-
-#Variance is even bigger!
 hist(mean_vector_gamma_IS, main = "Expectation of 1000 Gamma Simulations - IS", breaks = 40)
 abline(v = mean(claim_size_vector),col="Red")
 legend("topright", legend = "Data", col = "red", lty = 1)
@@ -854,7 +978,7 @@ mtext(as.character(round(var(mean_vector_gamma_IS),4)), side = 3, line = -2,
 
 
 
-
+### Stratified Sampling ###################################################################################################
 
 
 
@@ -874,6 +998,11 @@ abline(v = mean(claim_size_vector),col="Red")
 legend("topright", legend = "Data", col = "red", lty = 1)
 mtext(as.character(round(var(mean_vector_gamma_antithetic),4)), side = 3, line = -2,
       at = par("usr")[1], adj = -1, col = "black", cex = 0.6)
+
+
+
+
+
 
 
 #hist(var_vector_gamma, main = "Variance Gamma w/o variance reduction",breaks = 40)
