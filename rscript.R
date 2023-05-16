@@ -1,12 +1,12 @@
 ############################################################################################################################
 ####################################################### Read libraries #####################################################
 ############################################################################################################################
-library(readr) # Check encoding
-library(magrittr) # Pipe operator
+library(readr) # check encoding
+library(magrittr) # pipe operator
 library(dplyr) # data wrangling
 library(purrr) # efficient one liner pattern-matching
 library(ggplot2) # additional graphics
-library(TeachingDemos) # For overlaying plots
+library(TeachingDemos) # for overlaying plots
 
 
 ############################################################################################################################
@@ -263,20 +263,33 @@ for (f in features_cat) {
 # Panel truck has higher impact on the number of claims
 # Commercial car use has higher impact on the number of claims
 
-
-default_par <- par(no.readonly = TRUE) #save default drawing parameter
-
 for (f in claims_amounts) {
   plot(data[,f], main=f, xlab='' ,las=2,col=data$CLM_FREQ)
   grid()
 }
 #CLM_AMT_6 and CLM_AMT_7 rare occurrence
-
+#Age between 30 and 60 corresponds to more claims
 
 plot(data$CLM_FREQ, data$AGE, main='Age', xlab='',las = 2)
 grid()
 
 
+
+
+
+#Check freq relationship to covairates
+boxplot(data$CLM_FREQ~data$CAR_TYPE)
+boxplot(data$CLM_FREQ~data$CAR_TYPE)
+
+table(temp[,c("CAR_TYPE","at_least_one_claim")])
+
+
+
+#check severity relationship to covariates
+boxplot(temp$agg_clm~data$CAR_TYPE)
+
+
+rm(temp)#memory management
 ############################################################################################################################
 ########################################################### Q1 #############################################################
 ############################################################################################################################
