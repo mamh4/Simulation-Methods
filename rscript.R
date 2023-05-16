@@ -705,7 +705,7 @@ simulate_gamma_with_u_input <- function(random_numbers, shape, scale) {
 }
 
 
-antithetic_variates_gamma <- function(size, shape, scale){
+simulate_gamma_antithetic_variates <- function(size, shape, scale){
   if(size %% 2 == 0){
     u1_vector <- runif(size/2,0,1)
     u2_vector <- 1-u1_vector
@@ -728,7 +728,7 @@ for(i in 1:1000) {
   gamma_simulations_list_anthithetic[[i]] <- vector(mode = "list", length = length(claim_size_vector))
 }
 for(i in 1:1000){
-  gamma_simulations_list_anthithetic[[i]] <- antithetic_variates_gamma(size = length(claim_size_vector),
+  gamma_simulations_list_anthithetic[[i]] <- simulate_gamma_antithetic_variates(size = length(claim_size_vector),
                                                                        shape = gamma_estimated_k,
                                                                         scale = gamma_estimated_theta)
 }
@@ -744,20 +744,67 @@ for(i in 1:1000){
 
 
 hist(mean_vector_gamma_antithetic, main = "Expectation of 1000 Gamma Simulations - Antithetic Method")
-abline(v = mean(data$CLM_FREQ),col="Red")
+abline(v = mean(claim_size_vector),col="Red")
 legend("topright", legend = "Data", col = "red", lty = 1)
+mtext(as.character(round(var(mean_vector_gamma_antithetic),4)), side = 3, line = -2,
+      at = par("usr")[1], adj = -1, col = "black", cex = 0.6)
 
-hist(var_vector_gamma_antithetic, main = "Variance of 1000 Gamma Simulations - Antithetic Method")
-abline(v = mean(var(data$CLM_FREQ)),col="Red")
-legend("topright", legend = "Data", col = "red", lty = 1)
+#hist(var_vector_gamma_antithetic, main = "Variance of 1000 Gamma Simulations - Antithetic Method")
+#abline(v = var(claim_size_vector),col="Red")
+#legend("topright", legend = "Data", col = "red", lty = 1)
 
 
 
 # Control Variate method:
 # We introduce Pareto with parameter 500 and 8
 x <- sort(rgamma(length(claim_size_vector),shape = gamma_estimated_k, scale = gamma_estimated_theta))
-y <- sort(rPareto(length(claim_size_vector), 500, 8, truncation = NULL))
+y <- sort(rPareto(length(claim_size_vector), t = 500,alpha =  8, truncation = NULL))
 z <- x - cov(x,y)*1/var(y)*(y - 8*500/(8-1)) #Works
+
+
+
+simulate_gamma_cv_pareto <- function(size,shape,scale, pareto_alpha, pareto_ymin ){
+  x <- sort(rgamma(size,shape = shape, scale = scale))
+  y <- sort(rPareto(size,t = pareto_ymin, alpha = pareto_alpha, truncation = NULL))
+  z <- x - cov(x,y)*1/var(y)*(y - pareto_ymin*pareto_alpha/(pareto_alpha-1))
+  return(z)
+}
+
+
+gamma_simulations_list_cv <- vector(mode = "list", length = 1000)
+for(i in 1:1000) {
+  gamma_simulations_list_cv[[i]] <- vector(mode = "list", length = length(claim_size_vector))
+}
+for(i in 1:1000){
+  gamma_simulations_list_cv[[i]] <- simulate_gamma_cv_pareto(size = length(claim_size_vector),
+                                                                       shape = gamma_estimated_k,
+                                                                       scale = gamma_estimated_theta,
+                                                                       pareto_alpha =8,
+                                                                       pareto_ymin = 500)
+}
+
+
+
+mean_vector_gamma_cv <- c()
+var_vector_gamma_cv <- c()
+
+
+for(i in 1:1000){
+  mean_vector_gamma_cv[i] <- mean(gamma_simulations_list_cv[[i]])
+}
+
+#Higher variance
+hist(mean_vector_gamma_cv, main = "Expectation of 1000 Gamma Simulations - CV", breaks = 40)
+abline(v = mean(claim_size_vector),col="Red")
+legend("topright", legend = "Data", col = "red", lty = 1)
+mtext(as.character(round(var(mean_vector_gamma_cv),4)), side = 3, line = -2,
+      at = par("usr")[1], adj = -1, col = "black", cex = 0.6)
+
+
+
+
+
+
 
 
 #Importance sampling, higher variance :o
@@ -769,24 +816,77 @@ ICE <- dgamma(x,shape = gamma_estimated_k, scale = gamma_estimated_theta) / dexp
 
 
 
+simulate_gamma_IS_exp <- function(size, shape, scale,lambda){
+  x <- rexp(n = size,rate = lambda)
+  return( dgamma(x,shape = shape,scale =  scale) / dexp(x,rate = lambda) * x )
+}
+
+
+
+gamma_simulations_list_IS <- vector(mode = "list", length = 1000)
+for(i in 1:1000) {
+  gamma_simulations_list_IS[[i]] <- vector(mode = "list", length = length(claim_size_vector))
+}
+for(i in 1:1000){
+  gamma_simulations_list_IS[[i]] <- simulate_gamma_IS_exp(size = length(claim_size_vector),
+                                                             shape = gamma_estimated_k,
+                                                             scale = gamma_estimated_theta,
+                                                             lambd = lambda_hat_exp)
+}
+
+
+
+mean_vector_gamma_IS <- c()
+var_vector_gamma_IS <- c()
+
+
+for(i in 1:1000){
+  mean_vector_gamma_IS[i] <- mean(gamma_simulations_list_IS[[i]])
+}
+
+
+#Variance is even bigger!
+hist(mean_vector_gamma_IS, main = "Expectation of 1000 Gamma Simulations - CV", breaks = 40)
+abline(v = mean(claim_size_vector),col="Red")
+legend("topright", legend = "Data", col = "red", lty = 1)
+mtext(as.character(round(var(mean_vector_gamma_IS),4)), side = 3, line = -2,
+      at = par("usr")[1], adj = -1, col = "black", cex = 0.6)
+
+
+
+
+
+
+
+
 #*******************************************************Results*********************************************************#
 
 
-hist(mean_vector_gamma, main = "Expectation Gamma w/o variance reduction ")
+hist(mean_vector_gamma, main = "Expectation Gamma w/o variance reduction ", breaks = 40)
 abline(v = mean(claim_size_vector),col="Red")
+mtext(as.character(round(var(mean_vector_gamma),4)), side = 3, line = -2,
+      at = par("usr")[1], adj = -1, col = "black", cex = 0.6)
 
 
-hist(var_vector_gamma, main = "Variance Gamma w/o variance reduction",breaks = 40)
-abline(v = mean(var(claim_size_vector)),col="Red")
+
+hist(mean_vector_gamma_antithetic, main = "Expectation of 1000 Gamma Simulations - Antithetic Method", breaks = 40)
+abline(v = mean(claim_size_vector),col="Red")
 legend("topright", legend = "Data", col = "red", lty = 1)
+mtext(as.character(round(var(mean_vector_gamma_antithetic),4)), side = 3, line = -2,
+      at = par("usr")[1], adj = -1, col = "black", cex = 0.6)
 
 
-hist(mean_vector_gamma_antithetic, main = "Expectation Gamma Simulations - Antithetic Method")
-abline(v = mean(claim_size_vector),col="Red")
+#hist(var_vector_gamma, main = "Variance Gamma w/o variance reduction",breaks = 40)
+#abline(v = mean(var(claim_size_vector)),col="Red")
+#legend("topright", legend = "Data", col = "red", lty = 1)
 
 
-hist(var_vector_gamma_antithetic, main = "Variance Gamma - Antithetic Method", breaks = 40)
-abline(v = var(claim_size_vector),col="Red")
+#hist(mean_vector_gamma_antithetic, main = "Expectation Gamma Simulations - Antithetic Method")
+#abline(v = mean(claim_size_vector),col="Red")
+
+
+#hist(var_vector_gamma_antithetic, main = "Variance Gamma - Antithetic Method", breaks = 40)
+#abline(v = var(claim_size_vector),col="Red")
 
 
 
