@@ -1,9 +1,5 @@
 source("rscript.r")
 
-source("rscript.r")
-
-
-
 #install.packages("MASS")
 library(MASS)
 
@@ -64,6 +60,7 @@ pdf_negative_bin <- function(x, r, p) {
 #E(X)=(1-p)*r/p
 #VAR(X)=r*(1-p)/p^2
 
+
 # Define a class called "MyClass"
 setClass("MLE_neg_bin",
          representation(sample_mean = "numeric", sample_variance = "numeric", r = "numeric", p = "numeric"))
@@ -92,6 +89,10 @@ my_obj <- MLE_neg_bin(sample_mean, sample_variance)
 my_obj <- calculate(my_obj)
 print(paste("the MLE estimator of r, in Negative Binomial is",my_obj@r))
 print(paste("the MLE estimator of p, in Negative Binomial is", my_obj@p))
+
+my_obj@r
+my_obj@p
+
 
 empirical_data <- list()
 
@@ -124,34 +125,185 @@ mle_bin<- function(data){
 
 mle_bin(data$CLM_FREQ)
 
-###############################SIMULATE FROM NEGATIVE BINOMIAL################
+###############################NEGATIVE BINOMIAL################
+
+###########calculates the number of of trials required 
+#to achieve r successes in a negative binomial distribution
 
 
-simulate_negative_binomial <- function(r, p, size) {
-  simulated_negative_binomial <- integer(size)  # Create an integer vector of "size" length
-  
-  for (i in 1:size) {
-    counter <- 0
-    lower_bound <- 0
-    upper_bound <- choose(counter + r - 1, counter) * p^r * (1 - p)^counter #P(X=0) where
-    #X~Negative Binomial 
-    
-    random_number <- runif(1, 0, 1) #generates a single  rn~U(0,1)
-    
-    while (!(upper_bound > random_number && lower_bound <= random_number)) {
-      counter <- counter + 1
-      lower_bound <- upper_bound
-      upper_bound <- upper_bound + choose(counter + r - 1, counter) * p^r * (1 - p)^counter
-    }
-    
-    simulated_negative_binomial[i] <- counter
+negative_binomial_antithetic_estimator <- function (sample_size, r, p) {
+  sum <- 0 
+  for (i in 1:sample_size) {
+    random_number <-  runif(1,0,1)
+    sum <- sum + simulated_negative_binomial(random_number, r, p) + simulated_negative_binomial(1-random_number, r, p)  
   }
-  
-  return(simulated_negative_binomial)
+  sum <- sum /(2* sample_size )
 }
 
+negative_binomial_antithetic_estimator(1000,my_obj@r,my_obj@p)
+
+
+simulate_nb_with_u_input <- function(random_numbers, r, p) {
+  result <- c()
+  for(i in 1:length(random_numbers)){
+    counter <- 0 
+    lower_bound <- 0 
+    upper_bound <- choose(counter + r - 1 , counter )* p^r * (1-p)^counter
+    while (! ((upper_bound > random_numbers[i] ) & (lower_bound <= random_numbers[i]) )) {
+      counter <- counter + 1 
+      lower_bound <- upper_bound 
+      upper_bound <- upper_bound +  choose(counter + r - 1 , counter )* p^r * (1-p)^counter
+    }
+    result[i] <- counter
+  }
+  return(result)
+}
+
+simulate_nb_with_u_input(1000,obj@r,obj@p)
+
+antithetic_variates_nb <- function(size, r, p){
+  if(size %% 2 == 0){
+    u1_vector <- runif(size/2,0,1)
+    u2_vector <- 1-u1_vector
+  } else {
+    u1_vector <- runif(size/2 +1,0,1)
+    u2_vector <- 1-u1_vector
+  }
+  
+  f_u1 <- simulate_nb_with_u_input(random_numbers=u1_vector,r = r, p = p)
+  f_u2 <- simulate_nb_with_u_input(random_numbers=u2_vector,r = r, p = p)
+  
+  return(append(f_u1,f_u2))
+}
+
+###########################################################################
+###############################QUESTION 2###############################
+###############simulate from exponential#######################
+
+exponential_simulation <- function(lambda, size){
+  simulated_exponential <- rep(0, size) # a vector of zeros with length size
+  #that will store the simulated exponential values
+  for (i in 1:size){
+    initial_random_number <- runif(1,0,1)
+    single_simulated_exponential <- - log(1 - initial_random_number )/lambda
+    #given by inversion method
+    simulated_exponential[i] <- single_simulated_exponential
+  }
+  return (simulated_exponential)
+}
+
+exponential_simulation(sample_mean,1000)
 
 
 
+######################################QUESTION 2####################################
 
-######################################QUESTION 2#########################################
+n=1000
+set.seed(1)
+u=runif(n)
+u
+
+set.seed(5)
+poisson_simulation <- function(lambda, size){
+  simulated_poisson <- rep(0, size) #The variable simulated_poisson is initialized 
+#as a vector of zeros with length size
+#This vector will store the simulated Poisson values
+  for (i in 1:size){
+    sum_of_exponentials <- 0.0 
+    counter <- 0 
+    while (! (sum_of_exponentials > lambda )) {
+      initial_random_number <- runif(1,0,1) #length 1 lower bound 0 upper bound 1 
+      simulated_exponential <- -log(1 - initial_random_number ) 
+      #given by inversion method for parameter = 1 
+      sum_of_exponentials <- sum_of_exponentials + simulated_exponential
+      counter <- counter + 1 
+    }
+    simulated_poisson[i] <- counter -1
+  }
+  return (simulated_poisson)
+}
+
+##############################ACCEPTANCE/REJECTION METHOD########################
+
+X = runif(4500, 0, 1)
+U = runif(4500, 0, 1)
+
+pdf_negative_bin <- function(x, r, p) {
+  choose(x + r - 1, x) * (1 - p)^x * p^r
+}
+
+count = 1
+accept = c()
+
+while (count <= 4500 & length(accept) < 1000) {
+  test_u = U[count]
+  test_x = pdf_negative_bin(X[count], r, p) / (3.125 * dunif(X[count], 0, 1))
+  
+  if (test_u <= test_x) {
+    accept = c(accept, X[count])
+  }
+  
+  count = count + 1
+}
+
+hist(accept)
+
+
+
+#######################################ANTITHETIC VARIATES############################
+
+negative_binomial_antithetic_estimator <- function (sample_size, r, p) {
+  sum <- 0 
+  for (i in 1:sample_size) {
+    random_number <-  runif(1,0,1)
+    sum <- sum + negative_binomial_inversion_method(random_number, r, p) + negative_binomial_inversion_method(1-random_number, r, p)  
+  }
+  sum <- sum /(2* sample_size )
+}
+
+simulate_nb_with_u_input <- function(random_numbers, r, p) {
+  result <- c()
+  for(i in 1:length(random_numbers)){
+    counter <- 0 
+    lower_bound <- 0 
+    upper_bound <- choose(counter + r - 1 , counter )* p^r * (1-p)^counter
+    while (! ((upper_bound > random_numbers[i] ) & (lower_bound <= random_numbers[i]) )) {
+      counter <- counter + 1 
+      lower_bound <- upper_bound 
+      upper_bound <- upper_bound +  choose(counter + r - 1 , counter )* p^r * (1-p)^counter
+    }
+    result[i] <- counter
+  }
+  return(result)
+}
+
+simulate_nb_with_u_input(1000,obj@r,obj@p)
+
+
+negative_binomial_antithetic_estimator <- function (sample_size, r, p) {
+  sum <- 0 
+  for (i in 1:sample_size) {
+    random_number <-  runif(1,0,1)
+    sum <- sum + negative_binomial_inversion_method(random_number, r, p) + negative_binomial_inversion_method(1-random_number, r, p)  
+  }
+  sum <- sum /(2* sample_size )
+}
+
+simulate_nb_with_u_input <- function(random_numbers, r, p) {
+  result <- c()
+  for(i in 1:length(random_numbers)){
+    counter <- 0 
+    lower_bound <- 0 
+    upper_bound <- choose(counter + r - 1 , counter )* p^r * (1-p)^counter
+    while (! ((upper_bound > random_numbers[i] ) & (lower_bound <= random_numbers[i]) )) {
+      counter <- counter + 1 
+      lower_bound <- upper_bound 
+      upper_bound <- upper_bound +  choose(counter + r - 1 , counter )* p^r * (1-p)^counter
+    }
+    result[i] <- counter
+  }
+  return(result)
+}
+
+############################################QUESTION 4################################
+
