@@ -119,11 +119,6 @@ pdf_binomial <- function(x, n, p) {
   choose(n, x) * (1 - p)^(n-x) * p^x
 }
 
-mle_bin<- function(data){
-  sum(data)/length(data)
-}
-
-mle_bin(data$CLM_FREQ)
 
 ###############################NEGATIVE BINOMIAL################
 
@@ -132,52 +127,9 @@ mle_bin(data$CLM_FREQ)
 
 
 
-###########################################################################
-###############################QUESTION 2###############################
-###############simulate from exponential#######################
-
-exponential_simulation <- function(lambda, size){
-  simulated_exponential <- rep(0, size) # a vector of zeros with length size
-  #that will store the simulated exponential values
-  for (i in 1:size){
-    initial_random_number <- runif(1,0,1)
-    single_simulated_exponential <- - log(1 - initial_random_number )/lambda
-    #given by inversion method
-    simulated_exponential[i] <- single_simulated_exponential
-  }
-  return (simulated_exponential)
-}
-
-exponential_simulation(sample_mean,1000)
 
 
 
-######################################QUESTION 2####################################
-
-n=1000
-set.seed(1)
-u=runif(n)
-u
-
-set.seed(5)
-poisson_simulation <- function(lambda, size){
-  simulated_poisson <- rep(0, size) #The variable simulated_poisson is initialized 
-#as a vector of zeros with length size
-#This vector will store the simulated Poisson values
-  for (i in 1:size){
-    sum_of_exponentials <- 0.0 
-    counter <- 0 
-    while (! (sum_of_exponentials > lambda )) {
-      initial_random_number <- runif(1,0,1) #length 1 lower bound 0 upper bound 1 
-      simulated_exponential <- -log(1 - initial_random_number ) 
-      #given by inversion method for parameter = 1 
-      sum_of_exponentials <- sum_of_exponentials + simulated_exponential
-      counter <- counter + 1 
-    }
-    simulated_poisson[i] <- counter -1
-  }
-  return (simulated_poisson)
-}
 
 ##############################ACCEPTANCE/REJECTION METHOD########################
 
@@ -206,45 +158,8 @@ hist(accept)
 
 
 
-#######################################ANTITHETIC VARIATES############################
-simulate_nb_with_u_input <- function(random_numbers, r, p) {
-  result <- c()
-  for(i in 1:length(random_numbers)){
-    counter <- 0 
-    lower_bound <- 0 
-    upper_bound <- choose(counter + r - 1 , counter )* p^r * (1-p)^counter
-    while (! ((upper_bound > random_numbers[i] ) & (lower_bound <= random_numbers[i]) )) {
-      counter <- counter + 1 
-      lower_bound <- upper_bound 
-      upper_bound <- upper_bound +  choose(counter + r - 1 , counter )* p^r * (1-p)^counter
-    }
-    result[i] <- counter
-  }
-  return(result)
-}
-
-simulate_nb_with_u_input(1000,my_obj@r,my_obj@p)
 
 
-
-simulate_nb_with_u_input <- function(random_numbers, r, p) {
-  result <- c()
-  counter <- 0 
-  lower_bound <- 0 
-  upper_bound <- choose(counter + r - 1 , counter ) * p^r * (1-p)^counter
-  
-  while (! ((upper_bound > random_numbers) & (lower_bound <= random_numbers))) {
-    counter <- counter + 1 
-    lower_bound <- upper_bound 
-    upper_bound <- upper_bound +  choose(counter + r - 1 , counter ) * p^r * (1-p)^counter
-  }
-  result <- counter
-  return(result)
-}
-
-
-simulated_value <- simulate_nb_with_u_input(10,my_obj@r,my_obj@p)
-print(simulated_value)
 
 
 ############################################QUESTION 4################################
