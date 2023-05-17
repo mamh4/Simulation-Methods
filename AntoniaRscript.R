@@ -307,3 +307,25 @@ simulate_nb_with_u_input <- function(random_numbers, r, p) {
 
 ############################################QUESTION 4################################
 
+
+#Risk premiums calculated using the data
+
+total_loss <- 0
+# Assuming 'matrix' is your two-dimensional matrix
+for (i in 1:nrow(data)) {
+  for (j in 2:8) { 
+    # Iterating from the 2nd to the 8th column, the columns including claims height 
+    #and claims severity
+    total_loss <- total_loss + data[i, j]
+  }
+}
+riskpremium <- total_loss/ nrow(data) #the estimation is basically the total amount paid
+#for claims divided by the number of claims
+riskpremium #the premium using our data should be 766.067
+
+
+
+#Risk premium calculated based on our estimated frequency and severity models
+
+
+

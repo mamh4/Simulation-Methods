@@ -6,8 +6,10 @@ library(magrittr) # pipe operator
 library(dplyr) # data wrangling
 library(purrr) # efficient one liner pattern-matching
 library(ggplot2) # additional graphics
-library(TeachingDemos) # for overlaying plots
 
+
+install.packages("TeachingDemos")
+library(TeachingDemos) # for overlaying plots
 
 ############################################################################################################################
 #################################################### Read and store data ###################################################
