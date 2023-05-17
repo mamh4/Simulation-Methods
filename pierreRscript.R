@@ -1,7 +1,7 @@
 source("rscript.r")
 library(EnvStats)
 library(ffbase)
-
+library(EnvStats)
 #make this accurate 
 
 set.seed(5)
@@ -631,5 +631,100 @@ for  (i in 3:9 ){
     }
 }
 empiricalCDFVector <- vector() 
+
+
+#SOLVING THE WEIBULL FITTING ISSUE
+placeHolder <- eweibull(x = lossesVector, method = "mle")
+
+print(placeHolder)
+# FIX = somehow when EnvStats is included last, it works ... 
+#other option, ForestFit fitWeibull 
+# to avoid numerical resolution 
+
+#LOG NORMAL HOMEMADE FITTING 
+#log normal method of moments parameters estimator
+logNormalSigmaSquareEstimator <- function(random_vector){
+  return(log(1 + sample_variance(random_vector)/(sample_mean(random_vector)^2)))
+}
+logNormalMuEstimator <- function(random_vector){
+  return(log(sample_mean(random_vector)) - (logNormalSigmaSquareEstimator(random_vector)/2) )
+}
+sigmaSquareLN <- logNormalSigmaSquareEstimator(lossesVector)
+muLN <- logNormalMuEstimator(lossesVector)
+
+#simulation LN (does not allow for vectors yet)
+simulatedStandardNormalDistribution <- function(){
+  randomNumber1 <- runif(1,0,1)
+  exponentialRandomNumber <- simulate_exponential(1, 1)
+  while (randomNumber1 > exp(-0.5*(1+y)^2)) {
+    randomNumber1 <- runif(1,0,1)
+    exponentialRandomNumber <- simulate_exponential(1, 1)
+  }
+  randomNumber2 <- runif(1,0,1)
+  if (randomNumber2 < 0.5 ) {
+    return (-exponentialRandomNumber)
+  }
+  else {
+    return (exponentialRandomNumber)
+  }
+}
+simulatedLogNormalDistribution <- function(mu, sigmaSquared) {
+  return (exp(sigmaSquared*simulatedStandardNormalDistribution() + mu ) ) 
+}
+
+
+
+#prototype for FF plot of losses vector, Log Normal case 
+plot.ecdf(lossesVector, main = "FF plot", xlab = "Loss Amount", ylab = "Empirical Cumulative Distribution Function", col.points = "gray")
+x = seq(0,1500, 0.1)
+y = plnorm(x, meanlog = muLN, sdlog = sqrt(sigmaSquareLN) ) #sd log is sigma not sigma squared 
+lines(x,y, col = "green")
+z = pgamma(x, shape = gamma_estimated_k, scale =  gamma_estimated_teta) 
+lines(x,z, col = "red")
+u = pweibull(x, shape = value[[1]], scale =  value[[2]]) 
+lines(x,u, col = "blue")
+#LOOKS LIKE A MUCH BETTER FIT THAN GAMMA :( NEED SOME BACKTRACKING... GOOD NEWS -> TWO DECENT CANDIDATES FOR IMPORTANCE SAMPLING 
+
+
+#PREMIUM FROM DATA 
+# total losses divided by number of individual contracts 
+riskPremiumFromData <- sum(lossesVector)/length(data$id)
+print(riskPremiumFromData)
+# total premium divided by number of individual contracts 
+riskPremiumFromData2 <- sum(data$PREMIUM)/length(data$id)
+print(riskPremiumFromData2)
+# lower than sum of losses 
+
+#TENTATIVE MC PREMIUM COMPUTATION 
+riskPremiumFromMC <- function(numberOfContracts, numberOfIterations){
+  simulationClaimsVector <- vector() 
+  for (i in 1:numberOfIterations){
+    sumOfClaimsPerIndividualContractVector <- vector() 
+    numberOfClaimsVector <- simulateNumberOfClaims(parameters) #placeholder!!!
+    for (j in 1:numberOfContracts){
+      currentSumOfClaims <- 0 
+      for (k in 1:numberOfClaimsVector[j]){
+        currentSumOfClaims <- currentSumOfClaims + simulateClaimSeverity(parameters) #placeholder !!!
+      }
+      sumOfClaimsPerIndividualContractVector <- append(sumOfClaimsPerIndividualContractVector, currentSumOfClaims)
+    }
+    simulationClaimsVector <- append (simulationClaimsVector, sum(sumOfClaimsPerIndividualContractVector)) 
+  } 
+  return(sample_mean(simulationClaimsVector)) 
+}
+
+#TENTATIVE RUIN THEORY 
+# alpha quantile to check  
+crudeMCSimAlphaQuantile <- function(alpha, simulatedVector) {
+  #initialise simulatedvector 
+  orderedSimulatedVector <- order(simulatedVector, decreasing = FALSE )
+  # find percentage of vector 
+  #integer casting of 
+  index <- as.integer(alpha *length(orderedSimulatedVector)) #or  round(alpha *length(simulatedVector), digits = 0) 
+  return(orderedSimulatedVector[index]) 
+}
+
+#Finish expected shortfall 
+
 
 
