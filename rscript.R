@@ -283,7 +283,7 @@ grid()
 boxplot(data$CLM_FREQ~data$CAR_TYPE)
 boxplot(data$CLM_FREQ~data$CAR_TYPE)
 
-table(temp[,c("CAR_TYPE","at_least_one_claim")])
+#table(temp[,c("CAR_TYPE","at_least_one_claim")])
 
 
 

@@ -131,50 +131,6 @@ mle_bin(data$CLM_FREQ)
 #to achieve r successes in a negative binomial distribution
 
 
-negative_binomial_antithetic_estimator <- function (sample_size, r, p) {
-  sum <- 0 
-  for (i in 1:sample_size) {
-    random_number <-  runif(1,0,1)
-    sum <- sum + simulated_negative_binomial(random_number, r, p) + simulated_negative_binomial(1-random_number, r, p)  
-  }
-  sum <- sum /(2* sample_size )
-}
-
-negative_binomial_antithetic_estimator(1000,my_obj@r,my_obj@p)
-
-
-simulate_nb_with_u_input <- function(random_numbers, r, p) {
-  result <- c()
-  for(i in 1:length(random_numbers)){
-    counter <- 0 
-    lower_bound <- 0 
-    upper_bound <- choose(counter + r - 1 , counter )* p^r * (1-p)^counter
-    while (! ((upper_bound > random_numbers[i] ) & (lower_bound <= random_numbers[i]) )) {
-      counter <- counter + 1 
-      lower_bound <- upper_bound 
-      upper_bound <- upper_bound +  choose(counter + r - 1 , counter )* p^r * (1-p)^counter
-    }
-    result[i] <- counter
-  }
-  return(result)
-}
-
-simulate_nb_with_u_input(1000,obj@r,obj@p)
-
-antithetic_variates_nb <- function(size, r, p){
-  if(size %% 2 == 0){
-    u1_vector <- runif(size/2,0,1)
-    u2_vector <- 1-u1_vector
-  } else {
-    u1_vector <- runif(size/2 +1,0,1)
-    u2_vector <- 1-u1_vector
-  }
-  
-  f_u1 <- simulate_nb_with_u_input(random_numbers=u1_vector,r = r, p = p)
-  f_u2 <- simulate_nb_with_u_input(random_numbers=u2_vector,r = r, p = p)
-  
-  return(append(f_u1,f_u2))
-}
 
 ###########################################################################
 ###############################QUESTION 2###############################
@@ -251,16 +207,6 @@ hist(accept)
 
 
 #######################################ANTITHETIC VARIATES############################
-
-negative_binomial_antithetic_estimator <- function (sample_size, r, p) {
-  sum <- 0 
-  for (i in 1:sample_size) {
-    random_number <-  runif(1,0,1)
-    sum <- sum + negative_binomial_inversion_method(random_number, r, p) + negative_binomial_inversion_method(1-random_number, r, p)  
-  }
-  sum <- sum /(2* sample_size )
-}
-
 simulate_nb_with_u_input <- function(random_numbers, r, p) {
   result <- c()
   for(i in 1:length(random_numbers)){
@@ -277,33 +223,29 @@ simulate_nb_with_u_input <- function(random_numbers, r, p) {
   return(result)
 }
 
-simulate_nb_with_u_input(1000,obj@r,obj@p)
+simulate_nb_with_u_input(1000,my_obj@r,my_obj@p)
 
 
-negative_binomial_antithetic_estimator <- function (sample_size, r, p) {
-  sum <- 0 
-  for (i in 1:sample_size) {
-    random_number <-  runif(1,0,1)
-    sum <- sum + negative_binomial_inversion_method(random_number, r, p) + negative_binomial_inversion_method(1-random_number, r, p)  
-  }
-  sum <- sum /(2* sample_size )
-}
 
 simulate_nb_with_u_input <- function(random_numbers, r, p) {
   result <- c()
-  for(i in 1:length(random_numbers)){
-    counter <- 0 
-    lower_bound <- 0 
-    upper_bound <- choose(counter + r - 1 , counter )* p^r * (1-p)^counter
-    while (! ((upper_bound > random_numbers[i] ) & (lower_bound <= random_numbers[i]) )) {
-      counter <- counter + 1 
-      lower_bound <- upper_bound 
-      upper_bound <- upper_bound +  choose(counter + r - 1 , counter )* p^r * (1-p)^counter
-    }
-    result[i] <- counter
+  counter <- 0 
+  lower_bound <- 0 
+  upper_bound <- choose(counter + r - 1 , counter ) * p^r * (1-p)^counter
+  
+  while (! ((upper_bound > random_numbers) & (lower_bound <= random_numbers))) {
+    counter <- counter + 1 
+    lower_bound <- upper_bound 
+    upper_bound <- upper_bound +  choose(counter + r - 1 , counter ) * p^r * (1-p)^counter
   }
+  result <- counter
   return(result)
 }
+
+
+simulated_value <- simulate_nb_with_u_input(10,my_obj@r,my_obj@p)
+print(simulated_value)
+
 
 ############################################QUESTION 4################################
 
