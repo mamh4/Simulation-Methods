@@ -185,37 +185,56 @@ riskpremium #the premium using our data should be 766.067
 #Risk premium calculated based on our estimated frequency and severity models
 
 # Function to generate random samples from a negative binomial distribution using inversion method
-generate_negative_binomial_samples <- function(n, r, p) {
-  samples <- numeric(n)
-  
-  # Calculate the quantile function (inverse CDF) of the negative binomial distribution
-  quantile_function <- function(q) {
-    k <- 0
-    cumulative_prob <- p^r
-    
-    while (cumulative_prob < q) {
-      k <- k + 1
-      cumulative_prob <- cumulative_prob + choose(k + r - 1, k) * p^r
+
+simulate_negative_binomial <- function(r, p, size){
+  simulated_negative_binomial <- rep(0, size)
+  for (i in 1:size){
+    #cat("item", i)
+    counter <- 0 
+    lower_bound <- 0 
+    upper_bound <- choose(counter + r - 1 , counter )* p^r * (1-p)^counter
+    #print(lower_bound) 
+    #print(upper_bound) 
+    random_number <- runif(1,0,1)
+    #print(random_number)
+    while (! ((upper_bound > random_number ) & (lower_bound <= random_number) )) {
+      #print(" ")
+      counter <- counter + 1 
+      lower_bound <- upper_bound 
+      upper_bound <- upper_bound +  choose(counter + r - 1 , counter )* p^r * (1-p)^counter
+      #cat("lower bound ", lower_bound, "   upper bound ", upper_bound, " random number ", random_number, "   counter ", counter)
     }
-    
-    return(k)
+    simulated_negative_binomial[i] <- counter
   }
-  
-  # Generate random samples
-  for (i in 1:n) {
-    u <- runif(1)  # Generate a uniform random number between 0 and 1
-    samples[i] <- quantile_function(u)
-  }
-  
-  return(samples)
+  return (simulated_negative_binomial)
 }
 
-# Example usage
-n <- 1000  # Number of samples to generate
-r <- 10  # Size parameter
-p <- 0.3  # Probability parameter
+simulated_negative_binomial(my_obj@r,my_obj@p,1000)
 
-samples <- generate_negative_binomial_samples(n, r, p)
-print(samples)
+##########estimate the parameters of LN##############
 
+lossesVector <- vector()
+for  (i in 3:9 ){
+  for (j in 1:length(data[,i])){
+    if ( data[j,i] > 0 ){
+      lossesVector <- append(lossesVector, data[j,i])
+      print (data[j,i])
+    }
+  }
+}
 
+sample_mean_los<- mean(lossesVector)
+sample_var_los <- var(lossesVector)
+
+###estimating the parameters for LN using the method of moments
+logNormalSigmaSquareEstimator <- function(random_vector){
+  return(log(1 + sample_var_los(random_vector)/(sample_mean_los(random_vector)^2)))
+}
+
+logNormalMuEstimator <- function(random_vector){
+  return(log(sample_mean_los(random_vector)) - (logNormalSigmaSquareEstimator(random_vector)/2) )
+}
+
+##############assigning the results to variables sigmaSquareLN,muLn
+sigmaSquareLN <- logNormalSigmaSquareEstimator(lossesVector)
+muLN <- logNormalMuEstimator(lossesVector)
