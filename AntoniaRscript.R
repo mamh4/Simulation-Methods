@@ -1,9 +1,5 @@
 source("rscript.r")
 
-source("rscript.r")
-
-
-
 #install.packages("MASS")
 library(MASS)
 
@@ -64,6 +60,7 @@ pdf_negative_bin <- function(x, r, p) {
 #E(X)=(1-p)*r/p
 #VAR(X)=r*(1-p)/p^2
 
+
 # Define a class called "MyClass"
 setClass("MLE_neg_bin",
          representation(sample_mean = "numeric", sample_variance = "numeric", r = "numeric", p = "numeric"))
@@ -93,6 +90,10 @@ my_obj <- calculate(my_obj)
 print(paste("the MLE estimator of r, in Negative Binomial is",my_obj@r))
 print(paste("the MLE estimator of p, in Negative Binomial is", my_obj@p))
 
+my_obj@r
+my_obj@p
+
+
 empirical_data <- list()
 
 for (i in 1:length(observed_data)) {
@@ -118,40 +119,103 @@ pdf_binomial <- function(x, n, p) {
   choose(n, x) * (1 - p)^(n-x) * p^x
 }
 
-mle_bin<- function(data){
-  sum(data)/length(data)
+
+###############################NEGATIVE BINOMIAL################
+
+###########calculates the number of of trials required 
+#to achieve r successes in a negative binomial distribution
+
+
+
+
+
+
+
+##############################ACCEPTANCE/REJECTION METHOD########################
+
+X = runif(4500, 0, 1)
+U = runif(4500, 0, 1)
+
+pdf_negative_bin <- function(x, r, p) {
+  choose(x + r - 1, x) * (1 - p)^x * p^r
 }
 
-mle_bin(data$CLM_FREQ)
+count = 1
+accept = c()
 
-###############################SIMULATE FROM NEGATIVE BINOMIAL################
-
-
-simulate_negative_binomial <- function(r, p, size) {
-  simulated_negative_binomial <- integer(size)  # Create an integer vector of "size" length
+while (count <= 4500 & length(accept) < 1000) {
+  test_u = U[count]
+  test_x = pdf_negative_bin(X[count], r, p) / (3.125 * dunif(X[count], 0, 1))
   
-  for (i in 1:size) {
-    counter <- 0
-    lower_bound <- 0
-    upper_bound <- choose(counter + r - 1, counter) * p^r * (1 - p)^counter #P(X=0) where
-    #X~Negative Binomial 
-    
-    random_number <- runif(1, 0, 1) #generates a single  rn~U(0,1)
-    
-    while (!(upper_bound > random_number && lower_bound <= random_number)) {
-      counter <- counter + 1
-      lower_bound <- upper_bound
-      upper_bound <- upper_bound + choose(counter + r - 1, counter) * p^r * (1 - p)^counter
-    }
-    
-    simulated_negative_binomial[i] <- counter
+  if (test_u <= test_x) {
+    accept = c(accept, X[count])
   }
   
-  return(simulated_negative_binomial)
+  count = count + 1
 }
 
+hist(accept)
 
 
 
 
-######################################QUESTION 2#########################################
+
+
+
+############################################QUESTION 4################################
+
+
+#Risk premiums calculated using the data
+
+total_loss <- 0
+# Assuming 'matrix' is your two-dimensional matrix
+for (i in 1:nrow(data)) {
+  for (j in 2:8) { 
+    # Iterating from the 2nd to the 8th column, the columns including claims height 
+    #and claims severity
+    total_loss <- total_loss + data[i, j]
+  }
+}
+riskpremium <- total_loss/ nrow(data) #the estimation is basically the total amount paid
+#for claims divided by the number of claims
+riskpremium #the premium using our data should be 766.067
+
+
+
+#Risk premium calculated based on our estimated frequency and severity models
+
+# Function to generate random samples from a negative binomial distribution using inversion method
+generate_negative_binomial_samples <- function(n, r, p) {
+  samples <- numeric(n)
+  
+  # Calculate the quantile function (inverse CDF) of the negative binomial distribution
+  quantile_function <- function(q) {
+    k <- 0
+    cumulative_prob <- p^r
+    
+    while (cumulative_prob < q) {
+      k <- k + 1
+      cumulative_prob <- cumulative_prob + choose(k + r - 1, k) * p^r
+    }
+    
+    return(k)
+  }
+  
+  # Generate random samples
+  for (i in 1:n) {
+    u <- runif(1)  # Generate a uniform random number between 0 and 1
+    samples[i] <- quantile_function(u)
+  }
+  
+  return(samples)
+}
+
+# Example usage
+n <- 1000  # Number of samples to generate
+r <- 10  # Size parameter
+p <- 0.3  # Probability parameter
+
+samples <- generate_negative_binomial_samples(n, r, p)
+print(samples)
+
+
