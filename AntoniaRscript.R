@@ -184,5 +184,38 @@ riskpremium #the premium using our data should be 766.067
 
 #Risk premium calculated based on our estimated frequency and severity models
 
+# Function to generate random samples from a negative binomial distribution using inversion method
+generate_negative_binomial_samples <- function(n, r, p) {
+  samples <- numeric(n)
+  
+  # Calculate the quantile function (inverse CDF) of the negative binomial distribution
+  quantile_function <- function(q) {
+    k <- 0
+    cumulative_prob <- p^r
+    
+    while (cumulative_prob < q) {
+      k <- k + 1
+      cumulative_prob <- cumulative_prob + choose(k + r - 1, k) * p^r
+    }
+    
+    return(k)
+  }
+  
+  # Generate random samples
+  for (i in 1:n) {
+    u <- runif(1)  # Generate a uniform random number between 0 and 1
+    samples[i] <- quantile_function(u)
+  }
+  
+  return(samples)
+}
+
+# Example usage
+n <- 1000  # Number of samples to generate
+r <- 10  # Size parameter
+p <- 0.3  # Probability parameter
+
+samples <- generate_negative_binomial_samples(n, r, p)
+print(samples)
 
 
