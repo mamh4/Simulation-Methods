@@ -265,7 +265,7 @@ print(object$ks$p.value)
 simulate_negative_binomial <- function(r, p, size){
   simulated_negative_binomial <- rep(0, size)
   for (i in 1:size){
-    cat("item", i)
+    #cat("item", i)
     counter <- 0 
     lower_bound <- 0 
     upper_bound <- choose(counter + r - 1 , counter )* p^r * (1-p)^counter
