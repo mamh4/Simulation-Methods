@@ -2,6 +2,7 @@ source("rscript.r")
 library(EnvStats)
 library(ffbase)
 library(EnvStats)
+library(statmod)
 #make this accurate 
 
 set.seed(5)
@@ -717,7 +718,6 @@ riskPremiumFromMC <- function(numberOfContracts, numberOfIterations){
 # alpha quantile to check  
 crudeMCSimAlphaQuantile <- function(alpha, simulatedVector) {
   #initialise simulatedvector 
-  orderedSimulatedVector <- order(simulatedVector, decreasing = FALSE )
   # find percentage of vector 
   #integer casting of 
   index <- as.integer(alpha *length(orderedSimulatedVector)) #or  round(alpha *length(simulatedVector), digits = 0) 
@@ -725,6 +725,50 @@ crudeMCSimAlphaQuantile <- function(alpha, simulatedVector) {
 }
 
 #Finish expected shortfall 
+
+
+#inverse gaussian parameter estimation with the method of moments 
+#mu lambda 
+inverseGaussianMuEstimator <- function(randomVector) {
+  return (sample_mean(randomVector)) 
+} 
+inverseGaussianLambdaEstimator <- function(randomVector) {
+  return( sample_mean(randomVector)^3 / sample_variance(randomVector)) 
+}
+
+simulatedInverseGaussian <- function(mu, lambda){
+  initialValue <- simulatedStandardNormalDistribution()^2
+  secondaryValue <- mu + ((mu^2 * initialValue )/(2*lambda)) - (sqrt(4*lambda*mu*initialValue + mu^2 * initialValue^2 )*mu/(2*lambda))
+  randomNumber <- runif(1,0,1)
+  if (randomNumber <= (mu / (mu + x) ) ) {
+    return(secondaryValue) 
+  }
+  else {
+    return(mu^2 / secondaryValue)
+  }
+}  
+
+muIG <- inverseGaussianMuEstimator(lossesVector)
+lambdaIG <- inverseGaussianLambdaEstimator(lossesVector) 
+print (muIG)
+print (lambdaIG )
+
+#prototype for FF plot of losses vector, Log Normal case 
+plot.ecdf(lossesVector, main = "FF plot", xlab = "Loss Amount", ylab = "Empirical Cumulative Distribution Function", col.points = "gray")
+x = seq(0,1500, 0.1)
+y = plnorm(x, meanlog = muLN, sdlog = sqrt(sigmaSquareLN) ) #sd log is sigma not sigma squared 
+
+z = pgamma(x, shape = gamma_estimated_k, scale =  gamma_estimated_teta) 
+#lines(x,z, col = "red")
+u = pweibull(x, shape = value[[1]], scale =  value[[2]]) 
+#lines(x,u, col = "blue")
+v = pinvgauss(x, mean = muIG , shape = lambdaIG) 
+lines(x,v, col = "green")
+lines(x,y, col = "red")
+#INVERSE GAUSSIAN IS ALSO AN EXTREMELY GOOD FIT 
+
+
+
 
 
 
