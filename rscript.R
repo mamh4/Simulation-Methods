@@ -6,8 +6,15 @@ library(magrittr) # pipe operator
 library(dplyr) # data wrangling
 library(purrr) # efficient one liner pattern-matching
 library(ggplot2) # additional graphics
+<<<<<<< HEAD
 library(TeachingDemos) # for overlaying plots
 library(gridExtra) # include more than one ggplot
+=======
+
+>>>>>>> eb45aa1117df8d8d303d31095110af9355ab01d2
+
+install.packages("TeachingDemos")
+library(TeachingDemos) # for overlaying plots
 
 ############################################################################################################################
 #################################################### Read and store data ###################################################
@@ -355,6 +362,10 @@ temp2 <-  tidyr::gather(data,key = "CLM_Number" , value = "CLM_AMT",3:9)
 
 
 
+<<<<<<< HEAD
+=======
+#table(temp[,c("CAR_TYPE","at_least_one_claim")])
+>>>>>>> eb45aa1117df8d8d303d31095110af9355ab01d2
 
 
 
