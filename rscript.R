@@ -6,9 +6,10 @@ library(magrittr) # pipe operator
 library(dplyr) # data wrangling
 library(purrr) # efficient one liner pattern-matching
 library(ggplot2) # additional graphics
-library(TeachingDemos) # for overlaying plots
-library(gridExtra) # include more than one ggplot
 
+
+install.packages("TeachingDemos")
+library(TeachingDemos) # for overlaying plots
 
 ############################################################################################################################
 #################################################### Read and store data ###################################################
@@ -254,187 +255,43 @@ claims_amounts <- c('CLM_AMT_1',
 
 
 
-###### Claim Frequency Analysis
 for (f in features_cat) {
   plot(data[,f], main=f, xlab='', las=2,col=data$CLM_FREQ)
   grid()
 }
+# Results: (%-wise)
+# Rural has higher impact on the number of claims
+# Being Female has higher impact on the number of claims
+# Panel truck has higher impact on the number of claims
+# Commercial car use has higher impact on the number of claims
+
 for (f in claims_amounts) {
   plot(data[,f], main=f, xlab='' ,las=2,col=data$CLM_FREQ)
   grid()
 }
+#CLM_AMT_6 and CLM_AMT_7 rare occurrence
+#Age between 30 and 60 corresponds to more claims
+
 plot(data$CLM_FREQ, data$AGE, main='Age', xlab='',las = 2)
 grid()
 
 
 
-#General Analysis of Categorical Variables
-#Deeper Analysis: here the y is just a dummy, information in the next 3 plots is irrelevent of freq.
-plot1 <-ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ, fill = GENDER))+
-  geom_col(position = "fill") +
-  xlab("")+
-  ylab("")+
-  scale_y_continuous(labels = scales::percent)+
-  theme_minimal()+
-  theme(axis.line.x = element_blank(),
-        axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        panel.border = element_blank(),
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor.x = element_blank())
 
 
-plot2 <- ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ, fill = CAR_USE))+
-  geom_col(position = "fill")+
-  xlab("")+
-  ylab("")+
-  scale_y_continuous(labels = scales::percent)+
-  theme_minimal()+
-  theme(axis.line.x = element_blank(),
-        axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        panel.border = element_blank(),
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor.x = element_blank())
+#Check freq relationship to covairates
+boxplot(data$CLM_FREQ~data$CAR_TYPE)
+boxplot(data$CLM_FREQ~data$CAR_TYPE)
 
-
-plot3 <- ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ, fill = AREA))+
-  geom_col(position = "fill")+
-  xlab("")+
-  ylab("")+
-  scale_y_continuous(labels = scales::percent)+
-  theme_minimal()
-
-
-grid.arrange(plot1, plot2, plot3, nrow = 3)
-
-
-
-# Results: (%-wise) Rather hypotheses actually!
-# Rural has higher impact on the number of claims although data is pretty low compared to Urban
-# Being Female has higher impact on the number of claims Howver Many SUVs, so it could be being an SUV + could be 3rd liab. Also Femal are more in the data set
-# Panel truck and pick up have higher impact on the number of claims but also not many
-# Commercial car use has higher impact on the number of claims but correlated with Panel Truck and pick so one cause the other
-#CLM_AMT_6 and CLM_AMT_7 rare occurrence
-#Age between 30 and 60 corresponds to more claims
-
-
-
-#Deeper look
-temp <- data %>%
-  dplyr::mutate(agg_clm = CLM_AMT_1 + CLM_AMT_2 + CLM_AMT_3 +CLM_AMT_4+CLM_AMT_5+CLM_AMT_6+CLM_AMT_7,
-         is_claim           = ifelse(CLM_AMT_1>1,1,0),
-         car_use_char       = ifelse(CAR_USE=="Commercial","C","P"),
-         CAR_USE            = ifelse(CAR_USE=="Commercial","Comm","Private"))
-
-
-
-ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ)) +
-  geom_boxplot(outlier.shape = NA) +
-  geom_jitter(
-    position = position_jitter(width = 0.2, height = 0.08),
-    size = 1,
-    check_overlap = FALSE
-  ) +
-  scale_y_continuous(breaks = seq(0, 7)) +
-  geom_text(
-    data = temp,
-    aes(x = CAR_TYPE, y = 7, label = paste("Count:", table(CAR_TYPE)[as.character(CAR_TYPE)])),
-    vjust = -1,
-    size = 3,
-    color = "black"
-  ) +
-  theme_minimal() +
-  xlab("") +
-  ylab("") +
-  labs(title = "Claim Frequency by Car Type") +
-  theme(
-    plot.title = element_text(hjust = 0.5),
-    axis.text.x = element_text(size = 14),
-    plot.margin = margin(10, 20, 40, 20)  # Adjust the top, right, bottom, and left margins
-  )
-
+#table(temp[,c("CAR_TYPE","at_least_one_claim")])
 
 
 
 #check severity relationship to covariates
-#Need to pivot the data by CLM_AMT
-temp2 <-  tidyr::gather(data,key = "CLM_Number" , value = "CLM_AMT",3:9)
-#Need to replace 0 with NA otherwise it ruins the data
-temp2$CLM_AMT[temp2$CLM_AMT==0] <- NA
-#Include additional variables for analysis
-temp2 <- temp2 %>%
-  dplyr::mutate(is_claim           = ifelse(CLM_AMT>1,1,0),
-                car_use_char       = ifelse(CAR_USE=="Commercial","C","P"))
-
-
-for (f in features_cat) {
-  plot(temp2[,f], main=f, xlab='', las=2,col=temp2$CLM_AMT)
-  grid()
-}
-
-plot(temp2$CLM_AMT, temp2$AGE, main='Age', xlab='',las = 2)
-grid()
-
-#Both claim freq and severity increase for ages between 30 and 60
-#Although Panel truck has many claims they are relatively small
-#Although rural has high impact on freq severity is realtively low, but then again data is low on rural policies
-#Female claims tend to be small in size although higher freq. but again do not forget confounding with sport cars and SUVs
-
-#Note we can condition on variables to try to dis-intangle confounding but most often we have data only on male/female
-
-
-############################################### Big Picture! Warning!! BAD plots ############################################ 
-
-ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ)) +
-  geom_boxplot(outlier.shape = NA) +
-  scale_shape_manual(values = c(1, 4)) +
-  geom_jitter(aes(col = GENDER, shape = AREA),
-              position = position_jitter(width = 0.2, height = 0.2),
-              size = 3,
-              check_overlap = T) +
-  geom_text(aes(label = car_use_char),
-            position = position_jitter(width = 0.2, height = 0.2),
-            vjust = 1, size = 3,
-            check_overlap = TRUE) +
-  scale_y_continuous(breaks = seq(0, 7)) +
-  theme_minimal()
-
-
-
-
-ggplot(temp2, aes(x = CAR_TYPE, y = CLM_AMT)) +
-  geom_boxplot(outlier.shape = NA) +
-  scale_shape_manual(values = c(1, 4)) +
-  geom_jitter(aes(col = GENDER, shape = AREA),
-              position = position_jitter(width = 0.2, height = 0.2),
-              size = 3,
-              check_overlap = T) +
-  geom_text(aes(label = car_use_char),
-            position = position_jitter(width = 0.2, height = 0.2),
-            vjust = 1, size = 3,
-            check_overlap = TRUE) +
-  scale_y_continuous(breaks = seq(0, 7)) +
-  theme_minimal()
-
-
-####################################################### To be deleted #######################################################
-
-
-
-
-
-
-
-
-
-
-
-
+boxplot(temp$agg_clm~data$CAR_TYPE)
 
 
 rm(temp)#memory management
-rm(temp2)
 ############################################################################################################################
 ########################################################### Q1 #############################################################
 ############################################################################################################################
@@ -533,7 +390,13 @@ legend("topright", legend = c("Poisson Distribution", "Negative Binomial Distrib
 
 ############################################# Q2 Check Exponential #########################################################
 
-claim_size_vector <- data[,3:9][data[,3:9]>0]
+claim_size_vector <- vector()
+for  (i in 3:9 ){
+  for (j in 1:nrow(data)) 
+    if ( data[j,i] > 0 ){
+      claim_size_vector <- append(claim_size_vector, data[j,i])
+    }
+}
 
 
 hist(claim_size_vector,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
@@ -592,63 +455,10 @@ qqplot(claim_size_vector,rgamma(length(claim_size_vector),
 
 
 
-################################################ Q2 Check Lognormal ########################################################
-
-hist(claim_size_vector,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
-x <- seq(0,3500,length.out = length(claim_size_vector))
-
-#Maximum Likelihood Estimator
-logNormalSigmaSquareEstimator <- function(random_vector){
-  return(log(1 + sample_variance(random_vector)/(sample_mean(random_vector)^2)))
-}
-logNormalMuEstimator <- function(random_vector){
-  return(log(sample_mean(random_vector)) - (logNormalSigmaSquareEstimator(random_vector)/2) )
-}
-logNormal_estimator_sd <- sqrt(logNormalSigmaSquareEstimator(claim_size_vector))
-logNormal_estimator_mu <- logNormalMuEstimator(claim_size_vector)
 
 
-y_3 <- dlnorm(x,meanlog = logNormal_estimator_mu, sdlog = logNormal_estimator_sd) #Theoretical Distribution
-lines(x,y_3)
-
-#Additionally we include 11 plot against the theoretical distribution
-theoretical_quantiles_logNormal <- qlnorm(ppoints(100), meanlog = logNormal_estimator_mu, sdlog = logNormal_estimator_sd )
-
-qqplot(theoretical_quantiles_logNormal, claim_size_vector,
-       xlab = "Theoretical Quantiles", ylab = "Observed Quantiles",
-       main = "QQ Plot for Log Normal Distribution")
-abline(0, 1, col = "red", lty = 2)  # Add reference line
-
-ks.test(claim_size_vector, theoretical_quantiles_logNormal)
-
-########################################### Q2 Check Inverse Gaussian #####################################################
-
-hist(claim_size_vector,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
-x <- seq(0,3500,length.out = length(claim_size_vector))
 
 
-#Method of Moments
-inverseGaussianMuEstimator <- function(randomVector) {
-  return (sample_mean(randomVector)) 
-} 
-inverseGaussianLambdaEstimator <- function(randomVector) {
-  return( sample_mean(randomVector)^3 / sample_variance(randomVector)) 
-}
-
-IG_estimator_mu <- inverseGaussianMuEstimator(claim_size_vector)
-IG_estimator_lambda <- inverseGaussianLambdaEstimator(claim_size_vector) 
-
-y_4 <- dinvgauss(x,mean = IG_estimator_mu, shape = IG_estimator_lambda) #Theoretical Distribution
-lines(x,y_3)
-
-theoretical_quantiles_invgauss <- qinvgauss(ppoints(100), mean = IG_estimator_mu,shape = IG_estimator_lambda)
-
-qqplot(theoretical_quantiles_invgauss, claim_size_vector,
-       xlab = "Theoretical Quantiles", ylab = "Observed Quantiles",
-       main = "QQ Plot for IG Distribution")
-abline(0, 1, col = "red", lty = 2)  # Add reference line
-
-ks.test(claim_size_vector, theoretical_quantiles_invgauss)
 
 
 #******************************************************* Q2 Result *********************************************************
@@ -930,13 +740,13 @@ mtext(paste0("Var: ",round(mean(var_vector_nb_cv),4),
 #******************************************************** Results ********************************************************#
 
 par(mfrow = c(2, 2),cex.main = 0.8)
-hist(var_vector_nb, main = "Variance NB w/o variance reduction")
+hist(var_vector_nb, main = "Expectation NB w/o variance reduction")
 abline(v = mean(var_vector_nb),col="Red")
 
 legend("topright", legend = "Var CMC", col = "red", lty = 1,cex = 0.8)
 
 subplot(hist(nb_simulations_list[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "Sample Simulation",cex.main = 0.7)
-        , grconvertX(c(.06, .3), "npc"), grconvertY(c(.7, .9), "npc"))
+        , grconvertX(c(.04, .3), "npc"), grconvertY(c(.7, .9), "npc"))
 
 
 

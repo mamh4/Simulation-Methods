@@ -265,21 +265,20 @@ print(object$ks$p.value)
 simulate_negative_binomial <- function(r, p, size){
   simulated_negative_binomial <- rep(0, size)
   for (i in 1:size){
-    cat("item", i)
+    #cat("item", i)
+    counter <- 0 
     lower_bound <- 0 
     upper_bound <- choose(counter + r - 1 , counter )* p^r * (1-p)^counter
-    
-    print(lower_bound) 
-    print(upper_bound) 
-    counter <- 0 
+    #print(lower_bound) 
+    #print(upper_bound) 
     random_number <- runif(1,0,1)
-    print(random_number)
+    #print(random_number)
     while (! ((upper_bound > random_number ) & (lower_bound <= random_number) )) {
-      print(" ")
+      #print(" ")
       counter <- counter + 1 
       lower_bound <- upper_bound 
       upper_bound <- upper_bound +  choose(counter + r - 1 , counter )* p^r * (1-p)^counter
-      cat("lower bound ", lower_bound, "   upper bound ", upper_bound, " random number ", random_number, "   counter ", counter)
+      #cat("lower bound ", lower_bound, "   upper bound ", upper_bound, " random number ", random_number, "   counter ", counter)
     }
     simulated_negative_binomial[i] <- counter
   }
@@ -714,17 +713,7 @@ riskPremiumFromMC <- function(numberOfContracts, numberOfIterations){
   return(sample_mean(simulationClaimsVector)) 
 }
 
-#TENTATIVE RUIN THEORY 
-# alpha quantile to check  
-crudeMCSimAlphaQuantile <- function(alpha, simulatedVector) {
-  #initialise simulatedvector 
-  # find percentage of vector 
-  #integer casting of 
-  index <- as.integer(alpha *length(orderedSimulatedVector)) #or  round(alpha *length(simulatedVector), digits = 0) 
-  return(orderedSimulatedVector[index]) 
-}
 
-#Finish expected shortfall 
 
 
 #inverse gaussian parameter estimation with the method of moments 
@@ -766,6 +755,50 @@ v = pinvgauss(x, mean = muIG , shape = lambdaIG)
 lines(x,v, col = "green")
 lines(x,y, col = "red")
 #INVERSE GAUSSIAN IS ALSO AN EXTREMELY GOOD FIT 
+#NEED THE OTHER PLOTS + KS AND CHI SQUARED TO DECIDE/SELECT MODEL 
+# in any case, very solid candidate for importance selection 
+
+
+
+
+#TENTATIVE RUIN THEORY 
+# alpha quantile to check  
+crudeMCSimAlphaQuantile <- function(alpha, simulatedVector) {
+  #initialise simulatedvector 
+  # find percentage of vector 
+  #integer casting of 
+  orderedSimulatedVector <- sort(simulatedVector, decreasing= FALSE)
+  index <- as.integer(alpha *length(orderedSimulatedVector)) #or  round(alpha *length(simulatedVector), digits = 0) 
+  return(orderedSimulatedVector[index]) 
+}
+#test run 
+quantileTestRunVector <- runif(1000, 0, 1 ) 
+
+crudeMCSimAlphaQuantile(0.05, quantileTestRunVector)
+# pretty good test quantile 
+
+# had it been a stochastic process nice visual idea -> store all trajectories and draw all of them in gradient of color 
+
+crudeMCExpectedShortfall <- function(alpha, numberOfIterations) { #number of policies as parameter ? 
+  simulatedVector <- vector() 
+  for (i in 1:numberOfIterations) {
+    currentSimulation <- SIMULATEPLACEHOLDER()
+    #either loop on number of policies OR call a function passing number of policies as an argument 
+    simulatedVector <- append (simulatedVector, currentSimulation )
+  }
+  orderedSimulations <- sort(simulatedVector, decreasing= TRUE)  # check coherence with the above 
+  selectionIndex <- ( floor(numberOfIterations * (1 - alpha ) ) + 1 ) 
+  expectedShortfall <- 0 
+  for (i in 1:selectionIndex ){
+    expectedShortfall <- expectedShortfall +  (orderedSimulations[i]/ ( floor(numberOfIterations * (1 - alpha ) ) + 1 ) )
+  }
+}
+#fits course description, need to actually run tests 
+
+
+
+
+#Finish expected shortfall 
 
 
 

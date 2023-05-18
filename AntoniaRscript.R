@@ -1,11 +1,10 @@
 source("rscript.r")
 
-source("rscript.r")
-
-
-
 #install.packages("MASS")
 library(MASS)
+
+install.packages("extraDistr")
+library(extraDistr)
 
 sample_mean <- mean(data$CLM_FREQ) #calculating the sample mean
 sample_mean
@@ -118,6 +117,90 @@ pdf_binomial <- function(x, n, p) {
   choose(n, x) * (1 - p)^(n-x) * p^x
 }
 
+
+###############################NEGATIVE BINOMIAL################
+
+###########calculates the number of of trials required 
+#to achieve r successes in a negative binomial distribution
+
+
+
+
+
+
+
+##############################ACCEPTANCE/REJECTION METHOD########################
+
+#X = runif(4500, 0, 1)
+#U = runif(4500, 0, 1)
+
+#pdf_negative_bin <- function(x, r, p) {
+ # choose(x + r - 1, x) * (1 - p)^x * p^r
+#}
+#count = 1
+#accept = c()
+
+#while (count <= 4500 & length(accept) < 1000) {
+ # test_u = U[count]
+  #test_x = pdf_negative_bin(X[count], r, p) / (3.125 * dunif(X[count], 0, 1))
+  #
+  #if (test_u <= test_x) {
+   # accept = c(accept, X[count])
+  #}
+  
+#  count = count + 1
+#}
+
+#hist(accept)
+
+
+
+
+
+
+
+############################################QUESTION 4################################
+
+
+#Risk premiums calculated using the data
+
+total_loss <- 0
+# Assuming 'matrix' is your two-dimensional matrix
+for (i in 1:nrow(data)) {
+  for (j in 2:8) { 
+    # Iterating from the 2nd to the 8th column, the columns including claims height 
+    #and claims severity
+    total_loss <- total_loss + data[i, j]
+  }
+}
+riskpremium <- total_loss/ nrow(data) #the estimation is basically the total amount paid
+#for claims divided by the number of claims
+riskpremium #the premium using our data should be 766.067
+
+
+
+#Risk premium calculated based on our estimated frequency and severity models
+
+# Function to generate random samples from a negative binomial distribution using inversion method
+
+simulate_negative_binomial <- function(r, p, size){
+  simulated_negative_binomial <- rep(0, size)
+  for (i in 1:size){
+    #cat("item", i)
+    counter <- 0 
+    lower_bound <- 0 
+    upper_bound <- choose(counter + r - 1 , counter )* p^r * (1-p)^counter
+    #print(lower_bound) 
+    #print(upper_bound) 
+    random_number <- runif(1,0,1)
+    #print(random_number)
+    while (! ((upper_bound > random_number ) & (lower_bound <= random_number) )) {
+      #print(" ")
+      counter <- counter + 1 
+      lower_bound <- upper_bound 
+      upper_bound <- upper_bound +  choose(counter + r - 1 , counter )* p^r * (1-p)^counter
+      #cat("lower bound ", lower_bound, "   upper bound ", upper_bound, " random number ", random_number, "   counter ", counter)
+
 mle_bin<- function(data){
   sum(data)/length(data)
 }
@@ -154,4 +237,36 @@ simulate_negative_binomial <- function(r, p, size) {
 
 
 
+###estimating the parameters for LN using the method of moments
+logNormalSigmaSquareEstimator <- function(random_vector){
+  return(log(1 + sample_var_los/(sample_mean_los^2)))
+}
+
+logNormalMuEstimator <- function(random_vector){
+  return(log(sample_mean_los) - (logNormalSigmaSquareEstimator(random_vector)/2) )
+}
+
+##############assigning the results to variables sigmaSquareLN,muLn############
+sigmaSquareLN <- logNormalSigmaSquareEstimator(lossesVector)
+muLN <- logNormalMuEstimator(lossesVector)
 ######################################QUESTION 2#########################################
+
+
+# Number of simulations
+num_simulations <- 1000
+
+# Vector to store the simulated values of X
+simulated_X <- numeric(num_simulations)
+
+# Simulate the compound negative binomial
+for (i in 1:num_simulations) {
+  N <- simulate_negative_binomial(1, my_obj@r, my_obj@p)
+  Y <- rlnorm(N, muLN, sigmaSquareLN)
+  X <- sum(Y)
+  simulated_X[i] <- X
+}
+
+# View the simulated values
+print(simulated_X)
+
+
