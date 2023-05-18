@@ -930,10 +930,10 @@ mtext(paste0("Mean: ",round(mean(mean_vector_ln_cv_IG),4),
              " vs CMC:",round(mean(mean_vector_ln_cv_IG),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 
 #are they biased? #Theoretically unbiased
-hist(mean_vector_gamma-mean_vector_ln_cv_IG, main = "Differences: CV Method - CMC")
-mtext(paste0("pval: ", round(t.test(mean_vector_gamma, mean_vector_ln_cv_IG)$p.val, 6), "\n",
-             "conf.Int 95%: (", round(t.test(mean_vector_gamma, mean_vector_ln_cv_IG)$conf[1],6), ";",
-             round(t.test(mean_vector_gamma, mean_vector_ln_cv_IG)$conf[2],6), ")")
+hist(mean_vector_ln-mean_vector_ln_cv_IG, main = "Differences: CV Method - CMC")
+mtext(paste0("pval: ", round(t.test(ln_simulations_list_IS_gamma, mean_vector_ln_cv_IG)$p.val, 6), "\n",
+             "conf.Int 95%: (", round(t.test(ln_simulations_list_IS_gamma, mean_vector_ln_cv_IG)$conf[1],6), ";",
+             round(t.test(ln_simulations_list_IS_gamma, mean_vector_ln_cv_IG)$conf[2],6), ")")
       , side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 
 
@@ -953,44 +953,84 @@ mtext(paste0("Var: ",round(mean(var_vector_ln_cv_IG),4),
 #Importance sampling, higher variance
 #I = Gamma
 #F = F_tilda = lambda*e^(-lambda*x), g(x) = I(x) = x
-x <- rexp(1000,lambda_hat_exp)
-ISE <- dgamma(x,shape = gamma_estimated_k, scale = gamma_estimated_theta) / dexp(x,rate = lambda_hat_exp) * x
+x <- rgamma(n = length(claim_size_vector),shape = gamma_estimated_k,scale = gamma_estimated_theta)
+ISE <- dlnorm(x,meanlog = logNormal_estimator_mu, sdlog = logNormal_estimator_sd) / 
+  dgamma(x,shape = gamma_estimated_k, scale = gamma_estimated_theta) * x
 
 
 
 
-simulate_gamma_IS_exp <- function(size, shape, scale,lambda){
-  x <- rexp(n = size,rate = lambda)
-  return( dgamma(x,shape = shape,scale =  scale) / dexp(x,rate = lambda) * x )
+simulate_ln_IS_gamma <- function(size, shape_gamma, scale_gamma, mean_ln, sd_ln){
+  x <- rgamma(n = size, shape = shape_gamma, scale = scale_gamma)
+  return( dlnorm(x,meanlog =  mean_ln,sdlog = sd_ln) / 
+            dgamma(x,shape = shape_gamma, scale = scale_gamma) * x )
 }
 
 
 
-gamma_simulations_list_IS <- vector(mode = "list", length = 1000)
+ln_simulations_list_IS_gamma <- vector(mode = "list", length = 1000)
 for(i in 1:1000) {
-  gamma_simulations_list_IS[[i]] <- vector(mode = "list", length = length(claim_size_vector))
+  ln_simulations_list_IS_gamma[[i]] <- vector(mode = "list", length = length(claim_size_vector))
 }
 for(i in 1:1000){
-  gamma_simulations_list_IS[[i]] <- simulate_gamma_IS_exp(size = length(claim_size_vector),
-                                                             shape = gamma_estimated_k,
-                                                             scale = gamma_estimated_theta,
-                                                             lambd = lambda_hat_exp)
+  ln_simulations_list_IS_gamma[[i]] <- simulate_ln_IS_gamma(size = length(claim_size_vector),
+                                                             shape_gamma = gamma_estimated_k,
+                                                             scale_gamma = gamma_estimated_theta,
+                                                             mean_ln = logNormal_estimator_mu,
+                                                             sd_ln = logNormal_estimator_sd)
 }
 
 
 
-mean_vector_gamma_IS <- c()
-var_vector_gamma_IS <- c()
+mean_vector_ln_IS_gamma <- c()
+var_vector_ln_IS_gamma <- c()
 
 
 for(i in 1:1000){
-  mean_vector_gamma_IS[i] <- mean(gamma_simulations_list_IS[[i]])
+  mean_vector_ln_IS_gamma[i] <- mean(ln_simulations_list_IS_gamma[[i]])
+  var_vector_ln_IS_gamma[i]<- var(ln_simulations_list_IS_gamma[[i]])
 }
 
-hist(mean_vector_gamma_IS, main = "Expectation of 1000 Gamma Simulations - IS", breaks = 40)
+#Histogram of Antithetic covariate method estimators 
+hist(mean_vector_ln_IS_gamma, main = "Expectation of 1000 Log Normal Simulations - IS Method")
+abline(v = mean(mean_vector_ln_IS_gamma),col="Red")
+legend("topright", legend = "Mean CMC", col = "red", lty = 1)
+mtext(paste0("Mean: ",round(mean(mean_vector_ln_IS_gamma),4),
+             " vs CMC:",round(mean(mean_vector_ln_cv_IG),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+
+#are they biased? #Theoretically unbiased
+hist(mean_vector_ln-mean_vector_ln_IS_gamma, main = "Differences: IS Method - CMC")
+mtext(paste0("pval: ", round(t.test(mean_vector_ln, mean_vector_ln_IS_gamma)$p.val, 6), "\n",
+             "conf.Int 95%: (", round(t.test(mean_vector_ln, mean_vector_ln_IS_gamma)$conf[1],6), ";",
+             round(t.test(mean_vector_ln, mean_vector_ln_IS_gamma)$conf[2],6), ")")
+      , side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+
+
+
+#Compare variance
+hist(var_vector_ln_IS_gamma, main = "Variance - IS Method")
+abline(v = mean(var_vector_ln_IS_gamma),col="Red")
+legend("topright", legend = "Var CV", col = "red", lty = 1,cex = 0.8)
+mtext(paste0("Var: ",round(mean(var_vector_ln_IS_gamma),4),
+             " vs CMC:",round(mean(var_vector_ln),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+hist(mean_vector_ln_IS_gamma, main = "Expectation of 1000 Gamma Simulations - IS", breaks = 40)
 abline(v = mean(claim_size_vector),col="Red")
 legend("topright", legend = "Data", col = "red", lty = 1)
-mtext(as.character(round(var(mean_vector_gamma_IS),4)), side = 3, line = -2,
+mtext(as.character(round(var(mean_vector_ln_IS_gamma),4)), side = 3, line = -2,
       at = par("usr")[1], adj = -1, col = "black", cex = 0.6)
 
 
