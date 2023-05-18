@@ -292,3 +292,13 @@ for (i in 1:num_simulations) {
 mean(simulated_X_inbuiltfunctions)
 mean(simulate_cnb_ln)
 
+
+
+###comment
+
+n<-10
+sumw<-0
+for (i in 1:n){
+  sumw =i + sumw
+}
+
