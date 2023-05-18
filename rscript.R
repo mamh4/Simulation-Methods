@@ -255,43 +255,138 @@ claims_amounts <- c('CLM_AMT_1',
 
 
 
+###### Claim Frequency Analysis
 for (f in features_cat) {
   plot(data[,f], main=f, xlab='', las=2,col=data$CLM_FREQ)
   grid()
 }
-# Results: (%-wise)
-# Rural has higher impact on the number of claims
-# Being Female has higher impact on the number of claims
-# Panel truck has higher impact on the number of claims
-# Commercial car use has higher impact on the number of claims
-
 for (f in claims_amounts) {
   plot(data[,f], main=f, xlab='' ,las=2,col=data$CLM_FREQ)
   grid()
 }
-#CLM_AMT_6 and CLM_AMT_7 rare occurrence
-#Age between 30 and 60 corresponds to more claims
-
 plot(data$CLM_FREQ, data$AGE, main='Age', xlab='',las = 2)
 grid()
 
 
 
+#General Analysis of Categorical Variables
+#Deeper Analysis: here the y is just a dummy, information in the next 3 plots is irrelevent of freq.
+plot1 <-ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ, fill = GENDER))+
+  geom_col(position = "fill") +
+  xlab("")+
+  ylab("")+
+  scale_y_continuous(labels = scales::percent)+
+  theme_minimal()+
+  theme(axis.line.x = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        panel.border = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank())
 
 
-#Check freq relationship to covairates
-boxplot(data$CLM_FREQ~data$CAR_TYPE)
-boxplot(data$CLM_FREQ~data$CAR_TYPE)
+plot2 <- ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ, fill = CAR_USE))+
+  geom_col(position = "fill")+
+  xlab("")+
+  ylab("")+
+  scale_y_continuous(labels = scales::percent)+
+  theme_minimal()+
+  theme(axis.line.x = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        panel.border = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank())
 
-#table(temp[,c("CAR_TYPE","at_least_one_claim")])
+
+plot3 <- ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ, fill = AREA))+
+  geom_col(position = "fill")+
+  xlab("")+
+  ylab("")+
+  scale_y_continuous(labels = scales::percent)+
+  theme_minimal()
+
+
+grid.arrange(plot1, plot2, plot3, nrow = 3)
+
+
+
+# Results: (%-wise) Rather hypotheses actually!
+# Rural has higher impact on the number of claims although data is pretty low compared to Urban
+# Being Female has higher impact on the number of claims Howver Many SUVs, so it could be being an SUV + could be 3rd liab. Also Femal are more in the data set
+# Panel truck and pick up have higher impact on the number of claims but also not many
+# Commercial car use has higher impact on the number of claims but correlated with Panel Truck and pick so one cause the other
+#CLM_AMT_6 and CLM_AMT_7 rare occurrence
+#Age between 30 and 60 corresponds to more claims
+
+
+
+#Deeper look
+temp <- data %>%
+  dplyr::mutate(agg_clm = CLM_AMT_1 + CLM_AMT_2 + CLM_AMT_3 +CLM_AMT_4+CLM_AMT_5+CLM_AMT_6+CLM_AMT_7,
+                is_claim           = ifelse(CLM_AMT_1>1,1,0),
+                car_use_char       = ifelse(CAR_USE=="Commercial","C","P"),
+                CAR_USE            = ifelse(CAR_USE=="Commercial","Comm","Private"))
+
+
+
+ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(
+    position = position_jitter(width = 0.2, height = 0.08),
+    size = 1,
+    check_overlap = FALSE
+  ) +
+  scale_y_continuous(breaks = seq(0, 7)) +
+  geom_text(
+    data = temp,
+    aes(x = CAR_TYPE, y = 7, label = paste("Count:", table(CAR_TYPE)[as.character(CAR_TYPE)])),
+    vjust = -1,
+    size = 3,
+    color = "black"
+  ) +
+  theme_minimal() +
+  xlab("") +
+  ylab("") +
+  labs(title = "Claim Frequency by Car Type") +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    axis.text.x = element_text(size = 14),
+    plot.margin = margin(10, 20, 40, 20)  # Adjust the top, right, bottom, and left margins
+  )
+
 
 
 
 #check severity relationship to covariates
-boxplot(temp$agg_clm~data$CAR_TYPE)
+#Need to pivot the data by CLM_AMT
+temp2 <-  tidyr::gather(data,key = "CLM_Number" , value = "CLM_AMT",3:9)
+#Need to replace 0 with NA otherwise it ruins the data
+temp2$CLM_AMT[temp2$CLM_AMT==0] <- NA
+#Include additional variables for analysis
+temp2 <- temp2 %>%
+  dplyr::mutate(is_claim           = ifelse(CLM_AMT>1,1,0),
+                car_use_char       = ifelse(CAR_USE=="Commercial","C","P"))
+
+
+for (f in features_cat) {
+  plot(temp2[,f], main=f, xlab='', las=2,col=temp2$CLM_AMT)
+  grid()
+}
+
+plot(temp2$CLM_AMT, temp2$AGE, main='Age', xlab='',las = 2)
+grid()
+
+#Both claim freq and severity increase for ages between 30 and 60
+#Although Panel truck has many claims they are relatively small
+#Although rural has high impact on freq severity is realtively low, but then again data is low on rural policies
+#Female claims tend to be small in size although higher freq. but again do not forget confounding with sport cars and SUVs
+
+#Note we can condition on variables to try to dis-intangle confounding but most often we have data only on male/female
 
 
 rm(temp)#memory management
+rm(temp2)#memory management
 ############################################################################################################################
 ########################################################### Q1 #############################################################
 ############################################################################################################################
