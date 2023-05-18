@@ -1,3 +1,32 @@
+##################################################### Table of Content #####################################################
+#Lines ABCD to AEDF#
+#Lines ABCD to AEDF#
+#Lines ABCD to AEDF#
+#Lines ABCD to AEDF#
+#Lines ABCD to AEDF#
+#Lines ABCD to AEDF#
+#Lines ABCD to AEDF#
+#Lines ABCD to AEDF#
+#Lines ABCD to AEDF#
+#Lines ABCD to AEDF#
+#Lines ABCD to AEDF#
+#Lines ABCD to AEDF#
+#Lines ABCD to AEDF#
+#Lines ABCD to AEDF#
+#Lines ABCD to AEDF#
+#Lines ABCD to AEDF#
+#Lines ABCD to AEDF#
+#Lines ABCD to AEDF#
+#Lines ABCD to AEDF#
+#Lines ABCD to AEDF#
+#Lines ABCD to AEDF#
+#Lines ABCD to AEDF#
+#Lines ABCD to AEDF#
+#Lines ABCD to AEDF#
+#Lines ABCD to AEDF#
+#Lines ABCD to AEDF#
+#Lines ABCD to AEDF#
+
 ############################################################################################################################
 ####################################################### Read libraries #####################################################
 ############################################################################################################################
@@ -24,39 +53,7 @@ rm(data_orig) #memory management
 ############################################################################################################################
 #################################################### Function Definitions ##################################################
 ############################################################################################################################
-# Check whether number of claims matches the number of row entries.
 
-# In the end store data here
-############################################## Prototype ##################################################################
-# models <- list( claim_freq_models = list (
-#                                             poisson = list(
-#                                                             pdf = function(lambda,x){
-#                                                               return(lambda^x * exp(-lambda) / factorial((x)))}
-#                                                             random_poisson = "to be defined",
-#                                                             hist,
-#                                                             lines),
-#                                             
-#                                             negative_binomial = list(
-#                                                             pdf = function(r, p, k){return(choose((k+r-1),k) * p^r * (1-p)^k)}
-#                                             )),
-#                 claim_severity_models = list (
-#                                             exponential = list(
-#                                                           pdf = function(lambda,x){
-#                                                             return(lambda *exp(-x*lambda))}),
-#                                             gamma = list(
-#                                                           pdf = function(alpha, lamba, x ){
-#                                                             #no idea if the following works 
-#                                                             if (x < 0) 
-#                                                               {return(0.0) } 
-#                                                             else 
-#                                                               #needs gamma function 
-#                                                               {return(lambda * exp(- lambda * x )*(lambda*x)^(alpha -1 )/1 )}
-#                                                           }
-#                                             ),
-#                                             ))
-
-##########################################################################################################################
-##perhaps remove
 pdf_poisson <- function(lambda,x){
   return((lambda^x) * exp(-lambda) / factorial(x))
 }
@@ -636,7 +633,7 @@ legend("topright", legend = c("Exponential", "Gamma", "Log-Normal", "Inverse Gau
 ########################################################### Q3 #############################################################
 ############################################################################################################################
 
-set.seed(2022)
+set.seed(2024)
 ############################################## Q3 Monte Carlo Negative Binomial ###########################################
 #To assess the reliability of our monte carlo estimators in relation to the data we have, we will simulate 1000 negative 
 #binomial random variables using the same parameter p and r we obtained from the ***MoM*** estimator. We will do the following
@@ -865,10 +862,17 @@ mtext(paste0("Var: ",round(mean(var_vector_nb_cv),4),
 
 ### NB Importance Sampling Method #########################################################################################
 
-#try geometric / binomial
+#try geometric
+#Method of moments
+p_hat_geometric <- 1 / mean(data$CLM_FREQ)
 
 
 
+simulate_nb_IS_geometric <- function(size, prob_, scale_gamma, mean_ln, sd_ln){
+  x <- rgamma(n = size, shape = shape_gamma, scale = scale_gamma)
+  return( dlnorm(x,meanlog =  mean_ln,sdlog = sd_ln) / 
+            dgamma(x,shape = shape_gamma, scale = scale_gamma) * x )
+}
 
 
 
@@ -1210,11 +1214,14 @@ monte_carlo_claim_simulations_list <- vector(mode = "list", length = 1000)
 for(i in 1:1000) {
   monte_carlo_claim_simulations_list[[i]] <- vector(mode = "list", length = 1000)
 }
+
+agg_monte_carlo_claims <- c()
 for(i in 1:1000){
   clm_freq = monte_carlo_claim_freq <- rnbinom(1000,size = r_hat, prob = p_hat)
   monte_carlo_claim_sev <- purrr::map(monte_carlo_claim_freq,function(x){rlnorm(x,meanlog = logNormal_estimator_mu,
                                                                                 sdlog = logNormal_estimator_sd)})
   monte_carlo_claim_simulations_list[[i]] <- sapply(monte_carlo_claim_sev,sum)
+  agg_monte_carlo_claims[i] <- sum(sapply(monte_carlo_claim_sev,sum))
 }
 
 mean_monte_carlo_claims <- c()
@@ -1229,6 +1236,11 @@ for(i in 1:1000){
 
 
 
+############################################################################################################################
+########################################################### Q5 #############################################################
+############################################################################################################################
+
+
 #histogram of the mean
 hist(mean_monte_carlo_claims,xaxt = "n")
 abline(v=data_existing_premium, col = "Red")
@@ -1238,12 +1250,42 @@ legend("topright", legend = c("Data", "Model"),
 mtext(paste0("%: ",
              length(mean_monte_carlo_claims[mean_monte_carlo_claims<data_existing_premium])/length(mean_monte_carlo_claims)*100),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 axis(side = 1, at = seq(690, 850, length.out = 10))
+#The premium charged in the data set is even lower than the expected value of the claims!!
+
+
 
 #histogram of the maximum
 hist(max_monte_carlo_claims)
 abline(v=data_existing_premium)
 mtext(paste0("%: ",
              length(max_monte_carlo_claims[max_monte_carlo_claims<data_existing_premium])/length(max_monte_carlo_claims)*100),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+
+#histogram overall claims of overall portfolio
+hist(agg_monte_carlo_claims)
+abline( v= sum(data$PREMIUM))
+mtext(paste0("%: ",length(agg_monte_carlo_claims[agg_monte_carlo_claims<sum(data$PREMIUM)])/length(mean_monte_carlo_claims)*100," affordable")
+      ,  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+axis(side = 1, at = seq(690, 850, length.out = 10))
+
+
+############################################################################################################################
+########################################################### Q6 #############################################################
+############################################################################################################################
+
+#50 Corresponds to 0.05, here the sorting is descending.
+for(i in 1:1000){
+  capital_req[i] <- 
+    sum(sort(monte_carlo_claim_simulations_list[[i]],decreasing = T)[5:1000])
+}
+
+
+hist(capital_req)
+abline(v=sum(data$PREMIUM))
+
+
+
+
+
 
 
 ############################################################################################################################
