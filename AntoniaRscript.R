@@ -133,28 +133,27 @@ pdf_binomial <- function(x, n, p) {
 
 ##############################ACCEPTANCE/REJECTION METHOD########################
 
-X = runif(4500, 0, 1)
-U = runif(4500, 0, 1)
+#X = runif(4500, 0, 1)
+#U = runif(4500, 0, 1)
 
-pdf_negative_bin <- function(x, r, p) {
-  choose(x + r - 1, x) * (1 - p)^x * p^r
-}
+#pdf_negative_bin <- function(x, r, p) {
+ # choose(x + r - 1, x) * (1 - p)^x * p^r
+#}
+#count = 1
+#accept = c()
 
-count = 1
-accept = c()
-
-while (count <= 4500 & length(accept) < 1000) {
-  test_u = U[count]
-  test_x = pdf_negative_bin(X[count], r, p) / (3.125 * dunif(X[count], 0, 1))
+#while (count <= 4500 & length(accept) < 1000) {
+ # test_u = U[count]
+  #test_x = pdf_negative_bin(X[count], r, p) / (3.125 * dunif(X[count], 0, 1))
+  #
+  #if (test_u <= test_x) {
+   # accept = c(accept, X[count])
+  #}
   
-  if (test_u <= test_x) {
-    accept = c(accept, X[count])
-  }
-  
-  count = count + 1
-}
+#  count = count + 1
+#}
 
-hist(accept)
+#hist(accept)
 
 
 
@@ -228,11 +227,11 @@ sample_var_los <- var(lossesVector)
 
 ###estimating the parameters for LN using the method of moments
 logNormalSigmaSquareEstimator <- function(random_vector){
-  return(log(1 + sample_var_los(random_vector)/(sample_mean_los(random_vector)^2)))
+  return(log(1 + sample_var_los/(sample_mean_los^2)))
 }
 
 logNormalMuEstimator <- function(random_vector){
-  return(log(sample_mean_los(random_vector)) - (logNormalSigmaSquareEstimator(random_vector)/2) )
+  return(log(sample_mean_los) - (logNormalSigmaSquareEstimator(random_vector)/2) )
 }
 
 ##############assigning the results to variables sigmaSquareLN,muLn
