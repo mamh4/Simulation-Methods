@@ -275,7 +275,6 @@ log_normal_sim <- function(n,muLN,sigmaSquareLN) {
   return (samples)
 }
 
-
 #############################simulate without using inbuilt-functions######################
 # Simulate the compound negative binomial
 simulate_cnb_ln<-numeric(num_simulations)
@@ -292,13 +291,19 @@ for (i in 1:num_simulations) {
 mean(simulated_X_inbuiltfunctions)
 mean(simulate_cnb_ln)
 
+#################################Exercise 6######################################
 
 
-###comment
-
-n<-10
-sumw<-0
-for (i in 1:n){
-  sumw =i + sumw
+imulate_cnb_ln<-numeric(num_simulations)
+###########calculate VaR at risk#########################
+simulate_cnb_ln<-numeric(num_simulations)
+var_table <-c()
+for (i in 1:num_simulations) {
+  N <- simulate_negative_binomial(my_obj@r,my_obj@p,1)
+  Y <- log_normal_sim(N,muLN,sigmaSquareLN)
+  X <- sum(Y)
+  var_table[i] <- X
 }
+
+var_table<-sort(var_table)
 
