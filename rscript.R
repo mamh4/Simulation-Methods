@@ -35,9 +35,7 @@ library(magrittr) # pipe operator
 library(dplyr) # data wrangling
 library(purrr) # efficient one liner pattern-matching
 library(ggplot2) # additional graphics
-
-
-install.packages("TeachingDemos")
+library(gridExtra) #for combining ggplots
 library(TeachingDemos) # for overlaying plots
 
 ############################################################################################################################
@@ -260,7 +258,7 @@ temp <- data %>%
                 CAR_USE            = ifelse(CAR_USE=="Commercial","Comm","Private"))
 
 
-plot1 <-ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ, fill = GENDER))+ #CLM_FREQ is only used as a gap filler
+plot1 <-ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ, fill = AGE))+ #CLM_FREQ is only used as a gap filler
   geom_col(position = "fill") +
   xlab("")+
   ylab("")+
@@ -396,8 +394,9 @@ ggplot(temp2, aes(x = CAR_TYPE, y = CLM_AMT)) +
 #Although Panel truck has many claims they are relatively small
 #Although rural has high impact on freq severity is realtively low, but then again data is low on rural policies
 #Female claims tend to be small in size although higher freq. but again do not forget confounding with sport cars and SUVs
-
 #Note we can condition on variables to try to dis-intangle confounding but most often we have data only on male/female
+#Age analysis: Sports car are driven by women of 45 median age. In fact the oldest woman is driving a sports car! 72 years of Age actually 2 women. And the one who had more claims pays less premium
+#Oldest person in the data set comes from urban area and never had claims, nonetheless he pays more than average premium
 
 
 
@@ -416,8 +415,6 @@ ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ)) +
             check_overlap = TRUE) +
   scale_y_continuous(breaks = seq(0, 7)) +
   theme_minimal()
-
-
 
 
 ggplot(temp2, aes(x = CAR_TYPE, y = CLM_AMT)) +
@@ -867,31 +864,57 @@ mtext(paste0("Var: ",round(mean(var_vector_nb_cv),4),
 p_hat_geometric <- 1 / mean(data$CLM_FREQ)
 
 
+x <- rgeom(n = 1000, prob = p_hat_geometric)
+ISE <- dnbinom(x,size = r_hat,prob = p_hat) / 
+  dgeom(x,prob = p_hat_geometric) * x 
 
-simulate_nb_IS_geometric <- function(size, prob_, scale_gamma, mean_ln, sd_ln){
-  x <- rgamma(n = size, shape = shape_gamma, scale = scale_gamma)
-  return( dlnorm(x,meanlog =  mean_ln,sdlog = sd_ln) / 
-            dgamma(x,shape = shape_gamma, scale = scale_gamma) * x )
+
+
+simulate_nb_IS_geometric <- function(size_n, size_nb, prob_nb , prob_geometric){
+  x <- rgeom(n = size_n, prob = prob_geometric)
+  ISE <- dnbinom(x,size = size_nb,prob = prob_nb) / 
+    dgeom(x,prob = prob_geometric) * x 
+  #browser()
+  return(ISE)
 }
 
 
+nb_simulations_list_IS_geometric <- vector(mode = "list", length = 1000)
+for(i in 1:1000) {
+  nb_simulations_list_IS_geometric[[i]] <- vector(mode = "list", length = length(claim_size_vector))
+}
+for(i in 1:1000){
+  nb_simulations_list_IS_geometric[[i]] <- simulate_nb_IS_geometric(size_n = 1000,
+                                                                    size_nb = r_hat,
+                                                                    prob_nb = p_hat,
+                                                                    prob_geometric = p_hat_geometric)
+}
+
+mean_vector_nb_IS_geo <- c()
+var_vector_nb_IS_geo <- c()
+
+
+for(i in 1:1000){
+  mean_vector_nb_IS_geo[i] <- mean(nb_simulations_list_IS_geometric[[i]])
+  var_vector_nb_IS_geo[i]<- var(nb_simulations_list_IS_geometric[[i]])
+}
+
+
+#Skip mean comparison. it's again almost exactly the same as per theory
+
+
+#Compare variance
+hist(var_vector_nb_IS_geo, main = "Variance - CV Method")
+abline(v = mean(var_vector_nb_IS_geo),col="Red")
+legend("topright", legend = "Var CMC", col = "red", lty = 1,cex = 0.8)
+mtext(paste0("Var: ",round(mean(var_vector_nb_IS_geo),4),
+             " vs CMC:",round(mean(var_vector_nb),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 
 
 
+### NB Stratified Sampling Method #########################################################################################
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+# summary(glm(data$CLM_FREQ~data$AREA+data$GENDER+data$AGE+data$CAR_TYPE+data$CAR_USE,family = "poisson")) # no patterns
 
 #******************************************************** Results ********************************************************#
 
@@ -1165,16 +1188,10 @@ mtext(paste0("Var: ",round(mean(var_vector_ln_IS_gamma),4),
 ### Stratified Sampling ###################################################################################################
 
 
-
-
-
-
+#summary(glm(temp2$CLM_AMT~temp2$AREA+temp2$GENDER+temp2$AGE+temp2$CAR_TYPE+temp2$CAR_USE,family = "Gamma")) no patterns
 
 
 #*******************************************************Results*********************************************************#
-
-
-
 
 par(mfrow = c(2, 2),cex.main = 0.8)
 
