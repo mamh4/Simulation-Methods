@@ -334,8 +334,7 @@ ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ)) +
   geom_boxplot(outlier.shape = NA) +
   geom_jitter(
     position = position_jitter(width = 0.2, height = 0.08),
-    size = 1,
-    check_overlap = FALSE
+    size = 1
   ) +
   scale_y_continuous(breaks = seq(0, 7)) +
   geom_text(
@@ -366,7 +365,9 @@ temp2$CLM_AMT[temp2$CLM_AMT==0] <- NA
 #Include additional variables for analysis
 temp2 <- temp2 %>%
   dplyr::mutate(is_claim           = ifelse(CLM_AMT>1,1,0),
-                car_use_char       = ifelse(CAR_USE=="Commercial","C","P"))
+                car_use_char       = ifelse(CAR_USE=="Commercial","C","P")) %>%
+  dplyr::filter(!is.na(CLM_AMT))
+
 
 
 for (f in features_cat) {
@@ -376,6 +377,27 @@ for (f in features_cat) {
 
 plot(temp2$CLM_AMT, temp2$AGE, main='Age', xlab='',las = 2)
 grid()
+
+
+
+ggplot(temp2, aes(x = CAR_TYPE, y = CLM_AMT)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(
+    position = position_jitter(width = 0.2, height = 0.08),
+    size = 1
+  ) +
+  #scale_y_continuous(breaks = seq(0, 2000)) +
+  theme_minimal() +
+  xlab("") +
+  ylab("") +
+  labs(title = "Claim Severity by Car Type") +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    axis.text.x = element_text(size = 14),
+    plot.margin = margin(10, 20, 40, 20)  # Adjust the top, right, bottom, and left margins
+  )
+
+
 
 #Both claim freq and severity increase for ages between 30 and 60
 #Although Panel truck has many claims they are relatively small
