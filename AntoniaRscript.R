@@ -183,32 +183,7 @@ riskpremium #the premium using our data should be 766.067
 
 # Function to generate random samples from a negative binomial distribution using inversion method
 
-
-
-
-simulate_negative_binomial <- function(r, p, size){
-  simulated_negative_binomial <- rep(0, size)
-  for (i in 1:size){
-    #cat("item", i)
-    counter <- 0 
-    lower_bound <- 0 
-    upper_bound <- choose(counter + r - 1 , counter )* p^r * (1-p)^counter
-    #print(lower_bound) 
-    #print(upper_bound) 
-    random_number <- runif(1,0,1)
-    #print(random_number)
-    while (! ((upper_bound > random_number ) & (lower_bound <= random_number) )) {
-      #print(" ")
-      counter <- counter + 1 
-      lower_bound <- upper_bound 
-      upper_bound <- upper_bound +  choose(counter + r - 1 , counter )* p^r * (1-p)^counter
-      #cat("lower bound ", lower_bound, "   upper bound ", upper_bound, " random number ", random_number, "   counter ", counter)
-
-mle_bin<- function(data){
-  sum(data)/length(data)
-}
-
-mle_bin(data$CLM_FREQ)
+set.seed(42)
 
 ###############################SIMULATE FROM NEGATIVE BINOMIAL################
 
@@ -278,6 +253,7 @@ mean(simulated_X_inbuiltfunctions)
 
 
 # Generate standard normal random numbers using the Box-Muller transform
+##and transforming them into LN rn
 log_normal_sim <- function(n,muLN,sigmaSquareLN) {
   samples <- numeric(n)
   
