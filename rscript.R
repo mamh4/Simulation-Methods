@@ -385,6 +385,47 @@ grid()
 #Note we can condition on variables to try to dis-intangle confounding but most often we have data only on male/female
 
 
+
+############################################### Big Picture! Warning!! BAD plots ############################################ 
+
+ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ)) +
+  geom_boxplot(outlier.shape = NA) +
+  scale_shape_manual(values = c(1, 4)) +
+  geom_jitter(aes(col = GENDER, shape = AREA),
+              position = position_jitter(width = 0.2, height = 0.2),
+              size = 3,
+              check_overlap = T) +
+  geom_text(aes(label = car_use_char),
+            position = position_jitter(width = 0.2, height = 0.2),
+            vjust = 1, size = 3,
+            check_overlap = TRUE) +
+  scale_y_continuous(breaks = seq(0, 7)) +
+  theme_minimal()
+
+
+
+
+ggplot(temp2, aes(x = CAR_TYPE, y = CLM_AMT)) +
+  geom_boxplot(outlier.shape = NA) +
+  scale_shape_manual(values = c(1, 4)) +
+  geom_jitter(aes(col = GENDER, shape = AREA),
+              position = position_jitter(width = 0.2, height = 0.2),
+              size = 3,
+              check_overlap = T) +
+  geom_text(aes(label = car_use_char),
+            position = position_jitter(width = 0.2, height = 0.2),
+            vjust = 1, size = 3,
+            check_overlap = TRUE) +
+  scale_y_continuous(breaks = seq(0, 7)) +
+  theme_minimal()
+
+
+####################################################### To be deleted #######################################################
+
+
+rm(temp)#memory management
+rm(temp2)
+
 rm(temp)#memory management
 rm(temp2)#memory management
 ############################################################################################################################
