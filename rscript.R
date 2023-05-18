@@ -255,23 +255,15 @@ claims_amounts <- c('CLM_AMT_1',
 
 
 
-###### Claim Frequency Analysis
-for (f in features_cat) {
-  plot(data[,f], main=f, xlab='', las=2,col=data$CLM_FREQ)
-  grid()
-}
-for (f in claims_amounts) {
-  plot(data[,f], main=f, xlab='' ,las=2,col=data$CLM_FREQ)
-  grid()
-}
-plot(data$CLM_FREQ, data$AGE, main='Age', xlab='',las = 2)
-grid()
-
-
-
 #General Analysis of Categorical Variables
-#Deeper Analysis: here the y is just a dummy, information in the next 3 plots is irrelevent of freq.
-plot1 <-ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ, fill = GENDER))+
+temp <- data %>%
+  dplyr::mutate(agg_clm = CLM_AMT_1 + CLM_AMT_2 + CLM_AMT_3 +CLM_AMT_4+CLM_AMT_5+CLM_AMT_6+CLM_AMT_7,
+                is_claim           = ifelse(CLM_AMT_1>1,1,0),
+                car_use_char       = ifelse(CAR_USE=="Commercial","C","P"),
+                CAR_USE            = ifelse(CAR_USE=="Commercial","Comm","Private"))
+
+
+plot1 <-ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ, fill = GENDER))+ #CLM_FREQ is only used as a gap filler
   geom_col(position = "fill") +
   xlab("")+
   ylab("")+
@@ -320,13 +312,17 @@ grid.arrange(plot1, plot2, plot3, nrow = 3)
 #Age between 30 and 60 corresponds to more claims
 
 
-
-#Deeper look
-temp <- data %>%
-  dplyr::mutate(agg_clm = CLM_AMT_1 + CLM_AMT_2 + CLM_AMT_3 +CLM_AMT_4+CLM_AMT_5+CLM_AMT_6+CLM_AMT_7,
-                is_claim           = ifelse(CLM_AMT_1>1,1,0),
-                car_use_char       = ifelse(CAR_USE=="Commercial","C","P"),
-                CAR_USE            = ifelse(CAR_USE=="Commercial","Comm","Private"))
+###### Claim Frequency Analysis
+for (f in features_cat) {
+  plot(data[,f], main=f, xlab='', las=2,col=data$CLM_FREQ)
+  grid()
+}
+for (f in claims_amounts) {
+  plot(data[,f], main=f, xlab='' ,las=2,col=data$CLM_FREQ)
+  grid()
+}
+plot(data$CLM_FREQ, data$AGE, main='Age', xlab='',las = 2)
+grid()
 
 
 
@@ -445,8 +441,6 @@ ggplot(temp2, aes(x = CAR_TYPE, y = CLM_AMT)) +
 ####################################################### To be deleted #######################################################
 
 
-rm(temp)#memory management
-rm(temp2)
 
 rm(temp)#memory management
 rm(temp2)#memory management
@@ -930,7 +924,7 @@ subplot(hist(nb_simulations_list_cv[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = 
 
 
 
-##################################################### Q3 Monte Carlo Gamma ################################################
+################################################ Q3 Monte Carlo Log Normal ################################################
 
 #Here we will simulate random gamma distributions with the Method of moments scale and shape parameters and test our data against
 #each of them and take the mean p-value.
