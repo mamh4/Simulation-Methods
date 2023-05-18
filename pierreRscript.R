@@ -779,10 +779,15 @@ crudeMCSimAlphaQuantile(0.05, quantileTestRunVector)
 
 # had it been a stochastic process nice visual idea -> store all trajectories and draw all of them in gradient of color 
 
+
+
+
+
+#should give worst alpha % cases of total loss 
 crudeMCExpectedShortfall <- function(alpha, numberOfIterations) { #number of policies as parameter ? 
   simulatedVector <- vector() 
   for (i in 1:numberOfIterations) {
-    currentSimulation <- SIMULATEPLACEHOLDER()
+    currentSimulation <- SIMULATEPLACEHOLDER(). #REPLACEMENT NEEDED 
     #either loop on number of policies OR call a function passing number of policies as an argument 
     simulatedVector <- append (simulatedVector, currentSimulation )
   }
@@ -796,11 +801,13 @@ crudeMCExpectedShortfall <- function(alpha, numberOfIterations) { #number of pol
 #fits course description, need to actually run tests 
 
 
-#Finish expected shortfall 
+#Finish expected shortfall -> NEEDS ACTUAL SIMULATION IN IT 
 
-
-
-
+capitalFromData <- function() {
+  return (sum(data$PREMIUM)) 
+}
+#simple test 
+print(capitalFromData())
 
 
 
