@@ -183,29 +183,7 @@ riskpremium #the premium using our data should be 766.067
 
 # Function to generate random samples from a negative binomial distribution using inversion method
 
-simulate_negative_binomial <- function(r, p, size){
-  simulated_negative_binomial <- rep(0, size)
-  for (i in 1:size){
-    #cat("item", i)
-    counter <- 0 
-    lower_bound <- 0 
-    upper_bound <- choose(counter + r - 1 , counter )* p^r * (1-p)^counter
-    #print(lower_bound) 
-    #print(upper_bound) 
-    random_number <- runif(1,0,1)
-    #print(random_number)
-    while (! ((upper_bound > random_number ) & (lower_bound <= random_number) )) {
-      #print(" ")
-      counter <- counter + 1 
-      lower_bound <- upper_bound 
-      upper_bound <- upper_bound +  choose(counter + r - 1 , counter )* p^r * (1-p)^counter
-      #cat("lower bound ", lower_bound, "   upper bound ", upper_bound, " random number ", random_number, "   counter ", counter)
-
-mle_bin<- function(data){
-  sum(data)/length(data)
-}
-
-mle_bin(data$CLM_FREQ)
+set.seed(42)
 
 ###############################SIMULATE FROM NEGATIVE BINOMIAL################
 
@@ -256,17 +234,76 @@ muLN <- logNormalMuEstimator(lossesVector)
 num_simulations <- 1000
 
 # Vector to store the simulated values of X
-simulated_X <- numeric(num_simulations)
+simulated_X_inbuiltfunctions <- numeric(num_simulations)
 
+#############################simulate using inbuilt-functions######################
 # Simulate the compound negative binomial
 for (i in 1:num_simulations) {
-  N <- simulate_negative_binomial(1, my_obj@r, my_obj@p)
+  N <- rnbinom(1, my_obj@r, my_obj@p)
   Y <- rlnorm(N, muLN, sigmaSquareLN)
   X <- sum(Y)
-  simulated_X[i] <- X
+  simulated_X_inbuiltfunctions[i] <- X
 }
 
 # View the simulated values
-print(simulated_X)
+mean(simulated_X_inbuiltfunctions)
 
+
+##########################################box muller method to simulate SND#########
+
+
+# Generate standard normal random numbers using the Box-Muller transform
+##and transforming them into LN rn
+log_normal_sim <- function(n,muLN,sigmaSquareLN) {
+  samples <- numeric(n)
+  
+  for (i in 1:(n/2)) {
+    u1 <- runif(1)
+    u2 <- runif(1)
+    
+    R <- sqrt(-2 * log(u1))
+    theta <- 2 * pi * u2
+    
+    samples[i*2 - 1] <- R * cos(theta)
+    samples[i*2] <- R * sin(theta)
+  }
+  
+  for (i in 1:n){
+    samples[i]<-exp(muLN+sigmaSquareLN*samples[i])
+  }
+  
+  return (samples)
+}
+
+#############################simulate without using inbuilt-functions######################
+# Simulate the compound negative binomial
+simulate_cnb_ln<-numeric(num_simulations)
+
+for (i in 1:num_simulations) {
+  N <- simulate_negative_binomial(my_obj@r,my_obj@p,1)
+  Y <- log_normal_sim(N,muLN,sigmaSquareLN)
+  X <- sum(Y)
+  simulate_cnb_ln[i] <- X
+}
+
+
+# View the simulated values
+mean(simulated_X_inbuiltfunctions)
+mean(simulate_cnb_ln)
+
+#################################Exercise 6######################################
+
+
+imulate_cnb_ln<-numeric(num_simulations)
+###########calculate VaR at risk#########################
+simulate_cnb_ln<-numeric(num_simulations)
+var_table <-c()
+for (i in 1:num_simulations) {
+  N <- simulate_negative_binomial(my_obj@r,my_obj@p,1)
+  Y <- log_normal_sim(N,muLN,sigmaSquareLN)
+  X <- sum(Y)
+  var_table[i] <- X
+}
+
+var_table<-sort(var_table)
 
