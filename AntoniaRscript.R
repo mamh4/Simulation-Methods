@@ -183,6 +183,9 @@ riskpremium #the premium using our data should be 766.067
 
 # Function to generate random samples from a negative binomial distribution using inversion method
 
+
+
+
 simulate_negative_binomial <- function(r, p, size){
   simulated_negative_binomial <- rep(0, size)
   for (i in 1:size){
@@ -256,17 +259,60 @@ muLN <- logNormalMuEstimator(lossesVector)
 num_simulations <- 1000
 
 # Vector to store the simulated values of X
-simulated_X <- numeric(num_simulations)
+simulated_X_inbuiltfunctions <- numeric(num_simulations)
 
+#############################simulate using inbuilt-functions######################
 # Simulate the compound negative binomial
 for (i in 1:num_simulations) {
-  N <- simulate_negative_binomial(1, my_obj@r, my_obj@p)
+  N <- rnbinom(1, my_obj@r, my_obj@p)
   Y <- rlnorm(N, muLN, sigmaSquareLN)
   X <- sum(Y)
-  simulated_X[i] <- X
+  simulated_X_inbuiltfunctions[i] <- X
 }
 
 # View the simulated values
-print(simulated_X)
+mean(simulated_X_inbuiltfunctions)
 
+
+##########################################box muller method to simulate SND#########
+
+
+# Generate standard normal random numbers using the Box-Muller transform
+log_normal_sim <- function(n,muLN,sigmaSquareLN) {
+  samples <- numeric(n)
+  
+  for (i in 1:(n/2)) {
+    u1 <- runif(1)
+    u2 <- runif(1)
+    
+    R <- sqrt(-2 * log(u1))
+    theta <- 2 * pi * u2
+    
+    samples[i*2 - 1] <- R * cos(theta)
+    samples[i*2] <- R * sin(theta)
+  }
+  
+  for (i in 1:n){
+    samples[i]<-exp(muLN+sigmaSquareLN*samples[i])
+  }
+  
+  return (samples)
+}
+
+
+#############################simulate without using inbuilt-functions######################
+# Simulate the compound negative binomial
+simulate_cnb_ln<-numeric(num_simulations)
+
+for (i in 1:num_simulations) {
+  N <- simulate_negative_binomial(my_obj@r,my_obj@p,1)
+  Y <- log_normal_sim(N,muLN,sigmaSquareLN)
+  X <- sum(Y)
+  simulate_cnb_ln[i] <- X
+}
+
+
+# View the simulated values
+mean(simulated_X_inbuiltfunctions)
+mean(simulate_cnb_ln)
 
