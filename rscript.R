@@ -541,7 +541,7 @@ x <- seq(0,3500,length.out = length(claim_size_vector))
 
 #Maximum Likelihood Estimator
 lambda_hat_exp <- 1 / (1/length((claim_size_vector)) * sum(claim_size_vector))
-y <- dexp(x, lambda = lambda_hat_exp) #Theoretical Distribution
+y <- dexp(x, rate = lambda_hat_exp) #Theoretical Distribution
 lines(x,y)
 
 
@@ -656,14 +656,16 @@ ks.test(claim_size_vector, theoretical_quantiles_invgauss)
 #With regard to claim frequency we decided to select the gamma distribution. 
 
 hist(claim_size_vector,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
-x <- seq(0,3500,length.out = 812)
+x <- seq(0,3500,length.out = length(claim_size_vector))
 
-y <- dexp(x,lambda = lambda_hat_exp)
+y <- dexp(x,rate = lambda_hat_exp)
 y_2 <- dgamma(x,shape = gamma_estimated_k, scale = gamma_estimated_theta ) #Theoretical Distribution
 lines(x,y, col = "Red")
 lines(x,y_2, col = "Blue")
-legend("topright", legend = c("Exonential Distribution", "Gamma Distribution"),
-       col = c("red", "blue"), lty = 1)
+lines(x,y_3,col = "Green")
+lines(x,y_4,col = "Purple")
+legend("topright", legend = c("Exponential", "Gamma", "Log-Normal", "Inverse Gaussian"),
+       col = c("red", "blue", "Green", "Purple"), lty = 1)
 
 
 
@@ -965,33 +967,33 @@ subplot(hist(nb_simulations_list_cv[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = 
 #Here we will simulate random gamma distributions with the Method of moments scale and shape parameters and test our data against
 #each of them and take the mean p-value.
 
-gamma_simulations_list <- vector(mode = "list", length = 1000)
+ln_simulations_list <- vector(mode = "list", length = 1000)
 for(i in 1:1000) {
-  gamma_simulations_list[[i]] <- vector(mode = "list", length = length(claim_size_vector))
+  ln_simulations_list[[i]] <- vector(mode = "list", length = length(claim_size_vector))
 }
 for(i in 1:1000){
-  gamma_simulations_list[[i]] <- rgamma(length(claim_size_vector),shape = gamma_estimated_k, 
-                                          scale = gamma_estimated_theta)##Switch with our own simulation function
+  ln_simulations_list[[i]] <- rlnorm(length(claim_size_vector),meanlog = logNormal_estimator_mu,
+                                     sdlog = logNormal_estimator_sd)##Switch with our own simulation function
 }
 
 
 
-mean_vector_gamma <- c()
-var_vector_gamma <- c()
+mean_vector_ln <- c()
+var_vector_ln <- c()
 
 for(i in 1:1000){
-  mean_vector_gamma[i] <- mean(gamma_simulations_list[[i]])
-  var_vector_gamma[i] <- var(gamma_simulations_list[[i]])
+  mean_vector_ln[i] <- mean(ln_simulations_list[[i]])
+  var_vector_ln[i] <- var(ln_simulations_list[[i]])
 }
 
 
-hist(mean_vector_gamma, main = "Expectation of 1000 Gamma Simulations")
+hist(mean_vector_ln, main = "Expectation of 1000 Log Normal Simulations")
 abline(v = mean(claim_size_vector),col="Red")
-legend("topright", legend = "Data", col = "red", lty = 1)
+legend("topright", legend = "Model", col = "red", lty = 1)
 
-hist(var_vector_gamma, main = "Variance of 1000 Gamma Simulations")
+hist(var_vector_ln, main = "Variance of 1000 Log Normal Simulations")
 abline(v = mean(var(claim_size_vector)),col="Red")
-legend("topright", legend = "Data", col = "red", lty = 1)
+legend("topright", legend = "Model", col = "red", lty = 1)
 
 
 t.test(x = mean_vector_gamma, mu = mean(claim_size_vector))
@@ -1007,12 +1009,12 @@ t.test(x = var_vector_gamma, mu = mean(var(claim_size_vector)))
 ### Antithetic Method #####################################################################################################
 
 
-simulate_gamma_with_u_input <- function(random_numbers, shape, scale) {
-  return(qgamma(random_numbers, shape = shape , scale = scale))
+simulate_ln_with_u_input <- function(random_numbers, mean, sd) {
+  return(qlnorm(random_numbers, meanlog = mean , sdlog =  sd))
 }
 
 
-simulate_gamma_antithetic_variates <- function(size, shape, scale){
+simulate_ln_antithetic_variates <- function(size, mean, sd){
   if(size %% 2 == 0){
     u1_vector <- runif(size/2,0,1)
     u2_vector <- 1-u1_vector
@@ -1021,8 +1023,8 @@ simulate_gamma_antithetic_variates <- function(size, shape, scale){
     u2_vector <- 1-u1_vector
   }
   
-  f_u1 <- simulate_gamma_with_u_input(random_numbers=u1_vector,shape = shape, scale = scale)
-  f_u2 <- simulate_gamma_with_u_input(random_numbers=u2_vector,shape = shape, scale = scale)
+  f_u1 <- simulate_ln_with_u_input(random_numbers=u1_vector,mean = mean, sd = sd)
+  f_u2 <- simulate_ln_with_u_input(random_numbers=u2_vector,mean = mean, sd = sd)
   
   return(append(f_u1,f_u2))
 }
@@ -1030,57 +1032,57 @@ simulate_gamma_antithetic_variates <- function(size, shape, scale){
 
 
 
-gamma_simulations_list_anthithetic <- vector(mode = "list", length = 1000)
+ln_simulations_list_anthithetic <- vector(mode = "list", length = 1000)
 for(i in 1:1000) {
-  gamma_simulations_list_anthithetic[[i]] <- vector(mode = "list", length = length(claim_size_vector))
+  ln_simulations_list_anthithetic[[i]] <- vector(mode = "list", length = length(claim_size_vector))
 }
 for(i in 1:1000){
-  gamma_simulations_list_anthithetic[[i]] <- simulate_gamma_antithetic_variates(size = length(claim_size_vector),
-                                                                       shape = gamma_estimated_k,
-                                                                        scale = gamma_estimated_theta)
+  ln_simulations_list_anthithetic[[i]] <- simulate_ln_antithetic_variates(size = length(claim_size_vector),
+                                                                        mean = logNormal_estimator_mu,
+                                                                        sd = logNormal_estimator_sd)
 }
 
-mean_vector_gamma_antithetic <- c()
-var_vector_gamma_antithetic <- c()
+mean_vector_ln_antithetic <- c()
+var_vector_ln_antithetic <- c()
 
 
 for(i in 1:1000){
-  mean_vector_gamma_antithetic[i] <- mean(gamma_simulations_list_anthithetic[[i]])
-  var_vector_gamma_antithetic[i] <- var(gamma_simulations_list_anthithetic[[i]])
+  mean_vector_ln_antithetic[i] <- mean(ln_simulations_list_anthithetic[[i]])
+  var_vector_ln_antithetic[i] <- var(ln_simulations_list_anthithetic[[i]])
 }
 
 #Histogram of Antithetic covariate method estimators 
-hist(mean_vector_gamma_antithetic, main = "Expectation of 1000 Gamma Simulations - Antithetic Method")
-abline(v = mean(mean_vector_gamma_antithetic),col="Red")
-legend("topright", legend = "Mean CMC", col = "red", lty = 1)
-mtext(paste0("Mean: ",round(mean(mean_vector_gamma_antithetic),4),
-             " vs CMC:",round(mean(mean_vector_gamma_antithetic),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+hist(mean_vector_ln_antithetic, main = "Expectation of 1000 Log Normal Simulations - Antithetic Method")
+abline(v = mean(mean_vector_ln_antithetic),col="Red")
+legend("topright", legend = "Model", col = "red", lty = 1)
+mtext(paste0("Mean: ",round(mean(mean_vector_ln_antithetic),4),
+             " vs CMC:",round(mean(mean_vector_ln_antithetic),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 
 #are they biased? #Theoretically unbiased
-hist(mean_vector_gamma-mean_vector_gamma_antithetic, main = "Differences: Antithetic Method - CMC")
-mtext(paste0("pval: ", round(t.test(mean_vector_gamma, mean_vector_gamma_antithetic)$p.val, 6), "\n",
-             "conf.Int 95%: (", round(t.test(mean_vector_gamma, mean_vector_gamma_antithetic)$conf[1],6), ";",
-             round(t.test(mean_vector_gamma, mean_vector_gamma_antithetic)$conf[2],6), ")")
+hist(mean_vector_ln-mean_vector_ln_antithetic, main = "Differences: Antithetic Method - CMC")
+mtext(paste0("pval: ", round(t.test(mean_vector_ln, mean_vector_ln_antithetic)$p.val, 6), "\n",
+             "conf.Int 95%: (", round(t.test(mean_vector_ln, mean_vector_ln_antithetic)$conf[1],6), ";",
+             round(t.test(mean_vector_ln, mean_vector_ln_antithetic)$conf[2],6), ")")
       , side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 
 
 
 #Compare variance
-hist(var_vector_gamma_antithetic, main = "Variance - Antithetic Method")
-abline(v = mean(var_vector_gamma_antithetic),col="Red")
+hist(var_vector_ln_antithetic, main = "Variance - Antithetic Method")
+abline(v = mean(var_vector_ln_antithetic),col="Red")
 legend("topright", legend = "Var Antithetic", col = "red", lty = 1,cex = 0.8)
-mtext(paste0("Var: ",round(mean(var_vector_gamma_antithetic),4),
-             " vs CMC:",round(mean(var_vector_gamma),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+mtext(paste0("Var: ",round(mean(var_vector_ln_antithetic),4),
+             " vs CMC:",round(mean(var_vector_ln),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 
 
 
 ### Control Variate ######################################################################################################
 
 #Bad####
-simulate_gamma_cv_weibull <- function(size,shape,scale, shape_w, scale_w ){
-  x <- sort(rgamma(size,shape = shape, scale = scale))
-  y <- sort(rweibull(size,shape = shape_w, scale = scale_w))
-  z <- x - cov(x,y)*1/var(y)*(y - scale_w*gamma(1+1/shape_w))
+simulate_ln_cv_IG <- function(size,mean_ln,sd_ln, mean_IG, shape_IG ){
+  x <- sort(rlnorm(size,meanlog = mean_ln,sdlog = sd_ln))
+  y <- sort(rinvgauss(size,mean = mean_IG, shape = shape_IG))
+  z <- x - cov(x,y)*1/var(y)*(y - mean_IG)
   return(z)
 }
 #######
@@ -1088,50 +1090,50 @@ simulate_gamma_cv_weibull <- function(size,shape,scale, shape_w, scale_w ){
 
 
 
-gamma_simulations_list_cv <- vector(mode = "list", length = 1000)
+ln_simulations_list_cv_IG <- vector(mode = "list", length = 1000)
 for(i in 1:1000) {
-  gamma_simulations_list_cv[[i]] <- vector(mode = "list", length = length(claim_size_vector))
+  ln_simulations_list_cv_IG[[i]] <- vector(mode = "list", length = length(claim_size_vector))
 }
 for(i in 1:1000){
-  gamma_simulations_list_cv[[i]] <- simulate_gamma_cv_weibull(size = length(claim_size_vector),
-                                                                       shape = gamma_estimated_k,
-                                                                       scale = gamma_estimated_theta,
-                                                                       scale_w = 489.8513,
-                                                                       shape_w = 2.496191)
+  ln_simulations_list_cv_IG[[i]] <- simulate_ln_cv_IG(size = length(claim_size_vector),
+                                                                       mean_ln = logNormal_estimator_mu,
+                                                                       sd_ln = logNormal_estimator_sd,
+                                                                       mean_IG = IG_estimator_mu,
+                                                                       shape_IG = IG_estimator_lambda)
 }
 
 
-mean_vector_gamma_cv <- c()
-var_vector_gamma_cv <- c()
+mean_vector_ln_cv_IG <- c()
+var_vector_ln_cv_IG <- c()
 
 
 for(i in 1:1000){
-  mean_vector_gamma_cv[i] <- mean(gamma_simulations_list_cv[[i]])
-  var_vector_gamma_cv[i] <- var(gamma_simulations_list_cv[[i]])
+  mean_vector_ln_cv_IG[i] <- mean(ln_simulations_list_cv_IG[[i]])
+  var_vector_ln_cv_IG[i] <- var(ln_simulations_list_cv_IG[[i]])
   }
 
 #Histogram of Antithetic covariate method estimators 
-hist(mean_vector_gamma_cv, main = "Expectation of 1000 Gamma Simulations - CV Method")
-abline(v = mean(mean_vector_gamma_cv),col="Red")
+hist(mean_vector_ln_cv_IG, main = "Expectation of 1000 Gamma Simulations - CV Method")
+abline(v = mean(mean_vector_ln_cv_IG),col="Red")
 legend("topright", legend = "Mean CMC", col = "red", lty = 1)
-mtext(paste0("Mean: ",round(mean(mean_vector_gamma_cv),4),
-             " vs CMC:",round(mean(mean_vector_gamma_cv),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+mtext(paste0("Mean: ",round(mean(mean_vector_ln_cv_IG),4),
+             " vs CMC:",round(mean(mean_vector_ln_cv_IG),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 
 #are they biased? #Theoretically unbiased
-hist(mean_vector_gamma-mean_vector_gamma_cv, main = "Differences: CV Method - CMC")
-mtext(paste0("pval: ", round(t.test(mean_vector_gamma, mean_vector_gamma_cv)$p.val, 6), "\n",
-             "conf.Int 95%: (", round(t.test(mean_vector_gamma, mean_vector_gamma_cv)$conf[1],6), ";",
-             round(t.test(mean_vector_gamma, mean_vector_gamma_cv)$conf[2],6), ")")
+hist(mean_vector_gamma-mean_vector_ln_cv_IG, main = "Differences: CV Method - CMC")
+mtext(paste0("pval: ", round(t.test(mean_vector_gamma, mean_vector_ln_cv_IG)$p.val, 6), "\n",
+             "conf.Int 95%: (", round(t.test(mean_vector_gamma, mean_vector_ln_cv_IG)$conf[1],6), ";",
+             round(t.test(mean_vector_gamma, mean_vector_ln_cv_IG)$conf[2],6), ")")
       , side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 
 
 
 #Compare variance
-hist(var_vector_gamma_cv, main = "Variance - CV Method")
-abline(v = mean(var_vector_gamma_cv),col="Red")
+hist(var_vector_ln_cv_IG, main = "Variance - CV Method")
+abline(v = mean(var_vector_ln_cv_IG),col="Red")
 legend("topright", legend = "Var CV", col = "red", lty = 1,cex = 0.8)
-mtext(paste0("Var: ",round(mean(var_vector_gamma_cv),4),
-             " vs CMC:",round(mean(var_vector_gamma),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+mtext(paste0("Var: ",round(mean(var_vector_ln_cv_IG),4),
+             " vs CMC:",round(mean(var_vector_ln),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 
 
 
@@ -1142,7 +1144,7 @@ mtext(paste0("Var: ",round(mean(var_vector_gamma_cv),4),
 #I = Gamma
 #F = F_tilda = lambda*e^(-lambda*x), g(x) = I(x) = x
 x <- rexp(1000,lambda_hat_exp)
-ICE <- dgamma(x,shape = gamma_estimated_k, scale = gamma_estimated_theta) / dexp(x,rate = lambda_hat_exp) * x
+ISE <- dgamma(x,shape = gamma_estimated_k, scale = gamma_estimated_theta) / dexp(x,rate = lambda_hat_exp) * x
 
 
 
