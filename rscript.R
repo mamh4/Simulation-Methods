@@ -255,43 +255,195 @@ claims_amounts <- c('CLM_AMT_1',
 
 
 
+#General Analysis of Categorical Variables
+temp <- data %>%
+  dplyr::mutate(agg_clm = CLM_AMT_1 + CLM_AMT_2 + CLM_AMT_3 +CLM_AMT_4+CLM_AMT_5+CLM_AMT_6+CLM_AMT_7,
+                is_claim           = ifelse(CLM_AMT_1>1,1,0),
+                car_use_char       = ifelse(CAR_USE=="Commercial","C","P"),
+                CAR_USE            = ifelse(CAR_USE=="Commercial","Comm","Private"))
+
+
+plot1 <-ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ, fill = GENDER))+ #CLM_FREQ is only used as a gap filler
+  geom_col(position = "fill") +
+  xlab("")+
+  ylab("")+
+  scale_y_continuous(labels = scales::percent)+
+  theme_minimal()+
+  theme(axis.line.x = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        panel.border = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank())
+
+
+plot2 <- ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ, fill = CAR_USE))+
+  geom_col(position = "fill")+
+  xlab("")+
+  ylab("")+
+  scale_y_continuous(labels = scales::percent)+
+  theme_minimal()+
+  theme(axis.line.x = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        panel.border = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank())
+
+
+plot3 <- ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ, fill = AREA))+
+  geom_col(position = "fill")+
+  xlab("")+
+  ylab("")+
+  scale_y_continuous(labels = scales::percent)+
+  theme_minimal()
+
+
+grid.arrange(plot1, plot2, plot3, nrow = 3)
+
+
+
+# Results: (%-wise) Rather hypotheses actually!
+# Rural has higher impact on the number of claims although data is pretty low compared to Urban
+# Being Female has higher impact on the number of claims Howver Many SUVs, so it could be being an SUV + could be 3rd liab. Also Femal are more in the data set
+# Panel truck and pick up have higher impact on the number of claims but also not many
+# Commercial car use has higher impact on the number of claims but correlated with Panel Truck and pick so one cause the other
+#CLM_AMT_6 and CLM_AMT_7 rare occurrence
+#Age between 30 and 60 corresponds to more claims
+
+
+###### Claim Frequency Analysis
 for (f in features_cat) {
   plot(data[,f], main=f, xlab='', las=2,col=data$CLM_FREQ)
   grid()
 }
-# Results: (%-wise)
-# Rural has higher impact on the number of claims
-# Being Female has higher impact on the number of claims
-# Panel truck has higher impact on the number of claims
-# Commercial car use has higher impact on the number of claims
-
 for (f in claims_amounts) {
   plot(data[,f], main=f, xlab='' ,las=2,col=data$CLM_FREQ)
   grid()
 }
-#CLM_AMT_6 and CLM_AMT_7 rare occurrence
-#Age between 30 and 60 corresponds to more claims
-
 plot(data$CLM_FREQ, data$AGE, main='Age', xlab='',las = 2)
 grid()
 
 
 
+ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(
+    position = position_jitter(width = 0.2, height = 0.08),
+    size = 1
+  ) +
+  scale_y_continuous(breaks = seq(0, 7)) +
+  geom_text(
+    data = temp,
+    aes(x = CAR_TYPE, y = 7, label = paste("Count:", table(CAR_TYPE)[as.character(CAR_TYPE)])),
+    vjust = -1,
+    size = 3,
+    color = "black"
+  ) +
+  theme_minimal() +
+  xlab("") +
+  ylab("") +
+  labs(title = "Claim Frequency by Car Type") +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    axis.text.x = element_text(size = 14),
+    plot.margin = margin(10, 20, 40, 20)  # Adjust the top, right, bottom, and left margins
+  )
 
-
-#Check freq relationship to covairates
-boxplot(data$CLM_FREQ~data$CAR_TYPE)
-boxplot(data$CLM_FREQ~data$CAR_TYPE)
-
-#table(temp[,c("CAR_TYPE","at_least_one_claim")])
 
 
 
 #check severity relationship to covariates
-boxplot(temp$agg_clm~data$CAR_TYPE)
+#Need to pivot the data by CLM_AMT
+temp2 <-  tidyr::gather(data,key = "CLM_Number" , value = "CLM_AMT",3:9)
+#Need to replace 0 with NA otherwise it ruins the data
+temp2$CLM_AMT[temp2$CLM_AMT==0] <- NA
+#Include additional variables for analysis
+temp2 <- temp2 %>%
+  dplyr::mutate(is_claim           = ifelse(CLM_AMT>1,1,0),
+                car_use_char       = ifelse(CAR_USE=="Commercial","C","P")) %>%
+  dplyr::filter(!is.na(CLM_AMT))
+
+
+
+for (f in features_cat) {
+  plot(temp2[,f], main=f, xlab='', las=2,col=temp2$CLM_AMT)
+  grid()
+}
+
+plot(temp2$CLM_AMT, temp2$AGE, main='Age', xlab='',las = 2)
+grid()
+
+
+
+ggplot(temp2, aes(x = CAR_TYPE, y = CLM_AMT)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(
+    position = position_jitter(width = 0.2, height = 0.08),
+    size = 1
+  ) +
+  #scale_y_continuous(breaks = seq(0, 2000)) +
+  theme_minimal() +
+  xlab("") +
+  ylab("") +
+  labs(title = "Claim Severity by Car Type") +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    axis.text.x = element_text(size = 14),
+    plot.margin = margin(10, 20, 40, 20)  # Adjust the top, right, bottom, and left margins
+  )
+
+
+
+#Both claim freq and severity increase for ages between 30 and 60
+#Although Panel truck has many claims they are relatively small
+#Although rural has high impact on freq severity is realtively low, but then again data is low on rural policies
+#Female claims tend to be small in size although higher freq. but again do not forget confounding with sport cars and SUVs
+
+#Note we can condition on variables to try to dis-intangle confounding but most often we have data only on male/female
+
+
+
+############################################### Big Picture! Warning!! BAD plots ############################################ 
+
+ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ)) +
+  geom_boxplot(outlier.shape = NA) +
+  scale_shape_manual(values = c(1, 4)) +
+  geom_jitter(aes(col = GENDER, shape = AREA),
+              position = position_jitter(width = 0.2, height = 0.2),
+              size = 3,
+              check_overlap = T) +
+  geom_text(aes(label = car_use_char),
+            position = position_jitter(width = 0.2, height = 0.2),
+            vjust = 1, size = 3,
+            check_overlap = TRUE) +
+  scale_y_continuous(breaks = seq(0, 7)) +
+  theme_minimal()
+
+
+
+
+ggplot(temp2, aes(x = CAR_TYPE, y = CLM_AMT)) +
+  geom_boxplot(outlier.shape = NA) +
+  scale_shape_manual(values = c(1, 4)) +
+  geom_jitter(aes(col = GENDER, shape = AREA),
+              position = position_jitter(width = 0.2, height = 0.2),
+              size = 3,
+              check_overlap = T) +
+  geom_text(aes(label = car_use_char),
+            position = position_jitter(width = 0.2, height = 0.2),
+            vjust = 1, size = 3,
+            check_overlap = TRUE) +
+  scale_y_continuous(breaks = seq(0, 7)) +
+  theme_minimal()
+
+
+####################################################### To be deleted #######################################################
+
 
 
 rm(temp)#memory management
+rm(temp2)#memory management
 ############################################################################################################################
 ########################################################### Q1 #############################################################
 ############################################################################################################################
@@ -404,7 +556,7 @@ x <- seq(0,3500,length.out = length(claim_size_vector))
 
 #Maximum Likelihood Estimator
 lambda_hat_exp <- 1 / (1/length((claim_size_vector)) * sum(claim_size_vector))
-y <- dexp(x, lambda = lambda_hat_exp) #Theoretical Distribution
+y <- dexp(x, rate = lambda_hat_exp) #Theoretical Distribution
 lines(x,y)
 
 
@@ -466,14 +618,16 @@ qqplot(claim_size_vector,rgamma(length(claim_size_vector),
 #With regard to claim frequency we decided to select the gamma distribution. 
 
 hist(claim_size_vector,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
-x <- seq(0,3500,length.out = 812)
+x <- seq(0,3500,length.out = length(claim_size_vector))
 
-y <- dexp(x,lambda = lambda_hat_exp)
+y <- dexp(x,rate = lambda_hat_exp)
 y_2 <- dgamma(x,shape = gamma_estimated_k, scale = gamma_estimated_theta ) #Theoretical Distribution
 lines(x,y, col = "Red")
 lines(x,y_2, col = "Blue")
-legend("topright", legend = c("Exonential Distribution", "Gamma Distribution"),
-       col = c("red", "blue"), lty = 1)
+lines(x,y_3,col = "Green")
+lines(x,y_4,col = "Purple")
+legend("topright", legend = c("Exponential", "Gamma", "Log-Normal", "Inverse Gaussian"),
+       col = c("red", "blue", "Green", "Purple"), lty = 1)
 
 
 
@@ -770,38 +924,38 @@ subplot(hist(nb_simulations_list_cv[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = 
 
 
 
-##################################################### Q3 Monte Carlo Gamma ################################################
+################################################ Q3 Monte Carlo Log Normal ################################################
 
 #Here we will simulate random gamma distributions with the Method of moments scale and shape parameters and test our data against
 #each of them and take the mean p-value.
 
-gamma_simulations_list <- vector(mode = "list", length = 1000)
+ln_simulations_list <- vector(mode = "list", length = 1000)
 for(i in 1:1000) {
-  gamma_simulations_list[[i]] <- vector(mode = "list", length = length(claim_size_vector))
+  ln_simulations_list[[i]] <- vector(mode = "list", length = length(claim_size_vector))
 }
 for(i in 1:1000){
-  gamma_simulations_list[[i]] <- rgamma(length(claim_size_vector),shape = gamma_estimated_k, 
-                                          scale = gamma_estimated_theta)##Switch with our own simulation function
+  ln_simulations_list[[i]] <- rlnorm(length(claim_size_vector),meanlog = logNormal_estimator_mu,
+                                     sdlog = logNormal_estimator_sd)##Switch with our own simulation function
 }
 
 
 
-mean_vector_gamma <- c()
-var_vector_gamma <- c()
+mean_vector_ln <- c()
+var_vector_ln <- c()
 
 for(i in 1:1000){
-  mean_vector_gamma[i] <- mean(gamma_simulations_list[[i]])
-  var_vector_gamma[i] <- var(gamma_simulations_list[[i]])
+  mean_vector_ln[i] <- mean(ln_simulations_list[[i]])
+  var_vector_ln[i] <- var(ln_simulations_list[[i]])
 }
 
 
-hist(mean_vector_gamma, main = "Expectation of 1000 Gamma Simulations")
+hist(mean_vector_ln, main = "Expectation of 1000 Log Normal Simulations")
 abline(v = mean(claim_size_vector),col="Red")
-legend("topright", legend = "Data", col = "red", lty = 1)
+legend("topright", legend = "Model", col = "red", lty = 1)
 
-hist(var_vector_gamma, main = "Variance of 1000 Gamma Simulations")
+hist(var_vector_ln, main = "Variance of 1000 Log Normal Simulations")
 abline(v = mean(var(claim_size_vector)),col="Red")
-legend("topright", legend = "Data", col = "red", lty = 1)
+legend("topright", legend = "Model", col = "red", lty = 1)
 
 
 t.test(x = mean_vector_gamma, mu = mean(claim_size_vector))
@@ -817,12 +971,12 @@ t.test(x = var_vector_gamma, mu = mean(var(claim_size_vector)))
 ### Antithetic Method #####################################################################################################
 
 
-simulate_gamma_with_u_input <- function(random_numbers, shape, scale) {
-  return(qgamma(random_numbers, shape = shape , scale = scale))
+simulate_ln_with_u_input <- function(random_numbers, mean, sd) {
+  return(qlnorm(random_numbers, meanlog = mean , sdlog =  sd))
 }
 
 
-simulate_gamma_antithetic_variates <- function(size, shape, scale){
+simulate_ln_antithetic_variates <- function(size, mean, sd){
   if(size %% 2 == 0){
     u1_vector <- runif(size/2,0,1)
     u2_vector <- 1-u1_vector
@@ -831,8 +985,8 @@ simulate_gamma_antithetic_variates <- function(size, shape, scale){
     u2_vector <- 1-u1_vector
   }
   
-  f_u1 <- simulate_gamma_with_u_input(random_numbers=u1_vector,shape = shape, scale = scale)
-  f_u2 <- simulate_gamma_with_u_input(random_numbers=u2_vector,shape = shape, scale = scale)
+  f_u1 <- simulate_ln_with_u_input(random_numbers=u1_vector,mean = mean, sd = sd)
+  f_u2 <- simulate_ln_with_u_input(random_numbers=u2_vector,mean = mean, sd = sd)
   
   return(append(f_u1,f_u2))
 }
@@ -840,57 +994,57 @@ simulate_gamma_antithetic_variates <- function(size, shape, scale){
 
 
 
-gamma_simulations_list_anthithetic <- vector(mode = "list", length = 1000)
+ln_simulations_list_anthithetic <- vector(mode = "list", length = 1000)
 for(i in 1:1000) {
-  gamma_simulations_list_anthithetic[[i]] <- vector(mode = "list", length = length(claim_size_vector))
+  ln_simulations_list_anthithetic[[i]] <- vector(mode = "list", length = length(claim_size_vector))
 }
 for(i in 1:1000){
-  gamma_simulations_list_anthithetic[[i]] <- simulate_gamma_antithetic_variates(size = length(claim_size_vector),
-                                                                       shape = gamma_estimated_k,
-                                                                        scale = gamma_estimated_theta)
+  ln_simulations_list_anthithetic[[i]] <- simulate_ln_antithetic_variates(size = length(claim_size_vector),
+                                                                        mean = logNormal_estimator_mu,
+                                                                        sd = logNormal_estimator_sd)
 }
 
-mean_vector_gamma_antithetic <- c()
-var_vector_gamma_antithetic <- c()
+mean_vector_ln_antithetic <- c()
+var_vector_ln_antithetic <- c()
 
 
 for(i in 1:1000){
-  mean_vector_gamma_antithetic[i] <- mean(gamma_simulations_list_anthithetic[[i]])
-  var_vector_gamma_antithetic[i] <- var(gamma_simulations_list_anthithetic[[i]])
+  mean_vector_ln_antithetic[i] <- mean(ln_simulations_list_anthithetic[[i]])
+  var_vector_ln_antithetic[i] <- var(ln_simulations_list_anthithetic[[i]])
 }
 
 #Histogram of Antithetic covariate method estimators 
-hist(mean_vector_gamma_antithetic, main = "Expectation of 1000 Gamma Simulations - Antithetic Method")
-abline(v = mean(mean_vector_gamma_antithetic),col="Red")
-legend("topright", legend = "Mean CMC", col = "red", lty = 1)
-mtext(paste0("Mean: ",round(mean(mean_vector_gamma_antithetic),4),
-             " vs CMC:",round(mean(mean_vector_gamma_antithetic),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+hist(mean_vector_ln_antithetic, main = "Expectation of 1000 Log Normal Simulations - Antithetic Method")
+abline(v = mean(mean_vector_ln_antithetic),col="Red")
+legend("topright", legend = "Model", col = "red", lty = 1)
+mtext(paste0("Mean: ",round(mean(mean_vector_ln_antithetic),4),
+             " vs CMC:",round(mean(mean_vector_ln_antithetic),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 
 #are they biased? #Theoretically unbiased
-hist(mean_vector_gamma-mean_vector_gamma_antithetic, main = "Differences: Antithetic Method - CMC")
-mtext(paste0("pval: ", round(t.test(mean_vector_gamma, mean_vector_gamma_antithetic)$p.val, 6), "\n",
-             "conf.Int 95%: (", round(t.test(mean_vector_gamma, mean_vector_gamma_antithetic)$conf[1],6), ";",
-             round(t.test(mean_vector_gamma, mean_vector_gamma_antithetic)$conf[2],6), ")")
+hist(mean_vector_ln-mean_vector_ln_antithetic, main = "Differences: Antithetic Method - CMC")
+mtext(paste0("pval: ", round(t.test(mean_vector_ln, mean_vector_ln_antithetic)$p.val, 6), "\n",
+             "conf.Int 95%: (", round(t.test(mean_vector_ln, mean_vector_ln_antithetic)$conf[1],6), ";",
+             round(t.test(mean_vector_ln, mean_vector_ln_antithetic)$conf[2],6), ")")
       , side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 
 
 
 #Compare variance
-hist(var_vector_gamma_antithetic, main = "Variance - Antithetic Method")
-abline(v = mean(var_vector_gamma_antithetic),col="Red")
+hist(var_vector_ln_antithetic, main = "Variance - Antithetic Method")
+abline(v = mean(var_vector_ln_antithetic),col="Red")
 legend("topright", legend = "Var Antithetic", col = "red", lty = 1,cex = 0.8)
-mtext(paste0("Var: ",round(mean(var_vector_gamma_antithetic),4),
-             " vs CMC:",round(mean(var_vector_gamma),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+mtext(paste0("Var: ",round(mean(var_vector_ln_antithetic),4),
+             " vs CMC:",round(mean(var_vector_ln),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 
 
 
 ### Control Variate ######################################################################################################
 
 #Bad####
-simulate_gamma_cv_weibull <- function(size,shape,scale, shape_w, scale_w ){
-  x <- sort(rgamma(size,shape = shape, scale = scale))
-  y <- sort(rweibull(size,shape = shape_w, scale = scale_w))
-  z <- x - cov(x,y)*1/var(y)*(y - scale_w*gamma(1+1/shape_w))
+simulate_ln_cv_IG <- function(size,mean_ln,sd_ln, mean_IG, shape_IG ){
+  x <- sort(rlnorm(size,meanlog = mean_ln,sdlog = sd_ln))
+  y <- sort(rinvgauss(size,mean = mean_IG, shape = shape_IG))
+  z <- x - cov(x,y)*1/var(y)*(y - mean_IG)
   return(z)
 }
 #######
@@ -898,50 +1052,50 @@ simulate_gamma_cv_weibull <- function(size,shape,scale, shape_w, scale_w ){
 
 
 
-gamma_simulations_list_cv <- vector(mode = "list", length = 1000)
+ln_simulations_list_cv_IG <- vector(mode = "list", length = 1000)
 for(i in 1:1000) {
-  gamma_simulations_list_cv[[i]] <- vector(mode = "list", length = length(claim_size_vector))
+  ln_simulations_list_cv_IG[[i]] <- vector(mode = "list", length = length(claim_size_vector))
 }
 for(i in 1:1000){
-  gamma_simulations_list_cv[[i]] <- simulate_gamma_cv_weibull(size = length(claim_size_vector),
-                                                                       shape = gamma_estimated_k,
-                                                                       scale = gamma_estimated_theta,
-                                                                       scale_w = 489.8513,
-                                                                       shape_w = 2.496191)
+  ln_simulations_list_cv_IG[[i]] <- simulate_ln_cv_IG(size = length(claim_size_vector),
+                                                                       mean_ln = logNormal_estimator_mu,
+                                                                       sd_ln = logNormal_estimator_sd,
+                                                                       mean_IG = IG_estimator_mu,
+                                                                       shape_IG = IG_estimator_lambda)
 }
 
 
-mean_vector_gamma_cv <- c()
-var_vector_gamma_cv <- c()
+mean_vector_ln_cv_IG <- c()
+var_vector_ln_cv_IG <- c()
 
 
 for(i in 1:1000){
-  mean_vector_gamma_cv[i] <- mean(gamma_simulations_list_cv[[i]])
-  var_vector_gamma_cv[i] <- var(gamma_simulations_list_cv[[i]])
+  mean_vector_ln_cv_IG[i] <- mean(ln_simulations_list_cv_IG[[i]])
+  var_vector_ln_cv_IG[i] <- var(ln_simulations_list_cv_IG[[i]])
   }
 
 #Histogram of Antithetic covariate method estimators 
-hist(mean_vector_gamma_cv, main = "Expectation of 1000 Gamma Simulations - CV Method")
-abline(v = mean(mean_vector_gamma_cv),col="Red")
+hist(mean_vector_ln_cv_IG, main = "Expectation of 1000 Gamma Simulations - CV Method")
+abline(v = mean(mean_vector_ln_cv_IG),col="Red")
 legend("topright", legend = "Mean CMC", col = "red", lty = 1)
-mtext(paste0("Mean: ",round(mean(mean_vector_gamma_cv),4),
-             " vs CMC:",round(mean(mean_vector_gamma_cv),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+mtext(paste0("Mean: ",round(mean(mean_vector_ln_cv_IG),4),
+             " vs CMC:",round(mean(mean_vector_ln_cv_IG),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 
 #are they biased? #Theoretically unbiased
-hist(mean_vector_gamma-mean_vector_gamma_cv, main = "Differences: CV Method - CMC")
-mtext(paste0("pval: ", round(t.test(mean_vector_gamma, mean_vector_gamma_cv)$p.val, 6), "\n",
-             "conf.Int 95%: (", round(t.test(mean_vector_gamma, mean_vector_gamma_cv)$conf[1],6), ";",
-             round(t.test(mean_vector_gamma, mean_vector_gamma_cv)$conf[2],6), ")")
+hist(mean_vector_ln-mean_vector_ln_cv_IG, main = "Differences: CV Method - CMC")
+mtext(paste0("pval: ", round(t.test(ln_simulations_list_IS_gamma, mean_vector_ln_cv_IG)$p.val, 6), "\n",
+             "conf.Int 95%: (", round(t.test(ln_simulations_list_IS_gamma, mean_vector_ln_cv_IG)$conf[1],6), ";",
+             round(t.test(ln_simulations_list_IS_gamma, mean_vector_ln_cv_IG)$conf[2],6), ")")
       , side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 
 
 
 #Compare variance
-hist(var_vector_gamma_cv, main = "Variance - CV Method")
-abline(v = mean(var_vector_gamma_cv),col="Red")
+hist(var_vector_ln_cv_IG, main = "Variance - CV Method")
+abline(v = mean(var_vector_ln_cv_IG),col="Red")
 legend("topright", legend = "Var CV", col = "red", lty = 1,cex = 0.8)
-mtext(paste0("Var: ",round(mean(var_vector_gamma_cv),4),
-             " vs CMC:",round(mean(var_vector_gamma),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+mtext(paste0("Var: ",round(mean(var_vector_ln_cv_IG),4),
+             " vs CMC:",round(mean(var_vector_ln),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 
 
 
@@ -951,44 +1105,84 @@ mtext(paste0("Var: ",round(mean(var_vector_gamma_cv),4),
 #Importance sampling, higher variance
 #I = Gamma
 #F = F_tilda = lambda*e^(-lambda*x), g(x) = I(x) = x
-x <- rexp(1000,lambda_hat_exp)
-ICE <- dgamma(x,shape = gamma_estimated_k, scale = gamma_estimated_theta) / dexp(x,rate = lambda_hat_exp) * x
+x <- rgamma(n = length(claim_size_vector),shape = gamma_estimated_k,scale = gamma_estimated_theta)
+ISE <- dlnorm(x,meanlog = logNormal_estimator_mu, sdlog = logNormal_estimator_sd) / 
+  dgamma(x,shape = gamma_estimated_k, scale = gamma_estimated_theta) * x
 
 
 
 
-simulate_gamma_IS_exp <- function(size, shape, scale,lambda){
-  x <- rexp(n = size,rate = lambda)
-  return( dgamma(x,shape = shape,scale =  scale) / dexp(x,rate = lambda) * x )
+simulate_ln_IS_gamma <- function(size, shape_gamma, scale_gamma, mean_ln, sd_ln){
+  x <- rgamma(n = size, shape = shape_gamma, scale = scale_gamma)
+  return( dlnorm(x,meanlog =  mean_ln,sdlog = sd_ln) / 
+            dgamma(x,shape = shape_gamma, scale = scale_gamma) * x )
 }
 
 
 
-gamma_simulations_list_IS <- vector(mode = "list", length = 1000)
+ln_simulations_list_IS_gamma <- vector(mode = "list", length = 1000)
 for(i in 1:1000) {
-  gamma_simulations_list_IS[[i]] <- vector(mode = "list", length = length(claim_size_vector))
+  ln_simulations_list_IS_gamma[[i]] <- vector(mode = "list", length = length(claim_size_vector))
 }
 for(i in 1:1000){
-  gamma_simulations_list_IS[[i]] <- simulate_gamma_IS_exp(size = length(claim_size_vector),
-                                                             shape = gamma_estimated_k,
-                                                             scale = gamma_estimated_theta,
-                                                             lambd = lambda_hat_exp)
+  ln_simulations_list_IS_gamma[[i]] <- simulate_ln_IS_gamma(size = length(claim_size_vector),
+                                                             shape_gamma = gamma_estimated_k,
+                                                             scale_gamma = gamma_estimated_theta,
+                                                             mean_ln = logNormal_estimator_mu,
+                                                             sd_ln = logNormal_estimator_sd)
 }
 
 
 
-mean_vector_gamma_IS <- c()
-var_vector_gamma_IS <- c()
+mean_vector_ln_IS_gamma <- c()
+var_vector_ln_IS_gamma <- c()
 
 
 for(i in 1:1000){
-  mean_vector_gamma_IS[i] <- mean(gamma_simulations_list_IS[[i]])
+  mean_vector_ln_IS_gamma[i] <- mean(ln_simulations_list_IS_gamma[[i]])
+  var_vector_ln_IS_gamma[i]<- var(ln_simulations_list_IS_gamma[[i]])
 }
 
-hist(mean_vector_gamma_IS, main = "Expectation of 1000 Gamma Simulations - IS", breaks = 40)
+#Histogram of Antithetic covariate method estimators 
+hist(mean_vector_ln_IS_gamma, main = "Expectation of 1000 Log Normal Simulations - IS Method")
+abline(v = mean(mean_vector_ln_IS_gamma),col="Red")
+legend("topright", legend = "Mean CMC", col = "red", lty = 1)
+mtext(paste0("Mean: ",round(mean(mean_vector_ln_IS_gamma),4),
+             " vs CMC:",round(mean(mean_vector_ln_cv_IG),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+
+#are they biased? #Theoretically unbiased
+hist(mean_vector_ln-mean_vector_ln_IS_gamma, main = "Differences: IS Method - CMC")
+mtext(paste0("pval: ", round(t.test(mean_vector_ln, mean_vector_ln_IS_gamma)$p.val, 6), "\n",
+             "conf.Int 95%: (", round(t.test(mean_vector_ln, mean_vector_ln_IS_gamma)$conf[1],6), ";",
+             round(t.test(mean_vector_ln, mean_vector_ln_IS_gamma)$conf[2],6), ")")
+      , side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+
+
+
+#Compare variance
+hist(var_vector_ln_IS_gamma, main = "Variance - IS Method")
+abline(v = mean(var_vector_ln_IS_gamma),col="Red")
+legend("topright", legend = "Var CV", col = "red", lty = 1,cex = 0.8)
+mtext(paste0("Var: ",round(mean(var_vector_ln_IS_gamma),4),
+             " vs CMC:",round(mean(var_vector_ln),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+hist(mean_vector_ln_IS_gamma, main = "Expectation of 1000 Gamma Simulations - IS", breaks = 40)
 abline(v = mean(claim_size_vector),col="Red")
 legend("topright", legend = "Data", col = "red", lty = 1)
-mtext(as.character(round(var(mean_vector_gamma_IS),4)), side = 3, line = -2,
+mtext(as.character(round(var(mean_vector_ln_IS_gamma),4)), side = 3, line = -2,
       at = par("usr")[1], adj = -1, col = "black", cex = 0.6)
 
 
