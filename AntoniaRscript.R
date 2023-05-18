@@ -3,6 +3,9 @@ source("rscript.r")
 #install.packages("MASS")
 library(MASS)
 
+install.packages("extraDistr")
+library(extraDistr)
+
 sample_mean <- mean(data$CLM_FREQ) #calculating the sample mean
 sample_mean
 sample_variance <- var(data$CLM_FREQ) #calculating the sample variance
@@ -60,7 +63,6 @@ pdf_negative_bin <- function(x, r, p) {
 #E(X)=(1-p)*r/p
 #VAR(X)=r*(1-p)/p^2
 
-
 # Define a class called "MyClass"
 setClass("MLE_neg_bin",
          representation(sample_mean = "numeric", sample_variance = "numeric", r = "numeric", p = "numeric"))
@@ -89,10 +91,6 @@ my_obj <- MLE_neg_bin(sample_mean, sample_variance)
 my_obj <- calculate(my_obj)
 print(paste("the MLE estimator of r, in Negative Binomial is",my_obj@r))
 print(paste("the MLE estimator of p, in Negative Binomial is", my_obj@p))
-
-my_obj@r
-my_obj@p
-
 
 empirical_data <- list()
 
@@ -202,28 +200,42 @@ simulate_negative_binomial <- function(r, p, size){
       lower_bound <- upper_bound 
       upper_bound <- upper_bound +  choose(counter + r - 1 , counter )* p^r * (1-p)^counter
       #cat("lower bound ", lower_bound, "   upper bound ", upper_bound, " random number ", random_number, "   counter ", counter)
+
+mle_bin<- function(data){
+  sum(data)/length(data)
+}
+
+mle_bin(data$CLM_FREQ)
+
+###############################SIMULATE FROM NEGATIVE BINOMIAL################
+
+
+simulate_negative_binomial <- function(r, p, size) {
+  simulated_negative_binomial <- integer(size)  # Create an integer vector of "size" length
+  
+  for (i in 1:size) {
+    counter <- 0
+    lower_bound <- 0
+    upper_bound <- choose(counter + r - 1, counter) * p^r * (1 - p)^counter #P(X=0) where
+    #X~Negative Binomial 
+    
+    random_number <- runif(1, 0, 1) #generates a single  rn~U(0,1)
+    
+    while (!(upper_bound > random_number && lower_bound <= random_number)) {
+      counter <- counter + 1
+      lower_bound <- upper_bound
+      upper_bound <- upper_bound + choose(counter + r - 1, counter) * p^r * (1 - p)^counter
     }
+    
     simulated_negative_binomial[i] <- counter
   }
-  return (simulated_negative_binomial)
+  
+  return(simulated_negative_binomial)
 }
 
-simulated_negative_binomial(my_obj@r,my_obj@p,1000)
 
-##########estimate the parameters of LN##############
 
-lossesVector <- vector()
-for  (i in 3:9 ){
-  for (j in 1:length(data[,i])){
-    if ( data[j,i] > 0 ){
-      lossesVector <- append(lossesVector, data[j,i])
-      print (data[j,i])
-    }
-  }
-}
 
-sample_mean_los<- mean(lossesVector)
-sample_var_los <- var(lossesVector)
 
 ###estimating the parameters for LN using the method of moments
 logNormalSigmaSquareEstimator <- function(random_vector){
@@ -234,6 +246,27 @@ logNormalMuEstimator <- function(random_vector){
   return(log(sample_mean_los) - (logNormalSigmaSquareEstimator(random_vector)/2) )
 }
 
-##############assigning the results to variables sigmaSquareLN,muLn
+##############assigning the results to variables sigmaSquareLN,muLn############
 sigmaSquareLN <- logNormalSigmaSquareEstimator(lossesVector)
 muLN <- logNormalMuEstimator(lossesVector)
+######################################QUESTION 2#########################################
+
+
+# Number of simulations
+num_simulations <- 1000
+
+# Vector to store the simulated values of X
+simulated_X <- numeric(num_simulations)
+
+# Simulate the compound negative binomial
+for (i in 1:num_simulations) {
+  N <- simulate_negative_binomial(1, my_obj@r, my_obj@p)
+  Y <- rlnorm(N, muLN, sigmaSquareLN)
+  X <- sum(Y)
+  simulated_X[i] <- X
+}
+
+# View the simulated values
+print(simulated_X)
+
+
