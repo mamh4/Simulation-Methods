@@ -892,34 +892,24 @@ mtext(paste0("Var: ",round(mean(var_vector_nb_cv),4),
 #******************************************************** Results ********************************************************#
 
 par(mfrow = c(2, 2),cex.main = 0.8)
-hist(var_vector_nb, main = "Expectation NB w/o variance reduction")
-abline(v = mean(var_vector_nb),col="Red")
-
-legend("topright", legend = "Var CMC", col = "red", lty = 1,cex = 0.8)
-
+hist(var_vector_nb, main = "Variance NB w/o variance reduction")
 subplot(hist(nb_simulations_list[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "Sample Simulation",cex.main = 0.7)
-        , grconvertX(c(.04, .3), "npc"), grconvertY(c(.7, .9), "npc"))
-
-
+        , grconvertX(c(.75, 1), "npc"), grconvertY(c(0.75, 1), "npc"))
 
 
 
 hist(var_vector_nb_antithetic, main = "Variance - Antithetic Method")
-abline(v = mean(var_vector_nb_antithetic),col="Red")
-legend("topright", legend = "Var Antithetic", col = "red", lty = 1,cex = 0.8)
 mtext(paste0("Var: ",round(mean(var_vector_nb_antithetic),4),
              " vs CMC:",round(mean(var_vector_nb),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
-subplot(hist(nb_simulations_list_anthithetic[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n")
-        , grconvertX(c(.06, .3), "npc"), grconvertY(c(.7, .9), "npc"))
+subplot(hist(nb_simulations_list_anthithetic[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "Sample Simulation",cex.main = 0.7)
+        , grconvertX(c(.75, 1), "npc"), grconvertY(c(0.75, 1), "npc"))
 
 
 hist(var_vector_nb_cv, main = "Variance - CV Method")
-abline(v = mean(var_vector_nb_cv),col="Red")
-legend("topright", legend = "Var CV", col = "red", lty = 1,cex = 0.8)
 mtext(paste0("Var: ",round(mean(var_vector_nb_cv),4),
              " vs CMC:",round(mean(var_vector_nb),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
-subplot(hist(nb_simulations_list_cv[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n")
-        , grconvertX(c(.06, .3), "npc"), grconvertY(c(.7, .9), "npc"))
+subplot(hist(nb_simulations_list_cv[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "Sample Simulation",cex.main = 0.7)
+        , grconvertX(c(.75, 1), "npc"), grconvertY(c(0.75, 1), "npc"))
 
 
 
@@ -933,11 +923,12 @@ ln_simulations_list <- vector(mode = "list", length = 1000)
 for(i in 1:1000) {
   ln_simulations_list[[i]] <- vector(mode = "list", length = length(claim_size_vector))
 }
+
+
 for(i in 1:1000){
   ln_simulations_list[[i]] <- rlnorm(length(claim_size_vector),meanlog = logNormal_estimator_mu,
                                      sdlog = logNormal_estimator_sd)##Switch with our own simulation function
 }
-
 
 
 mean_vector_ln <- c()
@@ -965,7 +956,7 @@ t.test(x = var_vector_gamma, mu = mean(var(claim_size_vector)))
 
 
 
-############################################### Q3 variance reduction Gamma ###############################################
+############################################ Q3 variance reduction Log normal #############################################
 
 
 ### Antithetic Method #####################################################################################################
@@ -998,6 +989,7 @@ ln_simulations_list_anthithetic <- vector(mode = "list", length = 1000)
 for(i in 1:1000) {
   ln_simulations_list_anthithetic[[i]] <- vector(mode = "list", length = length(claim_size_vector))
 }
+
 for(i in 1:1000){
   ln_simulations_list_anthithetic[[i]] <- simulate_ln_antithetic_variates(size = length(claim_size_vector),
                                                                         mean = logNormal_estimator_mu,
@@ -1040,17 +1032,12 @@ mtext(paste0("Var: ",round(mean(var_vector_ln_antithetic),4),
 
 ### Control Variate ######################################################################################################
 
-#Bad####
 simulate_ln_cv_IG <- function(size,mean_ln,sd_ln, mean_IG, shape_IG ){
   x <- sort(rlnorm(size,meanlog = mean_ln,sdlog = sd_ln))
   y <- sort(rinvgauss(size,mean = mean_IG, shape = shape_IG))
   z <- x - cov(x,y)*1/var(y)*(y - mean_IG)
   return(z)
 }
-#######
-
-
-
 
 ln_simulations_list_cv_IG <- vector(mode = "list", length = 1000)
 for(i in 1:1000) {
@@ -1102,7 +1089,6 @@ mtext(paste0("Var: ",round(mean(var_vector_ln_cv_IG),4),
 
 ### Importance Sampling ###################################################################################################
 
-#Importance sampling, higher variance
 #I = Gamma
 #F = F_tilda = lambda*e^(-lambda*x), g(x) = I(x) = x
 x <- rgamma(n = length(claim_size_vector),shape = gamma_estimated_k,scale = gamma_estimated_theta)
@@ -1172,22 +1158,11 @@ mtext(paste0("Var: ",round(mean(var_vector_ln_IS_gamma),4),
 
 
 
-
-
-
-
-
-
-
-hist(mean_vector_ln_IS_gamma, main = "Expectation of 1000 Gamma Simulations - IS", breaks = 40)
-abline(v = mean(claim_size_vector),col="Red")
-legend("topright", legend = "Data", col = "red", lty = 1)
-mtext(as.character(round(var(mean_vector_ln_IS_gamma),4)), side = 3, line = -2,
-      at = par("usr")[1], adj = -1, col = "black", cex = 0.6)
-
-
-
 ### Stratified Sampling ###################################################################################################
+
+
+
+
 
 
 
@@ -1195,43 +1170,84 @@ mtext(as.character(round(var(mean_vector_ln_IS_gamma),4)), side = 3, line = -2,
 #*******************************************************Results*********************************************************#
 
 
-hist(mean_vector_gamma, main = "Expectation Gamma w/o variance reduction ", breaks = 40)
-abline(v = mean(claim_size_vector),col="Red")
-mtext(as.character(round(var(mean_vector_gamma),4)), side = 3, line = -2,
-      at = par("usr")[1], adj = -1, col = "black", cex = 0.6)
 
 
+par(mfrow = c(2, 2),cex.main = 0.8)
 
-hist(mean_vector_gamma_antithetic, main = "Expectation of 1000 Gamma Simulations - Antithetic Method", breaks = 40)
-abline(v = mean(claim_size_vector),col="Red")
-legend("topright", legend = "Data", col = "red", lty = 1)
-mtext(as.character(round(var(mean_vector_gamma_antithetic),4)), side = 3, line = -2,
-      at = par("usr")[1], adj = -1, col = "black", cex = 0.6)
-
+hist(var_vector_ln, main = "Variance Log Normal w/o variance reduction")
+subplot(hist(ln_simulations_list[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "Sample Simulation",cex.main = 0.7)
+        , grconvertX(c(.75, 1), "npc"), grconvertY(c(0.75, 1), "npc"))
 
 
+hist(var_vector_ln_antithetic, main = "Variance Log Normal - Antithetic Method")
+mtext(paste0("Var: ",round(mean(var_vector_ln_antithetic),4),
+             " vs CMC:",round(mean(var_vector_ln),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+subplot(hist(ln_simulations_list_anthithetic[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "Sample Simulation",cex.main = 0.7)
+        , grconvertX(c(.75, 1), "npc"), grconvertY(c(0.75, 1), "npc"))
 
 
-
-
-#hist(var_vector_gamma, main = "Variance Gamma w/o variance reduction",breaks = 40)
-#abline(v = mean(var(claim_size_vector)),col="Red")
-#legend("topright", legend = "Data", col = "red", lty = 1)
-
-
-#hist(mean_vector_gamma_antithetic, main = "Expectation Gamma Simulations - Antithetic Method")
-#abline(v = mean(claim_size_vector),col="Red")
-
-
-#hist(var_vector_gamma_antithetic, main = "Variance Gamma - Antithetic Method", breaks = 40)
-#abline(v = var(claim_size_vector),col="Red")
+hist(var_vector_ln_cv_IG, main = "Variance - CV Method")
+mtext(paste0("Var: ",round(mean(var_vector_ln_cv_IG),4),
+             " vs CMC:",round(mean(var_vector_ln),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+subplot(hist(ln_simulations_list_cv_IG[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "Sample Simulation",cex.main = 0.7)
+        , grconvertX(c(.75, 1), "npc"), grconvertY(c(0.75, 1), "npc"))
 
 
 
 
+############################################################################################################################
+########################################################### Q4 #############################################################
+############################################################################################################################
+
+########################################### Risk Premium Calculation through Data ##########################################
+
+
+data_existing_premium <- sum(data$PREMIUM)/nrow(data)
+data_premium_calculation <- sum(claim_size_vector) / nrow(data)
+
+
+monte_carlo_claim_simulations_list <- vector(mode = "list", length = 1000)
+for(i in 1:1000) {
+  monte_carlo_claim_simulations_list[[i]] <- vector(mode = "list", length = 1000)
+}
+for(i in 1:1000){
+  clm_freq = monte_carlo_claim_freq <- rnbinom(1000,size = r_hat, prob = p_hat)
+  monte_carlo_claim_sev <- purrr::map(monte_carlo_claim_freq,function(x){rlnorm(x,meanlog = logNormal_estimator_mu,
+                                                                                sdlog = logNormal_estimator_sd)})
+  monte_carlo_claim_simulations_list[[i]] <- sapply(monte_carlo_claim_sev,sum)
+}
+
+mean_monte_carlo_claims <- c()
+max_monte_carlo_claims <- c()
+min_monte_carlo_claims <- c()
+
+for(i in 1:1000){
+  mean_monte_carlo_claims[i] <- mean(monte_carlo_claim_simulations_list[[i]])
+  max_monte_carlo_claims[i]<- max(monte_carlo_claim_simulations_list[[i]])
+  min_monte_carlo_claims[i] <- min(monte_carlo_claim_simulations_list[[i]])
+}
 
 
 
+#histogram of the mean
+hist(mean_monte_carlo_claims,xaxt = "n")
+abline(v=data_existing_premium, col = "Red")
+abline(v=mean(mean_monte_carlo_claims, col = "Blue"))
+legend("topright", legend = c("Data", "Model"),
+       col = c("red", "blue"), lty = 1)
+mtext(paste0("%: ",
+             length(mean_monte_carlo_claims[mean_monte_carlo_claims<data_existing_premium])/length(mean_monte_carlo_claims)*100),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+axis(side = 1, at = seq(690, 850, length.out = 10))
 
+#histogram of the maximum
+hist(max_monte_carlo_claims)
+abline(v=data_existing_premium)
+mtext(paste0("%: ",
+             length(max_monte_carlo_claims[max_monte_carlo_claims<data_existing_premium])/length(max_monte_carlo_claims)*100),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+
+
+############################################################################################################################
+###################################################### Final Results #######################################################
+############################################################################################################################
 
 
