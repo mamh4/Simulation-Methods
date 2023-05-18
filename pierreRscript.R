@@ -796,9 +796,8 @@ crudeMCExpectedShortfall <- function(alpha, numberOfIterations) { #number of pol
 #fits course description, need to actually run tests 
 
 
-
-
 #Finish expected shortfall 
+
 
 
 
