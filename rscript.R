@@ -1305,6 +1305,9 @@ subplot(hist(ln_simulations_list_IS_gamma[[1]],ylab = "",xlab = "",ylim = NULL,y
 data_risk_premium_estimation <- sum(claim_size_vector) / nrow(data)
 
 
+########################################### Risk Premium Calculation through Data ##########################################
+
+
 monte_carlo_claim_simulations_list <- vector(mode = "list", length = 1000)
 for(i in 1:1000) {
   monte_carlo_claim_simulations_list[[i]] <- vector(mode = "list", length = 1000)
@@ -1332,25 +1335,30 @@ for(i in 1:1000){
 ########################################################### Q5 #############################################################
 ############################################################################################################################
 
-
-#histogram of the mean
-hist(mean_monte_carlo_claims,xaxt = "n", main = "")
+#histogram of the mean per policy view 
+hist(mean_monte_carlo_claims,xaxt = "n", main = "Data Vs CMC Risk Premium esitmate")
 abline(v=data_risk_premium_estimation, col = "Red")
 abline(v=mean(mean_monte_carlo_claims, col = "Blue"))
-legend("topright", legend = c("Data Risk Premium", "CMC Risk Premium"),
+legend("topright", legend = c("Calculated Data Risk Premium", "Caclulated CMC Risk Premium"),
        col = c("red", "blue"), lty = 1, cex = 0.75, box.lwd = 0.5)
-mtext(paste0("%: ",
-             length(mean_monte_carlo_claims[mean_monte_carlo_claims<data_risk_premium_estimation])/length(mean_monte_carlo_claims)*100),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 axis(side = 1, at = seq(690, 850, length.out = 10))
+
 #The premium charged in the data set is even lower than the expected value of the claims!!
+#Analysis of Existing Premium & Claims Against Monte Carlo Simulations on per policy basis
+hist(agg_monte_carlo_claims, main = "Aggregate claim amounts - 1000 simulations",xaxt = "n")
+axis(side = 1, at = seq(7e5, 9e5, length.out = 10))
+abline(v=sum(data$PREMIUM), col = "Red")
+abline(v=sum(claim_size_vector), col = "Blue")
+abline(v=mean(agg_monte_carlo_claims), col = "Green")
+legend("topright", legend = c("Portfolio Agg. Premium", "Portfolio Agg. Claims", "Model Premium estimates*"),
+       col = c("red", "blue", "green"), lty = 1, cex = 0.75, box.lwd = 0.5)
+mtext(paste0("Coverage of approx. \n",
+             length(agg_monte_carlo_claims[agg_monte_carlo_claims<sum(data$PREMIUM)])/length(agg_monte_carlo_claims)*100,
+             "% under current premium \nscheme\n",
+             length(agg_monte_carlo_claims[agg_monte_carlo_claims<mean(agg_monte_carlo_claims)])/length(agg_monte_carlo_claims)*100,
+             "% under our model (w/o loadings)"),
+      side = 3, line = -2, adj = 0, col = "black", cex = 0.9)
 
-
-#histogram overall claims of overall portfolio
-hist(agg_monte_carlo_claims, main = "1000 Risk Premium Estimations - Neg. Binomial & Log Normal")
-abline( v= data_risk_premium_estimation*nrow(data))
-abline( v = mean(agg_monte_carlo_claims))
-legend("topright", legend = c("Data Agg. Risk Premium", "CMC Agg. Risk Premium"),
-       col = c("red", "blue"), lty = 1, cex = 0.75, box.lwd = 0.5)
 
 
 ############################################################################################################################
@@ -1368,19 +1376,18 @@ crudeMCSimAlphaQuantile <- function(alpha, simulatedVector) {
   return(orderedSimulatedVector[index])
 }
 
+
+
 for (i in 1:1000) {
+  VaR_value <-0
+  for(j in 1:1000){#simulate one portfolio
   clm_freq <- rnbinom(1000, size = r_hat, prob = p_hat)
   clm_sev <- unlist(purrr::map(clm_freq, function(x) {
-    rlnorm(x, meanlog = logNormal_estimator_mu, sdlog = logNormal_estimator_sd)
-  }))
-  VaR_value <- 0
-  for (j in 1:1000) {
-    VaR_value <- VaR_value + crudeMCSimAlphaQuantile(0.05,clm_sev[j])
-    }
+    rlnorm(x, meanlog = logNormal_estimator_mu, sdlog = logNormal_estimator_sd)}))
+  VaR_value <- VaR_value + crudeMCSimAlphaQuantile(0.05,clm_sev)
+  }
   capital_req[i] <- VaR_value
-  browser()
 }
-
 
 
 
@@ -1405,13 +1412,10 @@ for (i in 1:1000) {
 
 
 
-hist(capital_req, breaks = 100)
-
-abline(v=)
-
-
-
-
+hist(capital_req, breaks = 100, main = "10,000 VaR simulations - Neg Binomial & Log-Normal")
+abline(v=mean(capital_req))
+legend("topright", legend = c("Expected Shortfall"),
+       col = c("red", "blue"), lty = 1, cex = 0.75, box.lwd = 0.5)
 
 
 
