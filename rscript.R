@@ -332,7 +332,6 @@ ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ)) +
   labs(title = "Claim Frequency by Car Type") +
   theme(
     plot.title = element_text(hjust = 0.5),
-    axis.text.x = element_text(size = 14),
     plot.margin = margin(10, 20, 40, 20)  # Adjust the top, right, bottom, and left margins
   )
 
@@ -375,7 +374,6 @@ ggplot(temp2, aes(x = CAR_TYPE, y = CLM_AMT)) +
   labs(title = "Claim Severity by Car Type") +
   theme(
     plot.title = element_text(hjust = 0.5),
-    axis.text.x = element_text(size = 14),
     plot.margin = margin(10, 20, 40, 20)  # Adjust the top, right, bottom, and left margins
   )
 
