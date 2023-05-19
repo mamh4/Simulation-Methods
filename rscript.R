@@ -37,6 +37,7 @@ library(purrr) # efficient one liner pattern-matching
 library(ggplot2) # additional graphics
 library(gridExtra) #for combining ggplots
 library(TeachingDemos) # for overlaying plots
+library(knitr) #export summary data
 
 ############################################################################################################################
 #################################################### Read and store data ###################################################
@@ -51,16 +52,6 @@ rm(data_orig) #memory management
 ############################################################################################################################
 #################################################### Function Definitions ##################################################
 ############################################################################################################################
-
-pdf_poisson <- function(lambda,x){
-  return((lambda^x) * exp(-lambda) / factorial(x))
-}
-
-pdf_exponential <- function(lambda,x){
-  return(lambda *exp(-lambda))
-}
-##unitel here
-#Our Own RNG? function?
 
 simulate_poisson <- function(lambda, size){
   simulated_poisson <- rep(0, size)
@@ -258,7 +249,7 @@ temp <- data %>%
                 CAR_USE            = ifelse(CAR_USE=="Commercial","Comm","Private"))
 
 
-plot1 <-ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ, fill = AGE))+ #CLM_FREQ is only used as a gap filler
+plot1 <-ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ, fill = GENDER))+ #CLM_FREQ is only used as a gap filler
   geom_col(position = "fill") +
   xlab("")+
   ylab("")+
@@ -396,13 +387,14 @@ ggplot(temp2, aes(x = CAR_TYPE, y = CLM_AMT)) +
 #Female claims tend to be small in size although higher freq. but again do not forget confounding with sport cars and SUVs
 #Note we can condition on variables to try to dis-intangle confounding but most often we have data only on male/female
 #Age analysis: Sports car are driven by women of 45 median age. In fact the oldest woman is driving a sports car! 72 years of Age actually 2 women. And the one who had more claims pays less premium
-#Oldest person in the data set comes from urban area and never had claims, nonetheless he pays more than average premium
+#Oldest person in the data set  80 male comes from urban area and never had claims, nonetheless he pays more than average premium
 
+#Premium Analysis notes:
 
 
 ############################################### Big Picture! Warning!! BAD plots ############################################ 
 
-ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ)) +
+ggplot(temp, aes(x = CAR_TYPE, y = PREMIUM)) +
   geom_boxplot(outlier.shape = NA) +
   scale_shape_manual(values = c(1, 4)) +
   geom_jitter(aes(col = GENDER, shape = AREA),
@@ -417,7 +409,7 @@ ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ)) +
   theme_minimal()
 
 
-ggplot(temp2, aes(x = CAR_TYPE, y = CLM_AMT)) +
+ggplot(temp2, aes(x = CAR_TYPE, y = PREMIUM)) +
   geom_boxplot(outlier.shape = NA) +
   scale_shape_manual(values = c(1, 4)) +
   geom_jitter(aes(col = GENDER, shape = AREA),
@@ -566,11 +558,16 @@ qqplot(theoretical_quantiles, claim_size_vector,
        main = "QQ Plot for Exponential Distribution")
 abline(0, 1, col = "red", lty = 2)  # Add reference line
 
+#FF plots
+plot.ecdf(claim_size_vector, main = "FF Exponential", xlab = "Loss Amount", ylab = "CDF", col.points = "Gray")
+x = seq(0,1500, 0.1)
+y = pexp(x, rate = lambda_hat_exp ) #gamma as an example 
+lines(x,y, col = "blue")
+
+
 
 
 ################################################ Q2 Check Gamma ############################################################
-
-
 
 hist(claim_size_vector,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
 x <- seq(0,3500,length.out = length(claim_size_vector))
@@ -600,7 +597,10 @@ qqplot(claim_size_vector,rgamma(length(claim_size_vector),
                                             main = "QQ Plot for Gamma Distribution")
 
 
-
+plot.ecdf(claim_size_vector, main = "FF Gamma", xlab = "Loss Amount", ylab = "CDF", col.points = "Gray")
+x = seq(0,1500, 0.1)
+y = pgamma(x, shape = gamma_estimated_k, scale = gamma_estimated_theta ) #gamma as an example 
+lines(x,y, col = "Blue")
 
 
 
