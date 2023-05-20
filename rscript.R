@@ -564,12 +564,14 @@ y <- dexp(x, rate = lambda_hat_exp) #Theoretical Distribution
 lines(x,y)
 
 
-## Test whether exponential is a good model.
 
-ks.test(claim_size_vector, rate = lambda_hat_exp) #kolomogorov smirnov test
 
 
 theoretical_quantiles <- qexp(ppoints(length(claim_size_vector)),rate = lambda_hat_exp )
+## Test whether exponential is a good model.
+
+ks.test(claim_size_vector,theoretical_quantiles) #kolomogorov smirnov test
+
 
 qqplot(theoretical_quantiles, claim_size_vector,
        xlab = "Theoretical Quantiles", ylab = "Observed Quantiles",
