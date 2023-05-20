@@ -307,7 +307,7 @@ for (f in claims_amounts) {
   plot(data[,f], main=f, xlab='' ,las=2,col=data$CLM_FREQ)
   grid()
 }
-plot(data$CLM_FREQ, data$AGE, main='Age', xlab='',las = 2)
+plot(data$CLM_FREQ, data$AGE, main='Age',las = 2)
 grid()
 
 
@@ -356,7 +356,7 @@ for (f in features_cat) {
   grid()
 }
 
-plot(temp2$CLM_AMT, temp2$AGE, main='Age', xlab='',las = 2)
+plot(temp2$CLM_AMT, temp2$AGE, main='Age',las = 2)
 grid()
 
 
@@ -388,6 +388,13 @@ ggplot(temp2, aes(x = CAR_TYPE, y = CLM_AMT)) +
 #Oldest person in the data set  80 male comes from urban area and never had claims, nonetheless he pays more than average premium
 
 #Premium Analysis notes:
+plot(data$CLM_FREQ,data$PREMIUM, main = "Premium across different # claim occurences")
+abline(lm(data$PREMIUM~data$CLM_FREQ),col = "blue")
+legend("topright", legend = c("Linear model"),
+       col = c("blue"), lty = 1)
+
+
+
 
 
 ############################################### Big Picture! Warning!! BAD plots ############################################ 
@@ -1422,5 +1429,13 @@ legend("topright", legend = c("Expected Shortfall"),
 ############################################################################################################################
 ###################################################### Final Results #######################################################
 ############################################################################################################################
-
-
+##Data Exploration #Report referencing
+median(data[data$GENDER=="M","AGE"])
+median(data[data$GENDER=="F","AGE"])
+nrow(data[data$AREA=="Urban",])/nrow(data)
+nrow(data[data$CAR_USE=="Private",])/nrow(data)
+nrow(data[data$GENDER=="F" & data$CAR_TYPE =="Sports Car",])/nrow(data[data$CAR_TYPE=="Sports Car",])
+nrow(data[data$GENDER=="F" & data$CAR_TYPE =="SUV",])/nrow(data[data$CAR_TYPE=="SUV",])
+mean(data[data$CAR_TYPE=="SUV","CLM_FREQ"])
+median(data[data$CAR_TYPE=="SUV","CLM_FREQ"])
+cor(temp2$CLM_AMT,temp2$CLM_FREQ) #need to re-run temp2 at the top
