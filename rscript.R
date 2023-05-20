@@ -1007,24 +1007,23 @@ subplot(hist(nb_simulations_list[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n"
 
 hist(var_vector_nb_antithetic, main = "Variance - Antithetic Method")
 mtext(paste0("Var: ",round(mean(var_vector_nb_antithetic),4),
-             " vs CMC:",round(mean(var_vector_nb),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
-subplot(hist(nb_simulations_list_anthithetic[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "Sample Simulation",cex.main = 0.7)
+             " vs\nCMC:",round(mean(var_vector_nb),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+subplot(hist(nb_simulations_list_anthithetic[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "",cex.main = 0.7)
         , grconvertX(c(.75, 1), "npc"), grconvertY(c(0.75, 1), "npc"))
 
 
 hist(var_vector_nb_cv, main = "Variance - CV Method (Poisson)")
 mtext(paste0("Var: ",round(mean(var_vector_nb_cv),4),
-             " vs CMC:",round(mean(var_vector_nb),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
-subplot(hist(nb_simulations_list_cv[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "Sample Simulation",cex.main = 0.7)
+             " vs\nCMC:",round(mean(var_vector_nb),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+subplot(hist(nb_simulations_list_cv[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "",cex.main = 0.7)
         , grconvertX(c(.75, 1), "npc"), grconvertY(c(0.75, 1), "npc"))
 
 
 hist(var_vector_nb_IS_geo, main = "Variance - IS Method (Geometric)")
 mtext(paste0("Var: ",round(mean(var_vector_nb_IS_geo),4),
-             " vs CMC:",round(mean(var_vector_nb),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
-subplot(hist(nb_simulations_list_IS_geometric[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "Sample Simulation",cex.main = 0.7)
+             " vs \nCMC:",round(mean(var_vector_nb),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+subplot(hist(nb_simulations_list_IS_geometric[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "",cex.main = 0.7)
         , grconvertX(c(.75, 1), "npc"), grconvertY(c(0.75, 1), "npc"))
-
 ################################################ Q3 Monte Carlo Log Normal ################################################
 
 #Here we will simulate 1000 random log noraml distributions with the method of moment scale and shape parameters and test our data against
@@ -1285,21 +1284,21 @@ subplot(hist(ln_simulations_list[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n"
 
 hist(var_vector_ln_antithetic, main = "Variance Log Normal - Antithetic Method")
 mtext(paste0("Var: ",round(mean(var_vector_ln_antithetic),4),
-             " vs CMC:",round(mean(var_vector_ln),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
-subplot(hist(ln_simulations_list_anthithetic[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "Sample Simulation",cex.main = 0.7)
+             " vs\nCMC:",round(mean(var_vector_ln),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+subplot(hist(ln_simulations_list_anthithetic[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "",cex.main = 0.7)
         , grconvertX(c(.75, 1), "npc"), grconvertY(c(0.75, 1), "npc"))
 
 
 hist(var_vector_ln_cv_IG, main = "Variance Log Normal - CV Method (Inverse Gaussian)")
 mtext(paste0("Var: ",round(mean(var_vector_ln_cv_IG),4),
-             " vs CMC:",round(mean(var_vector_ln),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
-subplot(hist(ln_simulations_list_cv_IG[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "Sample Simulation",cex.main = 0.7)
+             " vs\nCMC:",round(mean(var_vector_ln),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+subplot(hist(ln_simulations_list_cv_IG[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "",cex.main = 0.7)
         , grconvertX(c(.75, 1), "npc"), grconvertY(c(0.75, 1), "npc"))
 
 hist(var_vector_ln_IS_gamma, main = "Variance Log Normal - IS Method (Gamma)")
 mtext(paste0("Var: ",round(mean(var_vector_ln_IS_gamma),4),
-             " vs CMC:",round(mean(var_vector_ln),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
-subplot(hist(ln_simulations_list_IS_gamma[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "Sample Simulation",cex.main = 0.7)
+             " vs\nCMC:",round(mean(var_vector_ln),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+subplot(hist(ln_simulations_list_IS_gamma[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "",cex.main = 0.7)
         , grconvertX(c(.75, 1), "npc"), grconvertY(c(0.75, 1), "npc"))
 
 
