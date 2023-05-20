@@ -699,7 +699,7 @@ lines(x,y, col = "Blue")
 
 #******************************************************* Q2 Result *********************************************************
 #Claim Severity:
-#With regard to claim frequency we decided to select the gamma distribution. 
+#With regard to claim frequency we decided to select the lognormal distribution. 
 
 hist(claim_size_vector,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
 x <- seq(0,3500,length.out = length(claim_size_vector))
