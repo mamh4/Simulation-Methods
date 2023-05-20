@@ -388,12 +388,15 @@ ggplot(temp2, aes(x = CAR_TYPE, y = CLM_AMT)) +
 #Oldest person in the data set  80 male comes from urban area and never had claims, nonetheless he pays more than average premium
 
 #Premium Analysis notes:
+hist(data$PREMIUM~data$CAR_TYPE)
+boxplot(data$PREMIUM~data$CLM_FREQ)
+
 plot(data$CLM_FREQ,data$PREMIUM, main = "Premium across different # claim occurences")
 abline(lm(data$PREMIUM~data$CLM_FREQ),col = "blue")
 legend("topright", legend = c("Linear model"),
        col = c("blue"), lty = 1)
 
-
+#Premium is uniformly distributed between 500 and 1000.
 
 
 
@@ -1343,16 +1346,16 @@ for(i in 1:1000){
 ############################################################################################################################
 
 #histogram of the mean per policy view 
-hist(mean_monte_carlo_claims,xaxt = "n", main = "Data Vs CMC Risk Premium esitmate")
+hist(mean_monte_carlo_claims,xaxt = "n", main = "Data vs CMC Risk Premium esitmate")
 abline(v=data_risk_premium_estimation, col = "Red")
-abline(v=mean(mean_monte_carlo_claims, col = "Blue"))
+abline(v=mean(mean_monte_carlo_claims, col = "black"))
 legend("topright", legend = c("Calculated Data Risk Premium", "Caclulated CMC Risk Premium"),
-       col = c("red", "blue"), lty = 1, cex = 0.75, box.lwd = 0.5)
+       col = c("red", "Black"), lty = 1, cex = 0.75, box.lwd = 0.5)
 axis(side = 1, at = seq(690, 850, length.out = 10))
 
 #The premium charged in the data set is even lower than the expected value of the claims!!
 #Analysis of Existing Premium & Claims Against Monte Carlo Simulations on per policy basis
-hist(agg_monte_carlo_claims, main = "Aggregate claim amounts - 1000 simulations",xaxt = "n")
+hist(agg_monte_carlo_claims, main = "Aggregate claim amounts - 1000 simulations",xaxt = "n",xlab = "")
 axis(side = 1, at = seq(7e5, 9e5, length.out = 10))
 abline(v=sum(data$PREMIUM), col = "Red")
 abline(v=sum(claim_size_vector), col = "Blue")
@@ -1373,7 +1376,7 @@ mtext(paste0("Coverage of approx. \n",
 ############################################################################################################################
 
 #50 Corresponds to 0.05, here the sorting is descending.
-capital_req <- c()
+
 crudeMCSimAlphaQuantile <- function(alpha, simulatedVector) {
   #initialise simulatedvector 
   # find percentage of vector 
@@ -1399,8 +1402,8 @@ for (i in 1:1000) {
 
 
 
-
-
+ES_q_vector <-c()
+capital_req <- c()
 for (i in 1:1000) {
   clm_freq <- rnbinom(1000, size = r_hat, prob = p_hat)
   clm_sev <- unlist(purrr::map(monte_carlo_claim_freq, function(x) {
@@ -1409,21 +1412,41 @@ for (i in 1:1000) {
   single_portfolio <- c(clm_sev, rep(0, times = max(0, 1000 - length(clm_sev))))
   
   vaR <- 0
+  ES_q <- 0
   for (j in 1:1000) {
     vaR <- vaR + sort(single_portfolio, decreasing = TRUE)[5]
+    ES_q <- ES_q + sort(single_portfolio, decreasing = TRUE)[50]
   }
   capital_req[i] <- vaR
+  ES_q_vector <- ES_q
+}
+##### Below should be final
+capital_req_ES <-c()
+capital_req_var <- c()
+for (i in 1:1000) {
+  clm_freq <- rnbinom(1000, size = r_hat, prob = p_hat)
+  clm_sev <- unlist(purrr::map(monte_carlo_claim_freq, function(x) {
+    rlnorm(x, meanlog = logNormal_estimator_mu, sdlog = logNormal_estimator_sd)
+  }))
+  single_portfolio <- c(clm_sev, rep(0, times = max(0, 1000 - length(clm_sev))))
+  
+  vaR <- 0
+  ES_q <- 0
+  for (j in 1:1000) {
+    vaR <- vaR + sort(single_portfolio, decreasing = TRUE)[5]
+    ES_q <- ES_q + mean(sort(single_portfolio, decreasing = TRUE)[1:50])
+  }
+  capital_req_var[i] <- vaR
+  capital_req_ES[i] <- ES_q
 }
 
 
 
-
-
-hist(capital_req, breaks = 100, main = "10,000 VaR simulations - Neg Binomial & Log-Normal")
-abline(v=mean(capital_req))
+hist(capital_req_var, breaks = 100, main = "1,000 VaR simulations - Neg Binomial & Log-Normal",
+     xlim = c(800000, max(capital_req_var)))
+abline(v=mean(capital_req_ES), col = "red")
 legend("topright", legend = c("Expected Shortfall"),
-       col = c("red", "blue"), lty = 1, cex = 0.75, box.lwd = 0.5)
-
+       col = "red", lty = 1, cex = 0.75, box.lwd = 0.5)
 
 
 ############################################################################################################################
@@ -1439,3 +1462,4 @@ nrow(data[data$GENDER=="F" & data$CAR_TYPE =="SUV",])/nrow(data[data$CAR_TYPE=="
 mean(data[data$CAR_TYPE=="SUV","CLM_FREQ"])
 median(data[data$CAR_TYPE=="SUV","CLM_FREQ"])
 cor(temp2$CLM_AMT,temp2$CLM_FREQ) #need to re-run temp2 at the top
+data[data$AGE>=70,]
