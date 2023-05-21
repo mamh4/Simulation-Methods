@@ -37,7 +37,7 @@ library(purrr) # efficient one liner pattern-matching
 library(ggplot2) # additional graphics
 library(gridExtra) #for combining ggplots
 library(TeachingDemos) # for overlaying plots
-library(statmod)
+library(statmod) #for additional distribution
 
 ############################################################################################################################
 #################################################### Read and store data ###################################################
@@ -113,6 +113,9 @@ simulate_nb <- function(size, r, p) {
   }
   return(result)
 }
+
+# We used these functions initially but since they were slower in comparison to the inbuilt libraries we decided to replace
+# them, we keep them here however as reference.
 
 
 ############################################################################################################################
@@ -388,12 +391,10 @@ ggplot(temp, aes(x = CAR_TYPE, y = PREMIUM)) +
   scale_shape_manual(values = c(1, 4)) +
   geom_jitter(aes(col = GENDER, shape = AREA),
               position = position_jitter(width = 0.2, height = 0.2),
-              size = 3,
-              check_overlap = T) +
+              size = 3) +
   geom_text(aes(label = car_use_char),
             position = position_jitter(width = 0.2, height = 0.2),
-            vjust = 1, size = 3,
-            check_overlap = TRUE) +
+            vjust = 1, size = 3) +
   scale_y_continuous(breaks = seq(0, 7)) +
   theme_minimal()
 
@@ -403,12 +404,10 @@ ggplot(temp2, aes(x = CAR_TYPE, y = PREMIUM)) +
   scale_shape_manual(values = c(1, 4)) +
   geom_jitter(aes(col = GENDER, shape = AREA),
               position = position_jitter(width = 0.2, height = 0.2),
-              size = 3,
-              check_overlap = T) +
+              size = 3) +
   geom_text(aes(label = car_use_char),
             position = position_jitter(width = 0.2, height = 0.2),
-            vjust = 1, size = 3,
-            check_overlap = TRUE) +
+            vjust = 1, size = 3) +
   scale_y_continuous(breaks = seq(0, 7)) +
   theme_minimal()
 
@@ -444,6 +443,8 @@ rm(temp2)#memory management
 ########################################################### Q1 #############################################################
 ############################################################################################################################
 
+#Here we check the fit for poisson by plotting the data against the pdf. cdf (FF plots) and conducting chi square test.
+#We repeat those steps for the negative binomial.
 
 #################################################### Q1 Check Poisson ######################################################
 #Here we assume that the number of claims follows a poisson distribution. We apply Method of Moment to obtain
@@ -476,13 +477,13 @@ theoretical_pdf[9] <- 1-sum(theoretical_pdf[1:8])
 
 #We now have two comparable vectors. We test them using Chi-squared test.
 chisq.test(empirical_pdf,theoretical_pdf)
-# Warning message because the frequency in some bins is less than 5 which considered to be minimum
+# Warning message because the frequency in some bins is less than 5 which considered to be minimum for chi square test
 
 
 #FF plots
 plot.ecdf(data$CLM_FREQ, main = "FF Poisson", xlab = "Loss Frequency", ylab = "CDF", col.points = "Gray")
 x = seq(0,10, 1)
-y = ppois(x, lambda = lambda_hat_poisson ) #gamma as an example 
+y = ppois(x, lambda = lambda_hat_poisson )
 lines(x,y, col = "blue")
 
 
@@ -497,7 +498,7 @@ hist(data$CLM_FREQ, breaks = 30, freq = FALSE, main = "Empirical Histogram with 
 #overlay density
 x <- seq(0,10,length.out = 11)
 y_2 <- dnbinom(x,size = r_hat,prob = p_hat) #Theoretical Distribution
-lines(x,y)
+lines(x,y_2)
 
 
 #To make the pdf comparable, we discretise and apply the chi.sq test
@@ -508,13 +509,14 @@ for(i in 1:8){
 theoretical_pdf[9] <- 1-sum(theoretical_pdf[1:8])
 
 chisq.test(empirical_pdf,theoretical_pdf)
-# Warning message because the frequency in some bins is less than 5 which considered to be minimum
+# Warning message because the frequency in some bins is less than 5 which considered to be minimum for chi square test
 
 #FF plots
 plot.ecdf(data$CLM_FREQ, main = "FF Negative Binomial", xlab = "Loss Frequency", ylab = "CDF", col.points = "Gray")
 x <- seq(0,10, 1)
+y = ppois(x, lambda = lambda_hat_poisson )
 y_2 <- pnbinom(x, size = r_hat, prob = p_hat )
-lines(x,y, col = "blue")
+lines(x,y_2, col = "blue")
 
 
 
@@ -532,7 +534,8 @@ legend("topright", legend = c("Poisson Distribution", "Negative Binomial Distrib
 
 plot.ecdf(data$CLM_FREQ, main = "FF plots Poisson and Negative Binomial", xlab = "Loss Frequency", ylab = "CDF", col.points = "Gray")
 x = seq(0,10, 1)
-y = pnbinom(x, size = r_hat, prob = p_hat )
+y = ppois(x, lambda = lambda_hat_poisson )
+y_2 <- pnbinom(x, size = r_hat, prob = p_hat )
 lines(x, y, col = "blue", lwd = 2, lty = 1) 
 lines(x, y_2, col = "red", lwd = 2, lty = 2)
 legend("bottomright", legend = c("Poisson", "Negative Binomial"),
@@ -564,11 +567,11 @@ for  (i in 3:9 ){
 
 ############################################# Q2 Check Exponential #########################################################
 
-hist(claim_size_vector,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
-x <- seq(0,3500,length.out = length(claim_size_vector))
-
 #Method of Moments Estimator
 lambda_hat_exp <- 1 / (1/length((claim_size_vector)) * sum(claim_size_vector))
+
+hist(claim_size_vector,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
+x <- seq(0,3500,length.out = length(claim_size_vector))
 y <- dexp(x, rate = lambda_hat_exp) #Theoretical Distribution
 lines(x,y)
 
@@ -577,7 +580,7 @@ theoretical_quantiles <- qexp(ppoints(length(claim_size_vector)),rate = lambda_h
 
 # Test whether exponential is a good model.
 ks.test(claim_size_vector,theoretical_quantiles) #kolomogorov smirnov test
-
+#Presence of ties warning is because the original data we pass therough the test "claim size vector" has repeated values.
 
 qqplot(theoretical_quantiles, claim_size_vector,
        xlab = "Theoretical Quantiles", ylab = "Observed Quantiles",
@@ -595,13 +598,13 @@ lines(x,y, col = "blue")
 
 ################################################ Q2 Check Gamma ############################################################
 
-hist(claim_size_vector,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
-x <- seq(0,3500,length.out = length(claim_size_vector))
-
 #Maximum Likelihood Estimator
 gamma_estimated_theta <- var(claim_size_vector) / mean(claim_size_vector)
 gamma_estimated_k <- mean(claim_size_vector)^2/ var(claim_size_vector)
 
+
+hist(claim_size_vector,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
+x <- seq(0,3500,length.out = length(claim_size_vector))
 y_2 <- dgamma(x,shape = gamma_estimated_k, scale = gamma_estimated_theta ) #Theoretical Distribution
 lines(x,y_2)
 
@@ -614,6 +617,7 @@ qqplot(theoretical_quantiles, claim_size_vector,
 abline(0, 1, col = "red", lty = 2)  # Add reference line
 
 ks.test(claim_size_vector, theoretical_quantiles)
+#Presence of ties warning is because the original data we pass therough the test "claim size vector" has repeated values.
 
 
 qqplot(claim_size_vector,rgamma(length(claim_size_vector),
@@ -624,14 +628,11 @@ qqplot(claim_size_vector,rgamma(length(claim_size_vector),
 plot.ecdf(claim_size_vector, main = "FF Gamma", xlab = "Loss Amount", ylab = "CDF", col.points = "Gray")
 x = seq(0,1500, 0.1)
 y_2 = pgamma(x, shape = gamma_estimated_k, scale = gamma_estimated_theta )
-lines(x,y, col = "Blue")
+lines(x,y_2, col = "Blue")
 
 
 
 ################################################ Q2 Check Lognormal ########################################################
-
-hist(claim_size_vector,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
-x <- seq(0,3500,length.out = length(claim_size_vector))
 
 #Maximum Likelihood Estimator
 logNormalSigmaSquareEstimator <- function(random_vector){
@@ -643,7 +644,8 @@ logNormalMuEstimator <- function(random_vector){
 logNormal_estimator_sd <- sqrt(logNormalSigmaSquareEstimator(claim_size_vector))
 logNormal_estimator_mu <- logNormalMuEstimator(claim_size_vector)
 
-
+hist(claim_size_vector,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
+x <- seq(0,3500,length.out = length(claim_size_vector))
 y_3 <- dlnorm(x,meanlog = logNormal_estimator_mu, sdlog = logNormal_estimator_sd) #Theoretical Distribution
 lines(x,y_3)
 
@@ -656,20 +658,16 @@ qqplot(theoretical_quantiles_logNormal, claim_size_vector,
 abline(0, 1, col = "red", lty = 2)  # Add reference line
 
 ks.test(claim_size_vector, theoretical_quantiles_logNormal)
-#ties due to data point repetitions.
+#Presence of ties warning is because the original data we pass therough the test "claim size vector" has repeated values.
 
 plot.ecdf(claim_size_vector, main = "FF Log Normal", xlab = "Loss Amount", ylab = "CDF", col.points = "Gray")
 x = seq(0,1500, 0.1)
 y_3 = plnorm(x, meanlog = logNormal_estimator_mu, sdlog = logNormal_estimator_sd )  
-lines(x,y, col = "Blue")
+lines(x,y_3, col = "Blue")
 
 
 
 ########################################### Q2 Check Inverse Gaussian #####################################################
-
-hist(claim_size_vector,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
-x <- seq(0,3500,length.out = length(claim_size_vector))
-
 
 #Method of Moments
 inverseGaussianMuEstimator <- function(randomVector) {
@@ -680,10 +678,13 @@ inverseGaussianLambdaEstimator <- function(randomVector) {
 }
 
 IG_estimator_mu <- inverseGaussianMuEstimator(claim_size_vector)
-IG_estimator_lambda <- inverseGaussianLambdaEstimator(claim_size_vector) 
+IG_estimator_lambda <- inverseGaussianLambdaEstimator(claim_size_vector)
 
+
+hist(claim_size_vector,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
+x <- seq(0,3500,length.out = length(claim_size_vector))
 y_4 <- dinvgauss(x,mean = IG_estimator_mu, shape = IG_estimator_lambda) #Theoretical Distribution
-lines(x,y_3)
+lines(x,y_4)
 
 theoretical_quantiles_invgauss <- qinvgauss(ppoints(100), mean = IG_estimator_mu,shape = IG_estimator_lambda)
 
@@ -693,12 +694,13 @@ qqplot(theoretical_quantiles_invgauss, claim_size_vector,
 abline(0, 1, col = "red", lty = 2)  # Add reference line
 
 ks.test(claim_size_vector, theoretical_quantiles_invgauss)
+#Presence of ties warning is because the original data we pass therough the test "claim size vector" has repeated values.
 
 
 plot.ecdf(claim_size_vector, main = "FF Inverse Gaussian", xlab = "Loss Amount", ylab = "CDF", col.points = "Gray")
 x = seq(0,1500, 0.1)
 y_4 = pinvgauss(x, mean = IG_estimator_mu, shape = IG_estimator_lambda )  
-lines(x,y, col = "Blue")
+lines(x,y_4, col = "Blue")
 
 
 #******************************************************* Q2 Result *********************************************************
@@ -708,6 +710,8 @@ x <- seq(0,3500,length.out = length(claim_size_vector))
 
 y <- dexp(x,rate = lambda_hat_exp)
 y_2 <- dgamma(x,shape = gamma_estimated_k, scale = gamma_estimated_theta ) #Theoretical Distribution
+y_3 <- dlnorm(x,meanlog = logNormal_estimator_mu, sdlog = logNormal_estimator_sd) #Theoretical Distribution
+y_4 <- dinvgauss(x,mean = IG_estimator_mu, shape = IG_estimator_lambda)
 lines(x,y, col = "Red")
 lines(x,y_2, col = "Blue")
 lines(x,y_3,col = "springgreen")
@@ -740,7 +744,7 @@ legend("bottomright", legend = c("Exponential","Gamma", "Log-Normal","Inverse Ga
 ########################################################### Q3 #############################################################
 ############################################################################################################################
 
-set.seed(23)
+set.seed(2024)
 ############################################## Q3 Monte Carlo Negative Binomial ###########################################
 #To assess the reliability of our monte carlo estimators in relation to the data we have, we will simulate 1000 negative 
 #binomial random variables using the same parameter p and r we obtained from the MoM estimator. We will do the following
@@ -822,6 +826,7 @@ for(j in 1:9){
   }
 }
 
+par(mfrow = c(1, 1))
 barplot(table(data$CLM_FREQ), col = gray(0,0.5), beside = T, xlab = "Claim Frequency")
 barplot(avg_of_simulations_nb, col = gray(1,0.8),beside = T,add = T)
 legend("topright", legend = c("Original Data", "Average of 1000 Simulations"), 
@@ -1107,7 +1112,7 @@ for(i in 1:1000){
   mean_vector_ln_antithetic[i] <- mean(ln_simulations_list_anthithetic[[i]])
   var_vector_ln_antithetic[i] <- var(ln_simulations_list_anthithetic[[i]])
 }
-
+par(mfrow = c(1, 1))
 #Histogram of Antithetic covariate method estimators 
 hist(mean_vector_ln_antithetic, main = "Expectation of 1000 Log Normal Simulations - Antithetic Method")
 abline(v = mean(mean_vector_ln_antithetic),col="Red")
@@ -1184,7 +1189,7 @@ mtext(paste0("pval: ", round(t.test(mean_vector_ln, mean_vector_ln_cv_IG)$p.val,
 hist(var_vector_ln_cv_IG, main = "Variance - CV Method")
 abline(v = mean(var_vector_ln_cv_IG),col="Red")
 legend("topright", legend = "Var CV", col = "red", lty = 1,cex = 0.8)
-mtext(paste0("Var: ",round(mean(var_vector_ln_cv_IG),4),
+mtext(paste0("                        Var: ",round(mean(var_vector_ln_cv_IG),4),
              " vs CMC:",round(mean(var_vector_ln),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 
 
@@ -1264,7 +1269,7 @@ mtext(paste0("Var: ",round(mean(var_vector_ln_IS_gamma),4),
 
 
 #****************************************************** Q3  Result ********************************************************#
-
+#Frequency
 par(mfrow = c(2, 2),cex.main = 0.8)
 hist(var_vector_nb, main = "Variance NB w/o variance reduction",xlab = "", breaks = 20)
 subplot(hist(nb_simulations_list[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "Sample Simulation",cex.main = 0.7)
@@ -1295,6 +1300,7 @@ subplot(hist(nb_simulations_list_IS_geometric[[1]],ylab = "",xlab = "",ylim = NU
 #The monte carlo estimates seem to resemble what we expect given our choice of negative binomial. As a variance reduction technique
 #Control variate with poisson resulted in the lowest variance.
 
+#Severity
 par(mfrow = c(2, 2),cex.main = 0.8)
 hist(var_vector_ln, main = "Variance Log Normal w/o variance reduction", xlab = "", breaks = 10)
 subplot(hist(ln_simulations_list[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "",cex.main = 0.7)
@@ -1403,33 +1409,6 @@ mtext(paste0("Coverage of approx. \n",
 ########################################################### Q6 #############################################################
 ############################################################################################################################
 
-#
-####delete?
-crudeMCSimAlphaQuantile <- function(alpha, simulatedVector) {
-  #initialise simulatedvector 
-  # find percentage of vector 
-  #integer casting of
-  orderedSimulatedVector <- sort(simulatedVector, decreasing= TRUE)
-  index <- as.integer(alpha *length(orderedSimulatedVector)) #or  round(alpha *length(simulatedVector), digits = 0) 
-  return(orderedSimulatedVector[index])
-}
-
-
-
-for (i in 1:1000) {
-  VaR_value <-0
-  for(j in 1:1000){#simulate one portfolio
-  clm_freq <- rnbinom(1000, size = r_hat, prob = p_hat)
-  clm_sev <- unlist(purrr::map(clm_freq, function(x) {
-    rlnorm(x, meanlog = logNormal_estimator_mu, sdlog = logNormal_estimator_sd)}))
-  VaR_value <- VaR_value + crudeMCSimAlphaQuantile(0.05,clm_sev)
-  }
-  capital_req[i] <- VaR_value
-}
-
-##### Check with pierre delete until here
-
-
 ES_q_vector <-c()
 capital_req <- c()
 for (i in 1:1000) {
@@ -1450,7 +1429,7 @@ for (i in 1:1000) {
 }
 
 
-
+#The next code takes approx. 2 mins.
 capital_req_ES <-c()
 capital_req_var <- c()
 for (i in 1:1000) {
@@ -1481,8 +1460,8 @@ legend("topright", legend = c("Expected Shortfall"),
 
 #****************************************************** Q6  Result ********************************************************#
 #VaR ranging between 1,046,588 and 1,549,250 at the 0.5% level.
-T#he Expected Shortfall at the 5% level appears to be less strict in terms of capital requirement. The
-#simulation provided values ranging between 929,414 and 1,129,192
+#The Expected Shortfall at the 5% level appears to be less strict in terms of capital requirement. The
+#simulation provided values ranging between 929,000 and 1,200,000
 
 
 ############################################################################################################################
