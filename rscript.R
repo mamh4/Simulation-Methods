@@ -288,16 +288,6 @@ plot3 <- ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ, fill = AREA))+
 grid.arrange(plot1, plot2, plot3, nrow = 3)
 
 
-
-# Results: (%-wise) Rather hypotheses actually!
-# Rural has higher impact on the number of claims although data is pretty low compared to Urban
-# Being Female has higher impact on the number of claims Howver Many SUVs, so it could be being an SUV + could be 3rd liab. Also Femal are more in the data set
-# Panel truck and pick up have higher impact on the number of claims but also not many
-# Commercial car use has higher impact on the number of claims but correlated with Panel Truck and pick so one cause the other
-#CLM_AMT_6 and CLM_AMT_7 rare occurrence
-#Age between 30 and 60 corresponds to more claims
-
-
 ###### Claim Frequency Analysis
 for (f in features_cat) {
   plot(data[,f], main=f, xlab='', las=2,col=data$CLM_FREQ)
@@ -338,7 +328,7 @@ ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ)) +
 
 
 
-#check severity relationship to covariates
+###### Claim Severity Analysis
 #Need to pivot the data by CLM_AMT
 temp2 <-  tidyr::gather(data,key = "CLM_Number" , value = "CLM_AMT",3:9)
 #Need to replace 0 with NA otherwise it ruins the data
@@ -378,15 +368,6 @@ ggplot(temp2, aes(x = CAR_TYPE, y = CLM_AMT)) +
   )
 
 
-
-#Both claim freq and severity increase for ages between 30 and 60
-#Although Panel truck has many claims they are relatively small
-#Although rural has high impact on freq severity is realtively low, but then again data is low on rural policies
-#Female claims tend to be small in size although higher freq. but again do not forget confounding with sport cars and SUVs
-#Note we can condition on variables to try to dis-intangle confounding but most often we have data only on male/female
-#Age analysis: Sports car are driven by women of 45 median age. In fact the oldest woman is driving a sports car! 72 years of Age actually 2 women. And the one who had more claims pays less premium
-#Oldest person in the data set  80 male comes from urban area and never had claims, nonetheless he pays more than average premium
-
 #Premium Analysis notes:
 hist(data$PREMIUM~data$CAR_TYPE)
 boxplot(data$PREMIUM~data$CLM_FREQ)
@@ -395,9 +376,6 @@ plot(data$CLM_FREQ,data$PREMIUM, main = "Premium across different # claim occure
 abline(lm(data$PREMIUM~data$CLM_FREQ),col = "blue")
 legend("topright", legend = c("Linear model"),
        col = c("blue"), lty = 1)
-
-#Premium is uniformly distributed between 500 and 1000.
-
 
 
 ############################################### Big Picture! Warning!! BAD plots ############################################ 
@@ -432,8 +410,29 @@ ggplot(temp2, aes(x = CAR_TYPE, y = PREMIUM)) +
   theme_minimal()
 
 
-####################################################### To be deleted #######################################################
+##############################################################################################################################
 
+
+#************************************************* Data Exploration Results *************************************************#
+
+#Rural has higher impact on the number of claims although data is pretty low compared to Urban
+#Being Female has higher impact on the number of claims However Many SUVs, 
+#so it could be being an SUV + could be 3rd liability. Also Female are more in the data set
+#Panel truck and pick up have higher impact on the number of claims but also not many
+#Commercial car use has higher impact on the number of claims but correlated with Panel Truck and 
+#pick so one cause the other
+#CLM_AMT_6 and CLM_AMT_7 rare occurrence
+#Age between 30 and 60 corresponds to more claims
+#Both claim freq and severity increase for ages between 30 and 60
+#Although Panel truck has many claims they are relatively small
+#Although rural has high impact on freq severity is relatively low, but then again data is low on rural policies
+#Female claims tend to be small in size although higher freq. but again do not forget confounding with sport cars and SUVs
+#Note we can condition on variables to try to disintangle confounding but most often we have data only on male/female.
+#Sports car are driven by women of 45 median age. In fact the oldest woman is driving a sports car! 72 years
+#of Age actually 2 women. And the one who had more claims pays less premium.
+#Oldest person in the data set  80 male comes from urban area and never had claims, nonetheless he pays 
+#more than average premium.
+#Premium is uniformly distributed between 500 and 1000.
 
 
 rm(temp)#memory management
@@ -444,11 +443,12 @@ rm(temp2)#memory management
 
 
 #################################################### Q1 Check Poisson ######################################################
-#Here we assume that the number of claims follows a poisson distribution. We apply the maximum likelihood method to obtain
+#Here we assume that the number of claims follows a poisson distribution. We apply Method of Moment to obtain
 #an estimator for the poisson parameter lambda.
+#E(X) = Lambda => E(x)_hat = 1/n * sum(X)
 
 
-#Maximum likelihood Estimator for poisson case to estimate lambda
+#Method of Moment for poisson case to estimate lambda
 lambda_hat_poisson <- 1/length(data$CLM_FREQ) * sum(data$CLM_FREQ)
 
 #Here we plot a histogram of our claim frequency data against the theoretical pdf of parameter lambda hat.
@@ -459,7 +459,7 @@ y <- dpois(x,lambda=lambda_hat_poisson) #Theoretical Distribution
 lines(x,y)
 
 
-#Result: Graphically poisson seems to be a good model, to quantify how good of a fit it is we test it agains a theoretical pdf.
+#Result: Graphically poisson seems to be a good model, to quantify how good of a fit it is we test it against a theoretical pdf.
 # To make the pdfs comparable we will discetise the theoretical pdf to make them "comparable".
 empirical_pdf <- rep(0,9)
 for(i in 1:8){
@@ -481,9 +481,6 @@ plot.ecdf(data$CLM_FREQ, main = "FF Poisson", xlab = "Loss Frequency", ylab = "C
 x = seq(0,10, 1)
 y = ppois(x, lambda = lambda_hat_poisson ) #gamma as an example 
 lines(x,y, col = "blue")
-
-
-#Mixed Poisson Approach N follows  LAMBDA which it self follows Poi(lambda_hat)?
 
 
 ############################################# Q1 Check Negative binomial ###################################################
@@ -518,7 +515,7 @@ lines(x,y, col = "blue")
 
 
 
-#******************************************************* Q1 Result *********************************************************
+#************************************************** Q1 Result *************************************************************#
 
 hist(data$CLM_FREQ, breaks = 30, freq = FALSE, main = "Empirical Histogram with Theoretical PDFs")
 x <- seq(0,10,length.out = 11)
@@ -530,22 +527,17 @@ legend("topright", legend = c("Poisson Distribution", "Negative Binomial Distrib
        col = c("red", "blue"), lty = 1)
 
 #Claim Frequency:
-#We decided to stick with poisson for claim frequency. Both p-values against the theoretical distribution are exactly
-#the same. However, poisson has interesting properties.... etc..
-
-
-
-
+#We decided to stick with NB for claim frequency. since the Mean from the data is further away from the variance. Neg. Bin.
+#allows more flexibility in that regard
 
 
 ############################################################################################################################
 ########################################################### Q2 #############################################################
 ############################################################################################################################
+# Here we analyse Exponential, Gamma, Inverse Gaussian and Log-normal.
 
 
-
-############################################# Q2 Check Exponential #########################################################
-
+#Extract a vector of all single claim amounts
 claim_size_vector <- vector()
 for  (i in 3:9 ){
   for (j in 1:nrow(data)) 
@@ -555,21 +547,22 @@ for  (i in 3:9 ){
 }
 
 
+
+
+############################################# Q2 Check Exponential #########################################################
+
 hist(claim_size_vector,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
 x <- seq(0,3500,length.out = length(claim_size_vector))
 
-#Maximum Likelihood Estimator
+#Method of Moments Estimator
 lambda_hat_exp <- 1 / (1/length((claim_size_vector)) * sum(claim_size_vector))
 y <- dexp(x, rate = lambda_hat_exp) #Theoretical Distribution
 lines(x,y)
 
-
-
-
-
+# Get the the theoretical qunatiles for testing
 theoretical_quantiles <- qexp(ppoints(length(claim_size_vector)),rate = lambda_hat_exp )
-## Test whether exponential is a good model.
 
+# Test whether exponential is a good model.
 ks.test(claim_size_vector,theoretical_quantiles) #kolomogorov smirnov test
 
 
@@ -581,7 +574,7 @@ abline(0, 1, col = "red", lty = 2)  # Add reference line
 #FF plots
 plot.ecdf(claim_size_vector, main = "FF Exponential", xlab = "Loss Amount", ylab = "CDF", col.points = "Gray")
 x = seq(0,1500, 0.1)
-y = pexp(x, rate = lambda_hat_exp ) #gamma as an example 
+y = pexp(x, rate = lambda_hat_exp )
 lines(x,y, col = "blue")
 
 
@@ -598,8 +591,6 @@ gamma_estimated_k <- mean(claim_size_vector)^2/ var(claim_size_vector)
 
 y_2 <- dgamma(x,shape = gamma_estimated_k, scale = gamma_estimated_theta ) #Theoretical Distribution
 lines(x,y_2)
-
-
 
 #Additionally we include 11 plot against the theoretical distribution
 theoretical_quantiles <- qgamma(ppoints(100), shape = gamma_estimated_k, scale = gamma_estimated_theta )
@@ -698,8 +689,6 @@ lines(x,y, col = "Blue")
 
 
 #******************************************************* Q2 Result *********************************************************
-#Claim Severity:
-#With regard to claim frequency we decided to select the lognormal distribution. 
 
 hist(claim_size_vector,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
 x <- seq(0,3500,length.out = length(claim_size_vector))
@@ -713,17 +702,18 @@ lines(x,y_4,col = "Purple")
 legend("topright", legend = c("Exponential", "Gamma", "Log-Normal", "Inverse Gaussian"),
        col = c("red", "blue", "springgreen", "Purple"), lty = 1)
 
-
+#Log-normal appears to fit data best, as well as inverse gaussian, we decide on the log-normal since it is more prudent 
+# (heavy tailed).
 
 
 ############################################################################################################################
 ########################################################### Q3 #############################################################
 ############################################################################################################################
 
-set.seed(2024)
+set.seed(23)
 ############################################## Q3 Monte Carlo Negative Binomial ###########################################
 #To assess the reliability of our monte carlo estimators in relation to the data we have, we will simulate 1000 negative 
-#binomial random variables using the same parameter p and r we obtained from the ***MoM*** estimator. We will do the following
+#binomial random variables using the same parameter p and r we obtained from the MoM estimator. We will do the following
 #1) Plot histograms of the mean and variance values of the simulation to compare to the data.
 #2) Plot a histogram of the average of those 1000 simulations (converting to the true value) and compare them to the data.
 #3) Make a sample t-test to test whether the mean value could serve as an expectation of the mean value of the simulations.
@@ -953,7 +943,7 @@ mtext(paste0("Var: ",round(mean(var_vector_nb_cv),4),
 simulate_nb_IS_geometric <- function(size_n, size_nb, prob_nb , prob_geometric){
   x <- rgeom(n = size_n, prob = prob_geometric)
   ISE <- dnbinom(x,size = size_nb,prob = prob_nb) / 
-    dgeom(x,prob = prob_geometric) * x 
+    dgeom(x,prob = prob_geometric) * x
   #browser()
   return(ISE)
 }
@@ -996,34 +986,6 @@ mtext(paste0("Var: ",round(mean(var_vector_nb_IS_geo),4),
 
 # summary(glm(data$CLM_FREQ~data$AREA+data$GENDER+data$AGE+data$CAR_TYPE+data$CAR_USE,family = "poisson")) # no patterns
 
-#******************************************************** Results ********************************************************#
-
-par(mfrow = c(2, 2),cex.main = 0.8)
-hist(var_vector_nb, main = "Variance NB w/o variance reduction")
-subplot(hist(nb_simulations_list[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "Sample Simulation",cex.main = 0.7)
-        , grconvertX(c(.75, 1), "npc"), grconvertY(c(0.75, 1), "npc"))
-
-
-
-hist(var_vector_nb_antithetic, main = "Variance - Antithetic Method")
-mtext(paste0("Var: ",round(mean(var_vector_nb_antithetic),4),
-             " vs\nCMC:",round(mean(var_vector_nb),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
-subplot(hist(nb_simulations_list_anthithetic[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "",cex.main = 0.7)
-        , grconvertX(c(.75, 1), "npc"), grconvertY(c(0.75, 1), "npc"))
-
-
-hist(var_vector_nb_cv, main = "Variance - CV Method (Poisson)")
-mtext(paste0("Var: ",round(mean(var_vector_nb_cv),4),
-             " vs\nCMC:",round(mean(var_vector_nb),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
-subplot(hist(nb_simulations_list_cv[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "",cex.main = 0.7)
-        , grconvertX(c(.75, 1), "npc"), grconvertY(c(0.75, 1), "npc"))
-
-
-hist(var_vector_nb_IS_geo, main = "Variance - IS Method (Geometric)")
-mtext(paste0("Var: ",round(mean(var_vector_nb_IS_geo),4),
-             " vs \nCMC:",round(mean(var_vector_nb),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
-subplot(hist(nb_simulations_list_IS_geometric[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "",cex.main = 0.7)
-        , grconvertX(c(.75, 1), "npc"), grconvertY(c(0.75, 1), "npc"))
 ################################################ Q3 Monte Carlo Log Normal ################################################
 
 #Here we will simulate 1000 random log noraml distributions with the method of moment scale and shape parameters and test our data against
@@ -1263,17 +1225,43 @@ mtext(paste0("Var: ",round(mean(var_vector_ln_IS_gamma),4),
 
 
 
-
-
-
-
 ### Stratified Sampling ###################################################################################################
-
 
 #summary(glm(temp2$CLM_AMT~temp2$AREA+temp2$GENDER+temp2$AGE+temp2$CAR_TYPE+temp2$CAR_USE,family = "Gamma")) no patterns
 
 
-#*******************************************************Results*********************************************************#
+
+#****************************************************** Q3  Result ********************************************************#
+
+par(mfrow = c(2, 2),cex.main = 0.8)
+hist(var_vector_nb, main = "Variance NB w/o variance reduction")
+subplot(hist(nb_simulations_list[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "Sample Simulation",cex.main = 0.7)
+        , grconvertX(c(.75, 1), "npc"), grconvertY(c(0.75, 1), "npc"))
+
+
+
+hist(var_vector_nb_antithetic, main = "Variance - Antithetic Method")
+mtext(paste0("Var: ",round(mean(var_vector_nb_antithetic),4),
+             " vs\nCMC:",round(mean(var_vector_nb),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+subplot(hist(nb_simulations_list_anthithetic[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "",cex.main = 0.7)
+        , grconvertX(c(.75, 1), "npc"), grconvertY(c(0.75, 1), "npc"))
+
+
+hist(var_vector_nb_cv, main = "Variance - CV Method (Poisson)")
+mtext(paste0("Var: ",round(mean(var_vector_nb_cv),4),
+             " vs\nCMC:",round(mean(var_vector_nb),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+subplot(hist(nb_simulations_list_cv[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "",cex.main = 0.7)
+        , grconvertX(c(.75, 1), "npc"), grconvertY(c(0.75, 1), "npc"))
+
+
+hist(var_vector_nb_IS_geo, main = "Variance - IS Method (Geometric)")
+mtext(paste0("Var: ",round(mean(var_vector_nb_IS_geo),4),
+             " vs \nCMC:",round(mean(var_vector_nb),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+subplot(hist(nb_simulations_list_IS_geometric[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "",cex.main = 0.7)
+        , grconvertX(c(.75, 1), "npc"), grconvertY(c(0.75, 1), "npc"))
+
+#The monte carlo estimates seem to resemble what we expect given our choice of negative binomial. As a variance reduction technique
+#Control variate with poisson resulted in the lowest variance.
 
 par(mfrow = c(2, 2),cex.main = 0.8)
 
@@ -1302,7 +1290,8 @@ subplot(hist(ln_simulations_list_IS_gamma[[1]],ylab = "",xlab = "",ylim = NULL,y
         , grconvertX(c(.75, 1), "npc"), grconvertY(c(0.75, 1), "npc"))
 
 
-
+#The monte carlo estimates seem to resemble what we expect given our choice of log-nomal. As a variance reduction technique
+#Control variate with inverse gaussian resulted in the lowest variance.
 
 
 ############################################################################################################################
@@ -1311,12 +1300,10 @@ subplot(hist(ln_simulations_list_IS_gamma[[1]],ylab = "",xlab = "",ylim = NULL,y
 
 ########################################### Risk Premium Calculation through Data ##########################################
 
-
-
 data_risk_premium_estimation <- sum(claim_size_vector) / nrow(data)
 
 
-########################################### Risk Premium Calculation through Data ##########################################
+########################################## Risk Premium Calculation through Model ##########################################
 
 
 monte_carlo_claim_simulations_list <- vector(mode = "list", length = 1000)
@@ -1340,7 +1327,10 @@ for(i in 1:1000){
   mean_monte_carlo_claims[i] <- mean(monte_carlo_claim_simulations_list[[i]])
 }
 
+#****************************************************** Q4  Result ********************************************************#
 
+#The calculated empirical risk premium was 765.451, while the Monte Carlo risk premium converged
+#to an average value of 766.2344.
 
 ############################################################################################################################
 ########################################################### Q5 #############################################################
@@ -1371,13 +1361,18 @@ mtext(paste0("Coverage of approx. \n",
       side = 3, line = -2, adj = 0, col = "black", cex = 0.9)
 
 
+#****************************************************** Q5  Result ********************************************************#
+
+#The tariff/premium charged by us only covers approx. 27% of the claims. Our model excl. loading performs as expected
+#covering around 50%
+
 
 ############################################################################################################################
 ########################################################### Q6 #############################################################
 ############################################################################################################################
 
-#50 Corresponds to 0.05, here the sorting is descending.
-
+#
+####delete?
 crudeMCSimAlphaQuantile <- function(alpha, simulatedVector) {
   #initialise simulatedvector 
   # find percentage of vector 
@@ -1400,7 +1395,7 @@ for (i in 1:1000) {
   capital_req[i] <- VaR_value
 }
 
-
+##### Check with pierre delete until here
 
 
 ES_q_vector <-c()
@@ -1421,7 +1416,9 @@ for (i in 1:1000) {
   capital_req[i] <- vaR
   ES_q_vector <- ES_q
 }
-##### Below should be final
+
+
+
 capital_req_ES <-c()
 capital_req_var <- c()
 for (i in 1:1000) {
@@ -1430,7 +1427,8 @@ for (i in 1:1000) {
     rlnorm(x, meanlog = logNormal_estimator_mu, sdlog = logNormal_estimator_sd)
   }))
   single_portfolio <- c(clm_sev, rep(0, times = max(0, 1000 - length(clm_sev))))
-  
+  #5 Corresponds to 0.5%
+  #50 Corresponds to 5% here the sorting is descending.
   vaR <- 0
   ES_q <- 0
   for (j in 1:1000) {
@@ -1448,6 +1446,11 @@ hist(capital_req_var, breaks = 100, main = "1,000 VaR simulations - Neg Binomial
 abline(v=mean(capital_req_ES), col = "red")
 legend("topright", legend = c("Expected Shortfall"),
        col = "red", lty = 1, cex = 0.75, box.lwd = 0.5)
+
+#****************************************************** Q6  Result ********************************************************#
+#VaR ranging between 1,046,588 and 1,549,250 at the 0.5% level.
+T#he Expected Shortfall at the 5% level appears to be less strict in terms of capital requirement. The
+#simulation provided values ranging between 929,414 and 1,129,192
 
 
 ############################################################################################################################
