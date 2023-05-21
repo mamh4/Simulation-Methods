@@ -1,32 +1,33 @@
 ##################################################### Table of Content #####################################################
-#Lines ABCD to AEDF#
-#Lines ABCD to AEDF#
-#Lines ABCD to AEDF#
-#Lines ABCD to AEDF#
-#Lines ABCD to AEDF#
-#Lines ABCD to AEDF#
-#Lines ABCD to AEDF#
-#Lines ABCD to AEDF#
-#Lines ABCD to AEDF#
-#Lines ABCD to AEDF#
-#Lines ABCD to AEDF#
-#Lines ABCD to AEDF#
-#Lines ABCD to AEDF#
-#Lines ABCD to AEDF#
-#Lines ABCD to AEDF#
-#Lines ABCD to AEDF#
-#Lines ABCD to AEDF#
-#Lines ABCD to AEDF#
-#Lines ABCD to AEDF#
-#Lines ABCD to AEDF#
-#Lines ABCD to AEDF#
-#Lines ABCD to AEDF#
-#Lines ABCD to AEDF#
-#Lines ABCD to AEDF#
-#Lines ABCD to AEDF#
-#Lines ABCD to AEDF#
-#Lines ABCD to AEDF#
-
+#Lines 0121 to 0215 # Data quality check
+#Lines 0215 to 0442 # Data Exploration
+#Lines 0449 to 0490 # Q1 Claim Frequency Modelling: Poisson distribution
+#Lines 0491 to 0520 # Q1 Claim Frequency Modelling: Negative Binomial distribution
+#Lines 0524 to 0548 # Q1 Claim Frequency Results
+#Lines 0554 to 0565 # Q2 Data Adjustment for Claim Severity Modelling 
+#Lines 0569 to 0600 # Q2 Claim Severity Modelling: Exponential distribution
+#Lines 0601 to 0635 # Q2 Claim Severity Modelling: Gamma distribution
+#Lines 0636 to 0671 # Q2 Claim Severity Modelling: Log-Normal distribution
+#Lines 0671 to 0704 # Q2 Claim Severity Modelling: Inverse Gaussian distribution
+#Lines 0707 to 0742 # Q2 Claim Severity Results
+#Lines 0749 to 0754 # Q3 Approach Explanation 
+#Lines 0758 to 0842 # Q3 Negative Binomial Monte Carlo + Assessment
+#Lines 0844 to 0924 # Q3 Negative Binomial Variance Reduction: Antithetic Method
+#Lines 0925 to 0978 # Q3 Negative Binomial Variance Reduction: Control Variates Method
+#Lines 0978 to 1022 # Q3 Negative Binomial Variance Reduction: Importance Sampling Method + Try Stratified Sampling
+#Lines 1029 to 1066 # Q3 Log-Normal Monte Carlo + Assessment
+#Lines 1068 to 1142 # Q3 Log-Normal Variance Reduction: Antithetic Method
+#Lines 1142 to 1199 # Q3 Log-Normal Variance Reduction: Control Variates
+#Lines 1199 to 1271 # Q3 Log-Normal Variance Reduction: Importance Sampling Method
+#Lines 1272 to 1364 # Q3 Results
+#Lines 1364 to 1403 # Q4 + Results
+#Lines 1405 to 1440 # Q5 + Results
+#Lines 1445 to 1493 # Q6 + Results
+#Lines ABCD to AEDF #
+#Lines ABCD to AEDF #
+#Lines ABCD to AEDF #
+#Lines ABCD to AEDF #
+#Results are stored at the end of each section.
 ############################################################################################################################
 ####################################################### Read libraries #####################################################
 ############################################################################################################################
@@ -1269,6 +1270,38 @@ mtext(paste0("Var: ",round(mean(var_vector_ln_IS_gamma),4),
 
 
 #****************************************************** Q3  Result ********************************************************#
+
+# The Monte Carlo estimators seem to perform very well. We applied t.test to check whether the true mean and variance
+# for each estimator could serve as a sample mean from the generated simulations and obtained significant p-values confirming
+# that they indeed cannot be distinguished from the true mean. This further assures good model fit.
+par(mfrow = c(1, 2))
+#frequency final plots
+hist(mean_vector_nb, main = "",breaks = 40,
+     xlab = "Expected Value")
+abline(v = mean(data$CLM_FREQ),col="Red")
+#legend("topright", legend = "Data", col = "red", lty = 1)
+
+hist(var_vector_nb, main = "",
+     xlab = "Variance")
+abline(v = var(data$CLM_FREQ),col="Red")
+legend("topright", legend = "Data", col = "red", lty = 1)
+
+barplot(table(data$CLM_FREQ), col = gray(0,0.5), beside = T, xlab = "Claim Frequency")
+barplot(avg_of_simulations_nb, col = gray(1,0.8),beside = T,add = T)
+legend("topright", legend = c("Original Data", "Average of 1000 Simulations"), 
+       fill = c(gray(0, 0.5), gray(1, 0.8)))
+
+
+# Severity final plots
+hist(mean_vector_ln, main = "", xlab = "Expected Value")
+abline(v = mean(claim_size_vector),col="Red")
+#legend("topright", legend = "Data", col = "red", lty = 1)
+
+hist(var_vector_ln, main = "", xlab = "Variance")
+abline(v = mean(var(claim_size_vector)),col="Red")
+legend("topright", legend = "Data", col = "red", lty = 1)
+#variance reduction
+
 #Frequency
 par(mfrow = c(2, 2),cex.main = 0.8)
 hist(var_vector_nb, main = "Variance NB w/o variance reduction",xlab = "", breaks = 20)
