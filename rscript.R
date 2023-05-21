@@ -298,9 +298,9 @@ for (f in claims_amounts) {
   grid()
 }
 
-par(mfrow = c(1, 2),cex.main = 0.8, main = "Age")
-plot(data$CLM_FREQ, data$AGE, main='',las = 2)
-grid()
+
+plot(data$CLM_FREQ, data$AGE, main = '', las = 1, xlab = "Claim Frequency", ylim = c(20, 80),ylab = "Age")
+
 
 
 
@@ -349,8 +349,7 @@ for (f in features_cat) {
 }
 
 
-plot(temp2$CLM_AMT, temp2$AGE, main='Age',las = 1)
-grid()
+plot(temp2$CLM_AMT, temp2$AGE, main='', las = 1, xlab = "Claim Severity",ylim = c(20, 80),ylab = "")
 
 
 
@@ -375,7 +374,8 @@ ggplot(temp2, aes(x = CAR_TYPE, y = CLM_AMT)) +
 hist(data$PREMIUM~data$CAR_TYPE)
 boxplot(data$PREMIUM~data$CLM_FREQ)
 
-plot(data$CLM_FREQ,data$PREMIUM, main = "Premium across different # claim occurences")
+plot(data$CLM_FREQ,data$PREMIUM, main = "Premium and Claim Frequency Independence", xlab = "Claim Frequency",
+     ylab = "Premium")
 abline(lm(data$PREMIUM~data$CLM_FREQ),col = "blue")
 legend("topright", legend = c("Linear model"),
        col = c("blue"), lty = 1)
@@ -1378,7 +1378,7 @@ axis(side = 1, at = seq(690, 850, length.out = 10))
 
 #The premium charged in the data set is even lower than the expected value of the claims!!
 #Analysis of Existing Premium & Claims Against Monte Carlo Simulations on per policy basis
-hist(agg_monte_carlo_claims, main = "Aggregate claim amounts - 1000 simulations",xaxt = "n",xlab = "")
+hist(agg_monte_carlo_claims, main = "Claim Amount 1000 simulations",xaxt = "n",xlab = "Aggregate Claim Amounts")
 axis(side = 1, at = seq(7e5, 9e5, length.out = 10))
 abline(v=sum(data$PREMIUM), col = "Red")
 abline(v=sum(claim_size_vector), col = "Blue")
