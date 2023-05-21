@@ -297,7 +297,9 @@ for (f in claims_amounts) {
   plot(data[,f], main=f, xlab='' ,las=2,col=data$CLM_FREQ)
   grid()
 }
-plot(data$CLM_FREQ, data$AGE, main='Age',las = 2)
+
+par(mfrow = c(1, 2),cex.main = 0.8, main = "Age")
+plot(data$CLM_FREQ, data$AGE, main='',las = 2)
 grid()
 
 
@@ -346,7 +348,8 @@ for (f in features_cat) {
   grid()
 }
 
-plot(temp2$CLM_AMT, temp2$AGE, main='Age',las = 2)
+
+plot(temp2$CLM_AMT, temp2$AGE, main='Age',las = 1)
 grid()
 
 
@@ -450,7 +453,7 @@ rm(temp2)#memory management
 
 #Method of Moment for poisson case to estimate lambda
 lambda_hat_poisson <- 1/length(data$CLM_FREQ) * sum(data$CLM_FREQ)
-
+par(mfrow = c(1, 1))
 #Here we plot a histogram of our claim frequency data against the theoretical pdf of parameter lambda hat.
 hist(data$CLM_FREQ, breaks = 30, freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
 #overlay density
@@ -493,7 +496,7 @@ r_hat <- mean(data$CLM_FREQ)*p_hat /(1-p_hat)
 hist(data$CLM_FREQ, breaks = 30, freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
 #overlay density
 x <- seq(0,10,length.out = 11)
-y <- dnbinom(x,size = r_hat,prob = p_hat) #Theoretical Distribution
+y_2 <- dnbinom(x,size = r_hat,prob = p_hat) #Theoretical Distribution
 lines(x,y)
 
 
@@ -509,22 +512,32 @@ chisq.test(empirical_pdf,theoretical_pdf)
 
 #FF plots
 plot.ecdf(data$CLM_FREQ, main = "FF Negative Binomial", xlab = "Loss Frequency", ylab = "CDF", col.points = "Gray")
-x = seq(0,10, 1)
-y = pnbinom(x, size = r_hat, prob = p_hat ) #gamma as an example 
+x <- seq(0,10, 1)
+y_2 <- pnbinom(x, size = r_hat, prob = p_hat )
 lines(x,y, col = "blue")
 
 
 
 #************************************************** Q1 Result *************************************************************#
 
-hist(data$CLM_FREQ, breaks = 30, freq = FALSE, main = "Empirical Histogram with Theoretical PDFs")
+hist(data$CLM_FREQ, breaks = 30, freq = FALSE, main = "Empirical Histogram with Theoretical PDFs", xlab = "CLAIM FREQUENCY")
 x <- seq(0,10,length.out = 11)
 y <- dpois(x, lambda = lambda_hat_poisson) #Theoretical Distribution
 y_2 <- dnbinom(x,size = r_hat,prob = p_hat) #Theoretical Distribution
 lines(x,y, col = "Red")
 lines(x,y_2, col = "Blue")
 legend("topright", legend = c("Poisson Distribution", "Negative Binomial Distribution"),
-       col = c("red", "blue"), lty = 1)
+       col = c("red", "blue"), lty = 1, cex = 0.9, box.lwd = 0.9)
+
+
+plot.ecdf(data$CLM_FREQ, main = "FF plots Poisson and Negative Binomial", xlab = "Loss Frequency", ylab = "CDF", col.points = "Gray")
+x = seq(0,10, 1)
+y = pnbinom(x, size = r_hat, prob = p_hat )
+lines(x, y, col = "blue", lwd = 2, lty = 1) 
+lines(x, y_2, col = "red", lwd = 2, lty = 2)
+legend("bottomright", legend = c("Poisson", "Negative Binomial"),
+       col = c("blue", "red"), lty = c(1, 2))
+
 
 #Claim Frequency:
 #We decided to stick with NB for claim frequency. since the Mean from the data is further away from the variance. Neg. Bin.
@@ -610,7 +623,7 @@ qqplot(claim_size_vector,rgamma(length(claim_size_vector),
 
 plot.ecdf(claim_size_vector, main = "FF Gamma", xlab = "Loss Amount", ylab = "CDF", col.points = "Gray")
 x = seq(0,1500, 0.1)
-y = pgamma(x, shape = gamma_estimated_k, scale = gamma_estimated_theta ) #gamma as an example 
+y_2 = pgamma(x, shape = gamma_estimated_k, scale = gamma_estimated_theta )
 lines(x,y, col = "Blue")
 
 
@@ -647,7 +660,7 @@ ks.test(claim_size_vector, theoretical_quantiles_logNormal)
 
 plot.ecdf(claim_size_vector, main = "FF Log Normal", xlab = "Loss Amount", ylab = "CDF", col.points = "Gray")
 x = seq(0,1500, 0.1)
-y = plnorm(x, meanlog = logNormal_estimator_mu, sdlog = logNormal_estimator_sd )  
+y_3 = plnorm(x, meanlog = logNormal_estimator_mu, sdlog = logNormal_estimator_sd )  
 lines(x,y, col = "Blue")
 
 
@@ -684,13 +697,13 @@ ks.test(claim_size_vector, theoretical_quantiles_invgauss)
 
 plot.ecdf(claim_size_vector, main = "FF Inverse Gaussian", xlab = "Loss Amount", ylab = "CDF", col.points = "Gray")
 x = seq(0,1500, 0.1)
-y = pinvgauss(x, mean = IG_estimator_mu, shape = IG_estimator_lambda )  
+y_4 = pinvgauss(x, mean = IG_estimator_mu, shape = IG_estimator_lambda )  
 lines(x,y, col = "Blue")
 
 
 #******************************************************* Q2 Result *********************************************************
 
-hist(claim_size_vector,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
+hist(claim_size_vector,breaks = 20,freq = FALSE, main = "Empirical Histogram with Theoretical PDF",xlab = "Claim Frequency")
 x <- seq(0,3500,length.out = length(claim_size_vector))
 
 y <- dexp(x,rate = lambda_hat_exp)
@@ -701,6 +714,23 @@ lines(x,y_3,col = "springgreen")
 lines(x,y_4,col = "Purple")
 legend("topright", legend = c("Exponential", "Gamma", "Log-Normal", "Inverse Gaussian"),
        col = c("red", "blue", "springgreen", "Purple"), lty = 1)
+
+
+
+
+plot.ecdf(claim_size_vector, main = "", xlab = "Loss Amount", ylab = "CDF", col.points = "Gray")
+x = seq(0,1500, 0.1)
+y = pexp(x, rate = lambda_hat_exp )
+y_2 = pgamma(x, shape = gamma_estimated_k, scale = gamma_estimated_theta )
+y_3 = plnorm(x, meanlog = logNormal_estimator_mu, sdlog = logNormal_estimator_sd )
+y_4 = pinvgauss(x, mean = IG_estimator_mu, shape = IG_estimator_lambda ) 
+lines(x,y, col = "Red")
+lines(x,y_2, col = "Blue")
+lines(x,y_3, col = "springgreen")
+lines(x,y_4, col = "magenta")
+legend("bottomright", legend = c("Exponential","Gamma", "Log-Normal","Inverse Gaussian"),
+       col = c("red", "blue", "springgreen", "magenta"), lty = c(1))
+
 
 #Log-normal appears to fit data best, as well as inverse gaussian, we decide on the log-normal since it is more prudent 
 # (heavy tailed).
@@ -737,12 +767,14 @@ for(i in 1:1000){
   var_vector_nb[i] <- var(nb_simulations_list[[i]])
 }
 
-
-hist(mean_vector_nb, main = "Expectation of 1000 Negative Binomial Simulations",breaks = 40)
+par(mfrow = c(1, 2))
+hist(mean_vector_nb, main = "",breaks = 40,
+     xlab = "Expected Value")
 abline(v = mean(data$CLM_FREQ),col="Red")
-legend("topright", legend = "Data", col = "red", lty = 1)
+#legend("topright", legend = "Data", col = "red", lty = 1)
 
-hist(var_vector_nb, main = "Variance of 1000 Negative Binomial Simulations")
+hist(var_vector_nb, main = "",
+     xlab = "Variance")
 abline(v = var(data$CLM_FREQ),col="Red")
 legend("topright", legend = "Data", col = "red", lty = 1)
 
@@ -790,7 +822,7 @@ for(j in 1:9){
   }
 }
 
-barplot(table(data$CLM_FREQ), col = gray(0,0.5), beside = T)
+barplot(table(data$CLM_FREQ), col = gray(0,0.5), beside = T, xlab = "Claim Frequency")
 barplot(avg_of_simulations_nb, col = gray(1,0.8),beside = T,add = T)
 legend("topright", legend = c("Original Data", "Average of 1000 Simulations"), 
        fill = c(gray(0, 0.5), gray(1, 0.8)))
@@ -913,7 +945,7 @@ for(i in 1:1000){
 }
 
 
-#Histogram of Antithetic covariate method estimators 
+#Histogram of control covariate method estimators 
 hist(mean_vector_nb_cv, main = "Expectation of 1000 NB Simulations - Antithetic Method")
 abline(v = mean(mean_vector_nb_cv),col="Red")
 legend("topright", legend = "Mean CMC", col = "red", lty = 1)
@@ -1013,14 +1045,14 @@ for(i in 1:1000){
 
 
 
-par(mfrow = c(1, 1))
-hist(mean_vector_ln, main = "Expectation of 1000 Log Normal Simulations")
+par(mfrow = c(1, 2))
+hist(mean_vector_ln, main = "", xlab = "Expected Value")
 abline(v = mean(claim_size_vector),col="Red")
-legend("topright", legend = "CMC", col = "red", lty = 1)
+#legend("topright", legend = "Data", col = "red", lty = 1)
 
-hist(var_vector_ln, main = "Variance of 1000 Log Normal Simulations")
+hist(var_vector_ln, main = "", xlab = "Variance")
 abline(v = mean(var(claim_size_vector)),col="Red")
-legend("topright", legend = "CMC", col = "red", lty = 1)
+legend("topright", legend = "Data", col = "red", lty = 1)
 
 
 t.test(x = mean_vector_ln, mu = mean(claim_size_vector))
@@ -1234,27 +1266,27 @@ mtext(paste0("Var: ",round(mean(var_vector_ln_IS_gamma),4),
 #****************************************************** Q3  Result ********************************************************#
 
 par(mfrow = c(2, 2),cex.main = 0.8)
-hist(var_vector_nb, main = "Variance NB w/o variance reduction")
+hist(var_vector_nb, main = "Variance NB w/o variance reduction",xlab = "", breaks = 20)
 subplot(hist(nb_simulations_list[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "Sample Simulation",cex.main = 0.7)
         , grconvertX(c(.75, 1), "npc"), grconvertY(c(0.75, 1), "npc"))
 
 
 
-hist(var_vector_nb_antithetic, main = "Variance - Antithetic Method")
+hist(var_vector_nb_antithetic, main = "Variance - Antithetic Method", xlab = "", breaks = 20)
 mtext(paste0("Var: ",round(mean(var_vector_nb_antithetic),4),
              " vs\nCMC:",round(mean(var_vector_nb),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 subplot(hist(nb_simulations_list_anthithetic[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "",cex.main = 0.7)
         , grconvertX(c(.75, 1), "npc"), grconvertY(c(0.75, 1), "npc"))
 
 
-hist(var_vector_nb_cv, main = "Variance - CV Method (Poisson)")
+hist(var_vector_nb_cv, main = "Variance - CV Method (Poisson)", xlab = "", breaks = 20)
 mtext(paste0("Var: ",round(mean(var_vector_nb_cv),4),
              " vs\nCMC:",round(mean(var_vector_nb),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 subplot(hist(nb_simulations_list_cv[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "",cex.main = 0.7)
         , grconvertX(c(.75, 1), "npc"), grconvertY(c(0.75, 1), "npc"))
 
 
-hist(var_vector_nb_IS_geo, main = "Variance - IS Method (Geometric)")
+hist(var_vector_nb_IS_geo, main = "Variance - IS Method (Geometric)", xlab = "", breaks = 20)
 mtext(paste0("Var: ",round(mean(var_vector_nb_IS_geo),4),
              " vs \nCMC:",round(mean(var_vector_nb),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 subplot(hist(nb_simulations_list_IS_geometric[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "",cex.main = 0.7)
@@ -1264,28 +1296,27 @@ subplot(hist(nb_simulations_list_IS_geometric[[1]],ylab = "",xlab = "",ylim = NU
 #Control variate with poisson resulted in the lowest variance.
 
 par(mfrow = c(2, 2),cex.main = 0.8)
-
-hist(var_vector_ln, main = "Variance Log Normal w/o variance reduction")
-subplot(hist(ln_simulations_list[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "Sample Simulation",cex.main = 0.7)
+hist(var_vector_ln, main = "Variance Log Normal w/o variance reduction", xlab = "", breaks = 10)
+subplot(hist(ln_simulations_list[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "",cex.main = 0.7)
         , grconvertX(c(.75, 1), "npc"), grconvertY(c(0.75, 1), "npc"))
 
 
-hist(var_vector_ln_antithetic, main = "Variance Log Normal - Antithetic Method")
+hist(var_vector_ln_antithetic, main = "Variance Log Normal - Antithetic Method", xlab = "", breaks = 10)
 mtext(paste0("Var: ",round(mean(var_vector_ln_antithetic),4),
              " vs\nCMC:",round(mean(var_vector_ln),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 subplot(hist(ln_simulations_list_anthithetic[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "",cex.main = 0.7)
         , grconvertX(c(.75, 1), "npc"), grconvertY(c(0.75, 1), "npc"))
 
 
-hist(var_vector_ln_cv_IG, main = "Variance Log Normal - CV Method (Inverse Gaussian)")
-mtext(paste0("Var: ",round(mean(var_vector_ln_cv_IG),4),
-             " vs\nCMC:",round(mean(var_vector_ln),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+hist(var_vector_ln_cv_IG, main = "Variance Log Normal - CV Method (Inverse Gaussian)", xlab = "", breaks = 10)
+mtext(paste0("                          Var: ",round(mean(var_vector_ln_cv_IG),4),
+             " vs CMC:",round(mean(var_vector_ln),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 subplot(hist(ln_simulations_list_cv_IG[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "",cex.main = 0.7)
         , grconvertX(c(.75, 1), "npc"), grconvertY(c(0.75, 1), "npc"))
 
-hist(var_vector_ln_IS_gamma, main = "Variance Log Normal - IS Method (Gamma)")
-mtext(paste0("Var: ",round(mean(var_vector_ln_IS_gamma),4),
-             " vs\nCMC:",round(mean(var_vector_ln),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+hist(var_vector_ln_IS_gamma, main = "Variance Log Normal - IS Method (Gamma)", xlab = "", breaks = 10)
+mtext(paste0("            Var: ",round(mean(var_vector_ln_IS_gamma),4),
+             " vs CMC:",round(mean(var_vector_ln),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
 subplot(hist(ln_simulations_list_IS_gamma[[1]],ylab = "",xlab = "",ylim = NULL,yaxt = "n", main = "",cex.main = 0.7)
         , grconvertX(c(.75, 1), "npc"), grconvertY(c(0.75, 1), "npc"))
 
@@ -1336,8 +1367,9 @@ for(i in 1:1000){
 ########################################################### Q5 #############################################################
 ############################################################################################################################
 
+par(mfrow = c(1, 1))
 #histogram of the mean per policy view 
-hist(mean_monte_carlo_claims,xaxt = "n", main = "Data vs CMC Risk Premium esitmate")
+hist(mean_monte_carlo_claims,xaxt = "n", main = "Data vs CMC Risk Premium esitmate", xlab = "CMC Expected Claims")
 abline(v=data_risk_premium_estimation, col = "Red")
 abline(v=mean(mean_monte_carlo_claims, col = "black"))
 legend("topright", legend = c("Calculated Data Risk Premium", "Caclulated CMC Risk Premium"),
@@ -1441,7 +1473,7 @@ for (i in 1:1000) {
 
 
 
-hist(capital_req_var, breaks = 100, main = "1,000 VaR simulations - Neg Binomial & Log-Normal",
+hist(capital_req_var, breaks = 100, main = "1,000 VaR simulations (Neg. Binomial & Log-Normal)",xlab = "Required Capital",
      xlim = c(800000, max(capital_req_var)))
 abline(v=mean(capital_req_ES), col = "red")
 legend("topright", legend = c("Expected Shortfall"),
