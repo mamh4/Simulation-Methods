@@ -314,6 +314,7 @@ ggplot(temp, aes(x = CAR_TYPE, y = CLM_FREQ)) +
     position = position_jitter(width = 0.2, height = 0.08),
     size = 1
   ) +
+  stat_summary(fun.y=mean, geom="point", shape=20, size=3, color="red", fill="red") +
   scale_y_continuous(breaks = seq(0, 7)) +
   geom_text(
     data = temp,
@@ -363,6 +364,7 @@ ggplot(temp2, aes(x = CAR_TYPE, y = CLM_AMT)) +
     position = position_jitter(width = 0.2, height = 0.08),
     size = 1
   ) +
+  stat_summary(fun.y=mean, geom="point", shape=20, size=3, color="red", fill="red") +
   #scale_y_continuous(breaks = seq(0, 2000)) +
   theme_minimal() +
   xlab("") +
@@ -457,11 +459,13 @@ rm(temp2)#memory management
 lambda_hat_poisson <- 1/length(data$CLM_FREQ) * sum(data$CLM_FREQ)
 par(mfrow = c(1, 1))
 #Here we plot a histogram of our claim frequency data against the theoretical pdf of parameter lambda hat.
-hist(data$CLM_FREQ, breaks = 30, freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
-#overlay density
-x <- seq(0,10,length.out = 11)
-y <- dpois(x,lambda=lambda_hat_poisson) #Theoretical Distribution
-lines(x,y)
+plot(table(data$CLM_FREQ)/1000, main = "Empirical Histogram with Theoretical PMF", xlab = "Probability")
+
+# Overlay points with red color
+x <- seq(0, 7, length.out = 8)
+y <- dpois(x, lambda = lambda_hat_poisson) # Theoretical Distribution
+points(x, y, col = "red",pch = 19)
+legend("topright", legend = "Poisson", col = "red", pch = 19)
 
 
 #Result: Graphically poisson seems to be a good model, to quantify how good of a fit it is we test it against a theoretical pdf.
@@ -495,11 +499,13 @@ p_hat <- 1 / var(data$CLM_FREQ) * mean(data$CLM_FREQ)
 r_hat <- mean(data$CLM_FREQ)*p_hat /(1-p_hat)
 
 #Here we plot a histogram of our claim frequency data against the theoretical pdf of parameter p_hat and r_hat.
-hist(data$CLM_FREQ, breaks = 30, freq = FALSE, main = "Empirical Histogram with Theoretical PDF")
-#overlay density
-x <- seq(0,10,length.out = 11)
+plot(table(data$CLM_FREQ)/1000, main = "Empirical Histogram with Theoretical PMF", xlab = "Probability")
+
+# Overlay points with red color
+x <- seq(0, 7, length.out = 8)
 y_2 <- dnbinom(x,size = r_hat,prob = p_hat) #Theoretical Distribution
-lines(x,y_2)
+points(x, y_2, col = "blue",pch=19)
+legend("topright", legend = "Negative-Binomial", col = "blue", pch = 19)
 
 
 #To make the pdf comparable, we discretise and apply the chi.sq test
@@ -523,13 +529,13 @@ lines(x,y_2, col = "blue")
 
 #************************************************** Q1 Result *************************************************************#
 
-hist(data$CLM_FREQ, breaks = 30, freq = FALSE, main = "Empirical Histogram with Theoretical PDFs", xlab = "CLAIM FREQUENCY")
-x <- seq(0,10,length.out = 11)
+plot(table(data$CLM_FREQ)/1000, main = "Empirical Histogram with Theoretical PMF", xlab = "Probability")
+x <- seq(0,7,length.out = 8)
 y <- dpois(x, lambda = lambda_hat_poisson) #Theoretical Distribution
 y_2 <- dnbinom(x,size = r_hat,prob = p_hat) #Theoretical Distribution
-lines(x,y, col = "Red")
-lines(x,y_2, col = "Blue")
-legend("topright", legend = c("Poisson Distribution", "Negative Binomial Distribution"),
+points(x, y, col = "red",pch=19)
+points(x, y_2, col = "blue",pch=19)
+legend("topright", legend = c("Poisson", "NB"),
        col = c("red", "blue"), lty = 1, cex = 0.9, box.lwd = 0.9)
 
 
@@ -1012,11 +1018,62 @@ for(i in 1:1000){
 
 
 #Compare variance
-hist(var_vector_nb_IS_geo, main = "Variance - CV Method")
+hist(var_vector_nb_IS_geo, main = "Variance - IS Method")
 abline(v = mean(var_vector_nb_IS_geo),col="Red")
 legend("topright", legend = "Var CMC", col = "red", lty = 1,cex = 0.8)
 mtext(paste0("Var: ",round(mean(var_vector_nb_IS_geo),4),
              " vs CMC:",round(mean(var_vector_nb),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+
+
+
+###binomial MoM
+p_binom <- mean(data$CLM_FREQ)/1000
+n_binom <- 1000
+
+#try binomial
+simulate_nb_IS_binom <- function(size_n, size_nb, prob_nb , prob_binom){
+  x <- rbinom(n = size_n,size = size_n ,prob = prob_binom)
+  ISE <- dnbinom(x,size = size_nb,prob = prob_nb) / 
+    dbinom(x,size = size_n, prob = prob_binom) * x
+  #browser()
+  return(ISE)
+}
+
+
+nb_simulations_list_IS_binom <- vector(mode = "list", length = 1000)
+for(i in 1:1000) {
+  nb_simulations_list_IS_binom[[i]] <- vector(mode = "list", length = 1000)
+}
+for(i in 1:1000){
+  nb_simulations_list_IS_binom[[i]] <- simulate_nb_IS_binom(size_n = 1000,
+                                                                    size_nb = r_hat,
+                                                                    prob_nb = p_hat,
+                                                                    prob_binom =  p_binom
+                                                                    )
+}
+
+mean_vector_nb_IS_binom <- c()
+var_vector_nb_IS_binom <- c()
+
+
+for(i in 1:1000){
+  mean_vector_nb_IS_binom[i] <- mean(nb_simulations_list_IS_binom[[i]])
+  var_vector_nb_IS_binom[i]<- var(nb_simulations_list_IS_binom[[i]])
+}
+
+
+#Skip mean comparison. it's again almost exactly the same as per theory
+
+
+#Compare variance
+hist(var_vector_nb_IS_binom, main = "Variance - IS Method")
+abline(v = mean(var_vector_nb_IS_binom),col="Red")
+legend("topright", legend = "Var CMC", col = "red", lty = 1,cex = 0.8)
+mtext(paste0("Var: ",round(mean(var_vector_nb_IS_binom),4),
+             " vs CMC:",round(mean(var_vector_nb),4)),  side = 3, line = -1, adj = 0, col = "black", cex = 0.9)
+
+
+
 
 
 
